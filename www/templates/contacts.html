@@ -1,0 +1,33 @@
+<ion-view title="Contacts">
+    <div ng-controller="ContactsCtrl">
+        <ion-header-bar class="bar-light bar-subheader">
+            <input type="search"
+                   placeholder="Filter contacts..."
+                   ng-model="search"
+                   ng-change="scrollTop()">
+            <button ng-if="search.length"
+                    class="button button-icon ion-android-close input-button"
+                    ng-click="clearSearch()">
+            </button>
+        </ion-header-bar>
+        <ion-content>
+            <div class="list">
+
+                <a class="item contact-item"
+                   collection-repeat="item in getContacts()"
+                   collection-item-height="getItemHeight(item)"
+                   collection-item-width="100 + '%'"
+                   ng-style="{'line-height': getItemHeight(item) + 'px'}"
+                   ng-class="{'item-divider': item.isLetter}" href="#/contacts/{{item.id}}">
+
+                    <i ng-if="!item.isLetter" class="icon"
+                       ng-class="['ion-ios7-person','ion-person','ion-android-contact',
+                   'ion-android-social-user','ion-person-stalker'][$index % 5]"></i>
+
+                    {{item.letter || (item.first_name+' '+item.last_name ) + item.alias }}
+
+                </a>
+            </div>
+        </ion-content>
+    </div>
+</ion-view>

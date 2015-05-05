@@ -1,0 +1,16 @@
+{
+  "name": "OryzaMobile",
+  "private": "true",
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.0.0-rc.4",
+      "angularfire": null,
+      "angular-route": null,
+      "underscore": "~1.6.0",
+      "moment": "~2.7.0",
+      "angular-momentjs": null,
+      "elasticsearch": "~2.4.0",
+      "angular-mocks": "~1.2.17",
+      "angular-scenario": "~1.2.17"
+
+  }
+}

@@ -1,0 +1,12 @@
+<ion-view title="Message">
+    <ion-content>
+        <ion-list >
+            <ion-item ng-repeat="component in components | orderBy:'last':
+                false" type="item-text-wrap" href="#/message/{{component.$id}}">
+                <h3>{{component.name}}</h3>
+                <span am-time-ago="component.last"></span>
+                <span class="badge badge-assertive">{{component.unreadCount}}</span>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

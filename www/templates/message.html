@@ -1,0 +1,76 @@
+<div>
+    <div class="bar bar-header">
+
+        <a class="button icon ion-arrow-left-c" href="#/message/{{message.component}}"> </a>
+
+        <h1 class="title">{{ message.id }}</h1>
+        <button favorite-message
+                component="message.component"
+                message-id="message.id"
+                class="button icon-left ion-star button-positive">Favorites
+        </button>
+    </div>
+
+    <ion-content>
+        <ion-list>
+            <ion-item type="item-text-wrap">
+                <div ng-repeat="data in releaseGroupArray">
+                    <create-task message="message" release-group="data">
+                    </create-task>
+                </div>
+            </ion-item>
+        </ion-list>
+        <div class="list">
+            <a ng-repeat="(key,value) in message.last" class="item">
+                {{ key+': '+value }}
+            </a>
+            <span class="item-note" am-time-ago="message.last.date"></span>
+        </div>
+        <div class="list">
+            <div class="item item-divider">
+                Header
+            </div>
+            <a ng-repeat="(key,value) in message.metadata" class="item">
+                {{key+':'+ value}}
+            </a>
+
+            <a ng-click="goDetail()" class="item">
+                <div class="row">
+                    ->more data ...
+                </div>
+            </a>
+
+        </div>
+        <div class="list" ng-controller="messageItemCtrl">
+            <div class="item item-divider">
+                Items
+
+            </div>
+            <a ng-repeat="data in syncedItemStart" class="item"
+               ng-click="goDetail(data)"
+                    >
+
+                <div class="row">
+                    <div class="col">{{ data.po_ITEM}}</div>
+                    <div class="col">{{ data.pur_MAT}}</div>
+                    <div class="col">{{ data.net_PRICE}}</div>
+                    <div class="col">{{ data.disp_QUAN}}</div>
+                </div>
+                <div class="row">
+                    {{ data.short_TEXT}}
+
+                </div>
+
+            </a>
+            <button ng-hide="isloaded" class="button button-full button-stable" ng-click="loadingMore()">
+                {{ loadText }}
+            </button>
+            <a ng-repeat="data in continued" class="item">
+                {{ data }}
+            </a>
+        </div>
+    </ion-content>
+
+</div>
+
+

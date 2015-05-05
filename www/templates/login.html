@@ -1,0 +1,20 @@
+<ion-view title="Login" hide-back-button="true">
+    <ion-content has-header="true" has-tabs="true" padding="true">
+        <form ng-submit="tryLogin()">
+            <div class="list list-inset">
+                <label class="item item-input">
+                    <input type="text" placeholder="Username" ng-model="logindata.email">
+                </label>
+                <label class="item item-input">
+                    <input type="password" placeholder="Password" ng-model="logindata.pass">
+                </label>
+                <!-- remember me
+              <ion-toggle ng-model="logindata.remember">remember me</ion-toggle>
+                -->
+            </div>
+            <button class="button button-block button-positive" type="submit">Sign in</button>
+        </form>
+
+    </ion-content>
+</ion-view>
+

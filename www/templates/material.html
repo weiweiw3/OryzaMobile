@@ -1,0 +1,23 @@
+<div>
+    <div class="bar bar-header">
+        
+        <a class="button icon ion-arrow-left-c" href="#/{{ back_url }}"> </a>
+
+        <h1 class="title">{{ title }}</h1>
+
+    </div>
+    <ion-content>
+        <div class="list" >
+            <div class="item item-divider">
+                information
+            </div>
+            <a ng-repeat="(key,value) in data" class="item">
+                {{ key+': '+value }}
+            </a>
+
+        </div>
+    </ion-content>
+
+</div>
+
+

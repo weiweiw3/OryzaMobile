@@ -1,0 +1,31 @@
+<ion-view title="My Profile">
+    <ion-content class="padding" ng-controller="setting.profileCtrl">
+        <button ng-click="unBindData()">unBindData</button>
+        <span app-version></span>
+
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">Username</span>
+                <input type="text" ng-model="profile.name">
+            </label>
+        </div>
+        <ion-toggle ng-model="profile.flag">flag</ion-toggle>
+        <label class="item item-input item-select">
+            <div class="input-label">
+                Lightsaber
+            </div>
+            <select ng-model="profile.b" ng-options="item for item in items">
+
+            </select>
+        </label>
+
+        <div class="list">
+            <div class="item range range-positive">
+                <i class="icon ion-ios7-sunny-outline"></i>
+                <input type="range" name="volume" min="0" max="100" ng-model="profile.num">
+                <i class="icon ion-ios7-sunny"></i>
+            </div>
+        </div>
+
+    </ion-content>
+</ion-view>
