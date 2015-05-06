@@ -82,9 +82,6 @@ angular.module('firebase.simpleLogin', ['firebase', 'firebase.utils', 'changeEma
         return loc;
     }])
 
-//    .factory('simpleLogin', ['$firebaseAuth', 'fbutil', '$q', '$rootScope','authScopeUtil',
-//        function ($firebaseAuth, fbutil, $q, $rootScope,authScopeUtil) {
-
     .factory('simpleLogin', ['$firebaseAuth', 'fbutil', 'createProfile', 'changeEmail',
         function ($firebaseAuth, fbutil, createProfile, changeEmail) {
 

@@ -1,11 +1,3 @@
-/* Your app's CSS, go crazy, make it your own */
-
-.ionic-logo {
-  display: block;
-  margin: 15px auto;
-  width: 96px;
-  height: 96px;
-}
 /** Styling for the username field **/
 label.item.has-error {
     border-bottom: 2px solid red;
@@ -30,4 +22,8 @@ label.item.valid-lr {
 .form-error {
     padding: 2px 0 2px 16px;
     color: red;
+}
+.login-head {
+    padding: 2px 0 2px 16px;
+    color: white;
 }

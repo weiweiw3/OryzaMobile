@@ -4,30 +4,49 @@
 'use strict';
 
 angular.module('myApp.controllers.login', [ ])
+
     .controller('loginCtrl', function
-        ($scope, simpleLogin, $location, ionicLoading, $log, $state) {
-        $scope.logindata = {
-            email: '',
-            pass: '',
-            remember: true
+        ($localstorage, $scope, simpleLogin, $location,
+         ionicLoading, $log, $state, $timeout) {
+
+
+
+        $scope.data = {
+            isLoading: false
         };
+        var logindata = $localstorage.getObject('logindata');
+        if (logindata === undefined || logindata === null) {
+            $scope.logindata = {
+                email: '',
+                password: '',
+                remember: true
+            };
+        } else
+        {
+            $scope.logindata = logindata;
+        }
+
         $scope.$log = $log;
         $scope.tryLogin = function () {
-//            if(assertValidAccountProps()){
             ionicLoading.load('login......');
             simpleLogin.login($scope.logindata.email,
-                $scope.logindata.pass)
+                $scope.logindata.password)
                 .then(function (/* user */) {
+                    $localstorage.setObject('logindata', {
+                        email: $scope.logindata.email,
+                        password: $scope.logindata.password,
+                        remember: true
+                    });
+
                     ionicLoading.unload();
                     $state.go('tab.messages');
                 }, function (err) {
                     $log.error(errMessage(err));
+                    $scope.loginerror = errMessage(err);
+
                     ionicLoading.unload();
-                    $scope.err = errMessage(err);
+
                 });
-
-//            }
-
         };
 
         function assertValidAccountProps() {
