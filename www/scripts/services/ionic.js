@@ -5,11 +5,12 @@ angular.module('myApp.services.ionic', ['ionic'])
             loadText = loadText || 'Loading...';
 
             $ionicLoading.show({
-                template: '<i class="icon ion-loading-c"></i>\n<br/>\n' + loadText,
+                template: '<div ><ion-spinner icon="lines"></ion-spinner></div>' + loadText,
                 noBackdrop: false
             });
         };
         this.unload = function () {
             $ionicLoading.hide();
         };
+
     });

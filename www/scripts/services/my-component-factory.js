@@ -43,14 +43,6 @@ angular.module('myApp.services.myComponent',
                                 }
                                 messageData.$loaded().then(function(snapdata){
                                     i++;
-//                                    var data = {
-//                                        id:messageId,
-//                                        favorite:messageData.favorite,
-//                                        read:messageData.read,
-//                                        metadata:messageData.metadata,
-//                                        date:messageDate
-//                                   };
-
                                     messagesArray.push(snapdata);
                                     if(i==numChildren){
                                         $rootScope.$broadcast('messages.ready');
@@ -60,6 +52,10 @@ angular.module('myApp.services.myComponent',
                             });
                     });
                 },
+                getComponent: function(index){
+                    return syncedArray[index]
+                },
+
                 messagesArray: function(){
                     return messagesArray;
                 },

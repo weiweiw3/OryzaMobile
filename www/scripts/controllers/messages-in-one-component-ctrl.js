@@ -6,15 +6,27 @@ angular.module('myApp.controllers.messagesInOneComponent', [])
     //get message list with factory myMessage
     //update unread number with factory myComponent
     .controller('messagesInOneComponentCtrl', function
-        (myComponent, myMessage, $stateParams, $location, $timeout, $scope, ionicLoading) {
-        var componentId = $scope.component = $stateParams.component;
-        var messageId;
-        myComponent.getmessageList($scope.component);
+        (component,myComponent, myMessage,
+         $location, $timeout, $scope, ionicLoading) {
 
-        ionicLoading.load();
+        $scope.component=component;
+        var componentId = component.$id;
+
+        var messageId;
+        $scope.$on('$viewContentLoaded', function () {
+            ionicLoading.load('Loading');
+
+        });
+//        $scope.messages = myComponent.messagesArray(componentId);
+//        $scope.messages.$loaded().then(function () {
+//
+//            ionicLoading.unload();
+//        });
+        myComponent.getmessageList(componentId);
+
 
         $scope.$on('messages.ready', function (event) {
-            $scope.messages = myComponent.messagesArray($scope.component);
+            $scope.messages = myComponent.messagesArray(componentId);
         });
 
         $scope.$watch('messages', function (newVal) {

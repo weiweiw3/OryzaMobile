@@ -1,12 +1,21 @@
-<ion-view title="Message">
-
-    <ion-content>
-        <ion-list >
+<ion-view view-title="Messages">
+    <ion-content >
+        <ion-refresher on-refresh="refresh()"></ion-refresher>
+        <ion-list>
             <ion-item ng-repeat="component in components | orderBy:'last':
-                false" type="item-text-wrap" href="#/message/{{component.$id}}">
-                <h2>{{component.name}}</h2>
-                <span am-time-ago="component.last"></span>
-                <span class="badge badge-assertive">{{component.unreadCount}}</span>
+                false" type="item-text-wrap"
+                      ui-sref="component({index: $index})">
+                <div class="item item-avatar item-text-wrap">
+                    <span class="avatar" style="background-image: url('img/jon-snow.jpg');"></span>
+                    <strong>{{component.name}}</strong> knows nothing.
+                    <div class="card-footer text-right">
+                        <i class="icon ion-chatbubbles positive"></i> 6
+                        <i class="icon ion-heart assertive"></i> {{component.unreadCount}}
+                        <div class="pull-left">
+                            <i class="icon ion-clock"></i> <span am-time-ago="component.last"></span>
+                        </div>
+                    </div>
+                </div>
             </ion-item>
         </ion-list>
     </ion-content>

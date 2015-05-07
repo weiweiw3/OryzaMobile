@@ -4,18 +4,10 @@
 
 "use strict";
 
-angular.module('myApp.routes', ['ionic','firebase.simpleLogin' ])
+angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin' ])
 
     .config(
     function ($stateProvider, $urlRouterProvider) {
-        /*
-        // Turn off caching for demo simplicity's sake
-        $ionicConfigProvider.views.maxCache(0);
-
-
-         // Turn off back button text
-         $ionicConfigProvider.backButton.previousTitleText(false);
-         */
 
         $stateProvider
             .state('login', {            // setup an login page
@@ -49,15 +41,13 @@ angular.module('myApp.routes', ['ionic','firebase.simpleLogin' ])
                 }
             })
 
-            .state('tab.messages', {            // the message tab has its own child nav-view and history
+            .state('tab.messages', {
                 url: '/messages',
-//                    authRequired: true,
                 views: {
                     'messages-tab': {
                         templateUrl: 'templates/messages-index.html',
                         controller: 'messagesIndexCtrl'
-                    }
-                },
+                    }},
                 resolve: {
                     // controller will not be loaded until $requireAuth resolves
                     // Auth refers to our $firebaseAuth wrapper in the example above
@@ -70,21 +60,18 @@ angular.module('myApp.routes', ['ionic','firebase.simpleLogin' ])
                 }
             })
 
-            .state('message-list', {
-                url: '/message/:component',
+            .state('component', {
+                url: '/component/:index',
                 templateUrl: 'templates/message-list.html',
-                controller: 'messagesInOneComponentCtrl'
-
-//                    /people
-//                    /person/:index
-//                    ,
-//                    resolve:{
-//                        message: function($stateParams,messages){
-//                            return people.ready(function{
-//                                return people.list[+$stateParams.index]
-//                            })
-//                        }
-//                    }
+                controller: 'messagesInOneComponentCtrl',
+                resolve: {
+                    component: function ($stateParams, myComponent) {
+                        return myComponent.array.$loaded().then(function () {
+                                return myComponent.getComponent($stateParams.index)
+                            }
+                        )
+                    }
+                }
             })
             .state('message', {
                 url: '/message',
@@ -103,32 +90,6 @@ angular.module('myApp.routes', ['ionic','firebase.simpleLogin' ])
                 templateUrl: 'templates/components-management.html'
 
             })
-            // the contacts tab has its own child nav-view and history
-//                .state('tab.contacts', {
-//                    url: '/contacts',
-//                    views: {
-//                        'contacts-tab': {
-//                            templateUrl: 'templates/contacts.html'
-//                        }
-//                    }
-//                })
-
-//                .state('contacts-detail', {
-//                    url: '/contacts/:contactId',
-//                    templateUrl: 'templates/contact-detail.html'
-//                })
-
-            // the components tab has its own child nav-view and history
-//                .state('tab.components', {
-//                    url: '/components',
-//                    authRequired: true,
-//                    views: {
-//                        'components-tab': {
-//                            templateUrl: 'templates/components.html',
-//                            controller: 'componentsCtrl'
-//                        }
-//                    }
-//                })
 
             // the setting tab has its own child nav-view and history
             .state('tab.setting', {
@@ -143,7 +104,6 @@ angular.module('myApp.routes', ['ionic','firebase.simpleLogin' ])
                 url: '/myprofile',
                 views: {
                     'setting-tab': {
-//                            authRequired: true,
                         templateUrl: 'templates/profile-detail.html'
                     }
                 }

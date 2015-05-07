@@ -8,9 +8,6 @@ angular.module('myApp.controllers.login', [ ])
     .controller('loginCtrl', function
         ($localstorage, $scope, simpleLogin, $location,
          ionicLoading, $log, $state, $timeout) {
-
-
-
         $scope.data = {
             isLoading: false
         };
@@ -28,7 +25,7 @@ angular.module('myApp.controllers.login', [ ])
 
         $scope.$log = $log;
         $scope.tryLogin = function () {
-            ionicLoading.load('login......');
+            ionicLoading.load('Login...');
             simpleLogin.login($scope.logindata.email,
                 $scope.logindata.password)
                 .then(function (/* user */) {
@@ -37,15 +34,13 @@ angular.module('myApp.controllers.login', [ ])
                         password: $scope.logindata.password,
                         remember: true
                     });
-
-                    ionicLoading.unload();
                     $state.go('tab.messages');
                 }, function (err) {
                     $log.error(errMessage(err));
                     $scope.loginerror = errMessage(err);
-
+                })
+                .then(function(){
                     ionicLoading.unload();
-
                 });
         };
 

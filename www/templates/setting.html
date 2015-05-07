@@ -2,8 +2,7 @@
   This template gets placed in the Setting tab's <ion-nav-view> directive.
   It was wired up in the app config (app.js) 
  -->
-<ion-view title="Setting">
-
+<ion-view view-title="Setting1">
     <ion-content>
 
         <ion-list>
@@ -11,7 +10,7 @@
             {{ authData.password.email}}
             </ion-item>
 
-            <ion-item type="item-text-wrap" href="#/tab/sap-user-validation"> >
+            <ion-item type="item-text-wrap" ui-sref="tab.sap-user-validation"> >
                 SAP User validation
             </ion-item>
 
