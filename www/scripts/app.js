@@ -66,7 +66,9 @@ myApp
             // gcm_id: '466583810362'
         });
     }])
-    .run(function($rootScope, $state) {
+    .run(function($rootScope, $state,$stateParams) {
+        $rootScope.$state = $state;
+        $rootScope.$stateParams = $stateParams;
         $rootScope.goBack = function() {
             // function to go back
             window.history.back();

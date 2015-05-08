@@ -105,11 +105,8 @@ angular.module('firebase.simpleLogin', ['firebase', 'firebase.utils', 'changeEma
 
             var fns = {
                 auth: auth,
-
                 user: null,
-
                 getUser: function () {
-
 //                    return auth.$getCurrentUser();
                     return auth.$waitForAuth();
                 },

@@ -1,14 +1,16 @@
-<ion-view title="{{ component.name }}" hide-back-button="true">
-
+<ion-view view-title="purchaseOrders" hide-back-button="true">
     <ion-content has-header="true" has-tabs="true" padding="true">
     <ion-list>
-        <ion-item type="item-text-wrap"
-                  ng-repeat="message in messages  | orderBy:['-favorite','-id']"
-                  ng-click="goDetail(message.id,message.read,message.origin)">
+        <ion-item ng-repeat="message in messages  | orderBy:['-favorite','-id']"
+                  ui-sref="purchaseOrder({index: message.id})">
+
+            <!--ng-click="goDetail(message.id,message.read,message.origin)">
+ui-sref="purchaseOrder({index: $index})">
+                      -->
             <div class="item item-text-wrap">
-                <strong ng-class="{positive: message.read, energized: message.favorite}">
+                <div><strong ng-class="{positive: message.read, energized: message.favorite}">
                     {{ message.id }}
-                </strong> {{ message.metadata.vend_NAME}}
+                </strong> </div> {{ message.metadata.vend_NAME}}
                 <div class="card-footer text-right">
                     {{ message.message}}{{ message.metadata.target_VAL| currency:"RMB￥"}}
                     <div class="pull-left">{{ message.metadata.vend_NAME}}</div>

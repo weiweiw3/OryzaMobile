@@ -4,7 +4,7 @@
         <ion-list>
             <ion-item ng-repeat="component in components | orderBy:'last':
                 false" type="item-text-wrap"
-                      ui-sref="component({index: $index})">
+                      ng-href="{{$state.href(component.$id)}}">
                 <div class="item item-avatar item-text-wrap">
                     <span class="avatar" style="background-image: url('img/jon-snow.jpg');"></span>
                     <strong>{{component.name}}</strong> knows nothing.

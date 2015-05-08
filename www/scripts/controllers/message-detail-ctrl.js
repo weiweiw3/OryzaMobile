@@ -4,8 +4,8 @@
 angular.module('myApp.controllers.messagesDetail', [])
     //for message.html
     .controller('messageHeaderCtrl',
-    function (myMessage, $location, $log, $timeout, $scope, ionicLoading) {
-
+    function (purchaseOrder,myMessage, $location, $log, $stateParams, $timeout, $scope, ionicLoading) {
+        console.log(purchaseOrder);
         var params = $location.search();
         var messageId = $scope.messageId = params.key;
         var component = $scope.component = params.component;

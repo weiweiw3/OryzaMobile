@@ -6,9 +6,8 @@ angular.module('myApp.services.myComponent',
 
     //get component information, and update unread number
     //ref sample: users/simplelogin%3A33/components/E0001
-    .factory('myComponent', ['$rootScope', 'syncArray','syncObject', 'simpleLogin','myMessage',
-        function ($rootScope, syncArray,syncObject, simpleLogin, myMessage) {
-
+    .factory('myComponent', function (firebaseRef,$rootScope,
+                                      syncArray,syncObject, simpleLogin, myMessage) {
             var currentUser = simpleLogin.user.uid;
             var syncedArray = syncArray(['users', currentUser, 'components']);
             var syncedObject = syncObject(['users', currentUser, 'components']);
@@ -70,4 +69,4 @@ angular.module('myApp.services.myComponent',
                 }
             };
             return myComponent;
-        }]);
+        });

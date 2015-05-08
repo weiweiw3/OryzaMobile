@@ -8,6 +8,7 @@ angular.module('myApp.controllers.login', [ ])
     .controller('loginCtrl', function
         ($localstorage, $scope, simpleLogin, $location,
          ionicLoading, $log, $state, $timeout) {
+
         $scope.data = {
             isLoading: false
         };

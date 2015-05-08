@@ -73,6 +73,33 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin' ])
                     }
                 }
             })
+			.state('E0001', {
+                url: '/:index',
+                templateUrl: 'templates/purchase-order-list.html',
+                controller: 'purchaseOrdersCtrl',
+				resolve: {
+                    purchaseOrder: function ($stateParams, myMessage) {                       
+						return myMessage.purchaseOrderindexObject($stateParams.index).$loaded().then(function () {
+                                return myMessage.purchaseOrderindexObject($stateParams.index)
+                            }
+                        )
+                    }
+                }
+            })
+			.state('purchaseOrder', {
+                url: '/purchaseOrders/:index',
+                templateUrl: 'templates/purchase-order-index.html',
+                controller: 'messageHeaderCtrl',
+                resolve: {
+                    purchaseOrder: function ($stateParams, myMessage) {
+                       
+						return myMessage.purchaseOrderindexObject($stateParams.index).$loaded().then(function () {
+                                return myMessage.purchaseOrderindexObject($stateParams.index)
+                            }
+                        )
+                    }
+                }
+            })
             .state('message', {
                 url: '/message',
                 templateUrl: 'templates/message.html',
