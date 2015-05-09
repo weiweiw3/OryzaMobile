@@ -67,33 +67,36 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin' ])
                 resolve: {
                     component: function ($stateParams, myComponent) {
                         return myComponent.array.$loaded().then(function () {
+
                                 return myComponent.getComponent($stateParams.index)
                             }
                         )
                     }
                 }
             })
-			.state('E0001', {
-                url: '/:index',
+            .state('purchaseOrders', {
+                url: '/:index?rel_grp',
                 templateUrl: 'templates/purchase-order-list.html',
                 controller: 'purchaseOrdersCtrl',
-				resolve: {
-                    purchaseOrder: function ($stateParams, myMessage) {                       
-						return myMessage.purchaseOrderindexObject($stateParams.index).$loaded().then(function () {
-                                return myMessage.purchaseOrderindexObject($stateParams.index)
+                resolve: {
+                    purchaseOrders: function (ionicLoading,$stateParams, purchaseOrderFactory) {
+                        ionicLoading.load('Loading');
+                        return purchaseOrderFactory.ready($stateParams.index,$stateParams.rel_grp)
+                            .then(function () {
+                                ionicLoading.unload();
+                                return purchaseOrderFactory.purchaseOrderArray
                             }
                         )
                     }
                 }
             })
-			.state('purchaseOrder', {
+            .state('purchaseOrder', {
                 url: '/purchaseOrders/:index',
                 templateUrl: 'templates/purchase-order-index.html',
                 controller: 'messageHeaderCtrl',
                 resolve: {
                     purchaseOrder: function ($stateParams, myMessage) {
-                       
-						return myMessage.purchaseOrderindexObject($stateParams.index).$loaded().then(function () {
+                        return myMessage.purchaseOrderindexObject($stateParams.index).$loaded().then(function () {
                                 return myMessage.purchaseOrderindexObject($stateParams.index)
                             }
                         )

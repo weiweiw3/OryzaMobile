@@ -6,10 +6,9 @@ angular.module('myApp.controllers.messagesInOneComponent', [])
     //get message list with factory myMessage
     //update unread number with factory myComponent
     .controller('messagesInOneComponentCtrl', function
-        (component,myComponent, myMessage,
-         $location, $timeout, $scope, ionicLoading) {
+        (component, myComponent, myMessage, $location, $timeout, $scope, ionicLoading) {
 
-        $scope.component=component;
+        $scope.component = component;
         var componentId = component.$id;
 
         var messageId;
@@ -92,29 +91,46 @@ angular.module('myApp.controllers.messagesInOneComponent', [])
 //        };
     })
     .controller('purchaseOrdersCtrl', function
-        ($state,myComponent, myMessage,
-         $location, $timeout, $scope, ionicLoading) {
-$scope.$state = $state;
-console.log($state.current.name);
-//        $scope.component=component;
+        (purchaseOrders,purchaseOrderFactory,$state, myComponent, myMessage, $location, $timeout, $scope, ionicLoading) {
+
+        $scope.$state = $state;
+        console.log($state.current.name);
+
+//        ionicLoading.load('Loading');
         var componentId = $state.current.name;
 
         var messageId;
         $scope.$on('$viewContentLoaded', function () {
-            ionicLoading.load('Loading');
+//            console.log(purchaseOrders);
+//            ionicLoading.load('Loading');
+
         });
-//        $scope.messages = myComponent.messagesArray(componentId);
-//        $scope.messages.$loaded().then(function () {
-//
-//            ionicLoading.unload();
+        messages=$scope.messages=purchaseOrders;
+        console.log(messages[messages.length - 1].po_NUMBER);
+        $scope.refresh=function(){
+            purchaseOrderFactory.refresh().then(function(){
+                $scope.messages=purchaseOrderFactory.purchaseOrderArray;
+            });
+            console.log('$scope.refresh');
+
+            $scope.$broadcast('scroll.refreshComplete');
+        };
+        $scope.loadMore = function() {
+            purchaseOrderFactory.add($scope.messages.length+1).then(function(){
+                $scope.messages=purchaseOrderFactory.purchaseOrderArray;
+            });
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+        };
+
+        $scope.$on('$stateChangeSuccess', function() {
+            $scope.loadMore();
+        });
+//        console.log($scope.messages['4500017504']);
+//        myComponent.getmessageList(componentId);
+//        $scope.$on('messages.ready', function (event) {
+//            $scope.messages = myComponent.messagesArray(componentId);
 //        });
-        myComponent.getmessageList(componentId);
-
-
-        $scope.$on('messages.ready', function (event) {
-            $scope.messages = myComponent.messagesArray(componentId);
-        });
-
+//
         $scope.$watch('messages', function (newVal) {
             if (angular.isUndefined(newVal) || newVal == null) {
                 return

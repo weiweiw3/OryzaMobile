@@ -81,7 +81,22 @@ angular.module('firebase.simpleLogin', ['firebase', 'firebase.utils', 'changeEma
 
         return loc;
     }])
+    .factory('currentUser',function(simpleLogin,firebaseRef,$firebaseObject){
+        var fbUser = simpleLogin.user.uid;
+        var ref=firebaseRef(['users',fbUser,'setting/mapping/ServerUser']);
 
+        return {
+            user:$firebaseObject(ref).$value,
+            getUser: function(){
+                return $firebaseObject(ref).$loaded().then(function (data) {
+                    return data.$value;
+                })
+            }
+        }
+
+
+
+    })
     .factory('simpleLogin', ['$firebaseAuth', 'fbutil', 'createProfile', 'changeEmail',
         function ($firebaseAuth, fbutil, createProfile, changeEmail) {
 
@@ -90,13 +105,6 @@ angular.module('firebase.simpleLogin', ['firebase', 'firebase.utils', 'changeEma
             var listeners = [];
 
             function statusChange() {
-//                fns.getUser().then(function (user) {
-//                    fns.user = user || null;
-//                    angular.forEach(listeners, function (fn) {
-//                        fn(user || null);
-//                    });
-//                });
-
                 fns.user = auth.$getAuth();
                 angular.forEach(listeners, function (fn) {
                     fn(fns.user);
@@ -107,7 +115,6 @@ angular.module('firebase.simpleLogin', ['firebase', 'firebase.utils', 'changeEma
                 auth: auth,
                 user: null,
                 getUser: function () {
-//                    return auth.$getCurrentUser();
                     return auth.$waitForAuth();
                 },
 
@@ -117,12 +124,6 @@ angular.module('firebase.simpleLogin', ['firebase', 'firebase.utils', 'changeEma
                  * @returns {*}
                  */
                 login: function (email, pass) {
-//                    return auth.$login('password', {
-//                        email: email,
-//                        password: pass,
-//                        rememberMe: true
-//                    });
-//
                     return auth.$authWithPassword({
                         email: email,
                         password: pass
@@ -131,18 +132,9 @@ angular.module('firebase.simpleLogin', ['firebase', 'firebase.utils', 'changeEma
                 },
 
                 logout: function () {
-//                    $rootScope.$broadcast('authManager:beforeLogout', auth);
-//                    auth.$logout();
                     console.log('logout');
                     auth.$unauth();
                 },
-
-//                addToScope: function ($scope) {
-//                    authScopeUtil($scope);
-//                    $scope.login = this.login;
-//                    $scope.logout = this.logout;
-//                },
-
 
                 createAccount: function (email, pass, name) {
                     return auth.$createUser({email: email, password: pass})
@@ -188,65 +180,12 @@ angular.module('firebase.simpleLogin', ['firebase', 'firebase.utils', 'changeEma
                 }
             };
 
-//            $rootScope.$on('$firebaseSimpleLogin:login', statusChange);
-//            $rootScope.$on('$firebaseSimpleLogin:logout', statusChange);
-//            $rootScope.$on('$firebaseSimpleLogin:error', statusChange);
-
             auth.$onAuth(statusChange);
             statusChange();
 
             return fns;
         }])
 
-/**
- * A simple utility to monitor changes to authentication and set some values in scope for use in bindings/directives/etc
- */
-//    .factory('authScopeUtil', ['$log', 'updateScope', '$location',
-//        function ($log, updateScope, $location) {
-//            return function ($scope) {
-//                $scope.auth = {
-//                    authenticated: false,
-//                    user: null,
-//                    name: null
-//                };
-//
-//                $scope.$on('$firebaseSimpleLogin:login', _loggedIn);
-//                $scope.$on('$firebaseSimpleLogin:error', function (err) {
-//                    $log.error(err);
-//                    _loggedOut();
-//                });
-//                $scope.$on('$firebaseSimpleLogin:logout', _loggedOut);
-//
-//                function parseName(user) {
-//                    return user.id;
-//                }
-//
-//                function _loggedIn(evt, user) {
-//                    $scope.auth = {
-//                        authenticated: true,
-//                        user: user.id,
-//                        name: parseName(user)
-//                    };
-////                    updateScope($scope, 'auth', $scope.auth, function () {
-////                        if (!($location.path() || '').match('/hearth')) {
-////                            $location.path('/hearth');
-////                        }
-////                    });
-//                }
-//
-//                function _loggedOut() {
-//                    $scope.auth = {
-//                        authenticated: false,
-//                        user: null,
-//                        name: null
-//                    };
-//                    updateScope($scope, 'auth', $scope.auth, function () {
-//                        $location.search('feed', null);
-//                        $location.path('/demo');
-//                    });
-//                }
-//            }
-//        }])
 
     .factory('updateScope', ['$timeout', '$parse', function ($timeout, $parse) {
         return function (scope, name, val, cb) {
