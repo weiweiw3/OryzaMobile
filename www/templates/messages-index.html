@@ -1,6 +1,31 @@
 <ion-view view-title="Messages">
-    <ion-content >
+    <ion-content>
         <ion-refresher on-refresh="refresh()"></ion-refresher>
+        <div class="card-gallery item item-text-wrap">
+            <div class="item item-divider positive">
+                Purchase
+                Order
+            </div>
+            <div class="item item-text-wrap item-icon-right positive"
+                 ui-sref="purchaseOrders({index:'E0001',rel_grp:'02_PU'})">
+                Purchase Order Approve/rel_grp:'02_PU'
+                <i class="icon ion-ios-arrow-right muted"></i>
+            </div>
+            <div class="item item-text-wrap item-icon-right positive"
+                 ui-sref="purchaseOrdersApproveMessages({index:'E0002'})">
+                Purchase Order Approve Message
+                <i class="icon ion-ios-arrow-right muted"></i>
+            </div>
+            <!--
+            <div class="item item-text-wrap">
+                <a class="item-icon-right positive"
+                   ui-sref="purchaseOrders({index:'E0001',rel_grp:'Z2_Z1'})">
+                    Purchase Order Approve/rel_grp:'Z2_Z1'
+                    <i class="icon ion-ios-arrow-right muted"></i>
+                    <a>
+            </div>
+            -->
+        </div>
         <ion-list>
             <ion-item ng-repeat="component in components | orderBy:'last':
                 false" type="item-text-wrap"

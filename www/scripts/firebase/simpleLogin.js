@@ -84,18 +84,15 @@ angular.module('firebase.simpleLogin', ['firebase', 'firebase.utils', 'changeEma
     .factory('currentUser',function(simpleLogin,firebaseRef,$firebaseObject){
         var fbUser = simpleLogin.user.uid;
         var ref=firebaseRef(['users',fbUser,'setting/mapping/ServerUser']);
-
         return {
             user:$firebaseObject(ref).$value,
             getUser: function(){
                 return $firebaseObject(ref).$loaded().then(function (data) {
+                    console.log(data.$value);
                     return data.$value;
                 })
             }
         }
-
-
-
     })
     .factory('simpleLogin', ['$firebaseAuth', 'fbutil', 'createProfile', 'changeEmail',
         function ($firebaseAuth, fbutil, createProfile, changeEmail) {

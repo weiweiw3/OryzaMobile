@@ -3,8 +3,8 @@
  */
 angular.module('myApp.controllers.messagesDetail', [])
     //for message.html
-    .controller('messageHeaderCtrl',
-    function (purchaseOrder,myMessage, $location, $log, $stateParams, $timeout, $scope, ionicLoading) {
+    .controller('messageHeaderCtrl_old',
+    function (purchaseOrder, myMessage, $location, $log, $stateParams, $timeout, $scope, ionicLoading) {
         console.log(purchaseOrder);
         var params = $location.search();
         var messageId = $scope.messageId = params.key;
@@ -68,7 +68,65 @@ angular.module('myApp.controllers.messagesDetail', [])
         };
 
     })
+    .controller('messageHeaderCtrl',
+    function (myTask, ionicLoading, purchaseOrder, $ionicPopup, $timeout, $scope) {
 
+        ionicLoading.load('Loading');
+        $scope.$watch('data.lock', function (newVal) {
+            console.log(newVal);
+            if(newVal){
+                $scope.data.approveButtonText='SEND OUT';
+            }else{
+                $scope.data.approveButtonText='Approve';
+            }
+        });
+        purchaseOrder.$bindTo($scope, "data").then(function () {
+            $scope.data.read=true;
+            ionicLoading.unload();
+            $scope.component = purchaseOrder.$ref().parent().parent().parent().parent().key();
+            $scope.ServerUserID = purchaseOrder.$ref().parent().parent().parent().key();
+            $scope.PO_REL_CODE = purchaseOrder.$ref().parent().parent().key().substr(3);
+            $scope.PURCHASEORDER = purchaseOrder.$ref().key();
+            if($scope.data.lock){
+                $scope.data.approveButtonText='SEND OUT';
+            }else{
+                $scope.data.approveButtonText='Approve';
+            }
+
+            //E0001->E0002
+            myTask.getInputP('E0002').$loaded().then(
+                function (data) {
+                    inputParas = data.$value;
+                    inputParas = inputParas.replace('$P01$', $scope.PO_REL_CODE);//PO_REL_CODE
+                    //TODO replace P02 twice , in the furture use replace-all function
+                    inputParas = inputParas.replace('$P02$', $scope.PURCHASEORDER);//PURCHASEORDER
+                    inputParas = inputParas.replace('$P02$', $scope.PURCHASEORDER);//PURCHASEORDER
+                    inputParas = inputParas.replace('$P03$', $scope.ServerUserID);//ServerUserID
+                    $scope.inputParas =inputParas;
+                }
+            );
+            $scope.showConfirm = function () {
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'Purchase Order Approve',
+                    template: $scope.data.po_NUMBER,
+                    cancelText: ' ',
+                    cancelType: 'button icon ion-close button-assertive',
+                    okText: ' ',
+                    okType: 'button icon ion-checkmark-round button-balanced'
+                });
+                confirmPopup.then(function (res) {
+                    if (res) {
+                        myTask.createTask('E0002',$scope.ServerUserID,
+                            inputParas, $scope.PURCHASEORDER, 'Approve');
+                        $scope.data.lock = true;
+                        console.log('approve');
+                    } else {
+                        console.log('cancel');
+                    }
+                });
+            };
+        });
+    })
     .controller('messageItemCtrl',
     function (myMessage, $location, $timeout, $scope, ionicLoading) {
         ionicLoading.load();

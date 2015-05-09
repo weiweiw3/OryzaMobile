@@ -190,64 +190,41 @@ angular.module('myApp.services.myMessage', ['firebase', 'firebase.utils', 'fireb
         return myMessages;
     })
     .factory('purchaseOrderFactory',
-    function (currentUser, firebaseRef, $rootScope, syncArray, syncObject, $q) {
+    function (currentUser, $firebaseObject,firebaseRef, $rootScope, syncArray, syncObject, $q) {
         var purchaseOrderFactory = {};
-//        var purchaseOrderListRef;
 
-
-                purchaseOrderFactory.purchaseOrderArray = [];
-//        purchaseOrderFactory.purchaseOrderListAdd= function(){
-////            var purchaseOrders =new Array();
-//             currentUser.getUser().then(function(user){
-//                purchaseOrderListRef = firebaseRef(['Event',xx,user,'02_PU/PO_HEADERS'])
-//                    .orderByKey().startAt(oo)
-//                    .limitToFirst(3).on("child_added", function(snapshot) {
-//                        purchaseOrderFactory.purchaseOrderArray.push(snapshot.val());
-////                        purchaseOrderFactory.purchaseOrderArray[snapshot.key()]=snapshot.val();
-//                    });
-//            });
-//            return $q.all(purchaseOrderFactory.purchaseOrderListAdd);
-//        };
-        purchaseOrderFactory.add = function (xx) {
+        purchaseOrderFactory.purchaseOrderArray = [];
+        purchaseOrderFactory.purchaseOrdersadd = function (len) {
             var promises = [];
             var deffered = $q.defer();
             purchaseOrderFactory.purchaseOrderArray = [];
-            currentUser.getUser().then(function (user) {
-                purchaseOrderListRef = firebaseRef(['Event', purchaseOrderFactory.component, user,
-                purchaseOrderFactory.rel_grp, 'PO_HEADERS'])
+
+            purchaseOrderFactory.purchaseOrdersHeaderRef
 //                    .orderByKey().startAt(xx)
-                    .limitToFirst(xx).on("child_added", function (snapshot) {
-                        purchaseOrderFactory.purchaseOrderArray.push(snapshot.val());
-                        deffered.resolve(snapshot.val());
-                    });
-            });
+                .limitToFirst(len).on("child_added", function (snapshot) {
+                    purchaseOrderFactory.purchaseOrderArray.push(snapshot.val());
+                    deffered.resolve(snapshot.val());
+                });
+
             promises.push(deffered.promise);
             return $q.all(promises);
         };
-        purchaseOrderFactory.refresh = function () {
-            var promises = [];
-            var deffered = $q.defer();
-            purchaseOrderFactory.purchaseOrderArray = [];
-            currentUser.getUser().then(function (user) {
-                purchaseOrderListRef = firebaseRef(['Event', purchaseOrderFactory.component, user,
-                    purchaseOrderFactory.rel_grp, 'PO_HEADERS'])
-//                    .orderByKey().startAt(xx)
-                    .limitToFirst(3).on("child_added", function (snapshot) {
-                        purchaseOrderFactory.purchaseOrderArray.push(snapshot.val());
-                        deffered.resolve(snapshot.val());
-                    });
-            });
-            promises.push(deffered.promise);
-            return $q.all(promises);
+        purchaseOrderFactory.purchaseOrder = function (purchaseOrderID) {
+            purchaseOrderFactory.purchaseOrderHeaderRefStr =
+            purchaseOrderFactory.purchaseOrdersHeaderRefStr;
+            purchaseOrderFactory.purchaseOrderHeaderRefStr.push(purchaseOrderID);
+            var ref= firebaseRef(purchaseOrderFactory.purchaseOrderHeaderRefStr);
+            return $firebaseObject(ref);
         };
-        purchaseOrderFactory.ready = function (component, rel_grp) {
+        purchaseOrderFactory.purchaseOrdersinit = function (component, rel_grp) {
             var promises = [];
             var deffered = $q.defer();
-            purchaseOrderFactory.component=component;
-            purchaseOrderFactory.rel_grp=rel_grp;
             purchaseOrderFactory.purchaseOrderArray = [];
             currentUser.getUser().then(function (user) {
-                purchaseOrderListRef = firebaseRef(['Event', component, user, rel_grp, 'PO_HEADERS'])
+                purchaseOrderFactory.purchaseOrdersHeaderRefStr = ['Event', component, user,
+                    rel_grp, 'PO_HEADERS'];
+                purchaseOrderFactory.purchaseOrdersHeaderRef = firebaseRef(purchaseOrderFactory.purchaseOrdersHeaderRefStr);
+                purchaseOrderFactory.purchaseOrdersHeaderRef
                     .limitToFirst(3).on("child_added", function (snapshot) {
                         purchaseOrderFactory.purchaseOrderArray.push(snapshot.val());
                         deffered.resolve(snapshot.val());

@@ -9,12 +9,7 @@ angular.module('myApp.controllers.messagesIndex', [])
 //                return purchaseOrderFactory.purchaseOrderArray
 //            }
 //        );
-        purchaseOrderFactory.ready('E0001','02_PU')
-            .then(function () {
-//                                ionicLoading.unload();
-                return purchaseOrderFactory.purchaseOrderArray
-            }
-        );
+
 
         var ctrlName = 'messagesCtrl';
         var ref= firebaseRef(['users','simplelogin:41/messages/E0001/header']);

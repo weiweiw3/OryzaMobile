@@ -75,13 +75,13 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin' ])
                 }
             })
             .state('purchaseOrders', {
-                url: '/:index?rel_grp',
+                url: '/purchaseOrders/:index?rel_grp',
                 templateUrl: 'templates/purchase-order-list.html',
                 controller: 'purchaseOrdersCtrl',
                 resolve: {
-                    purchaseOrders: function (ionicLoading,$stateParams, purchaseOrderFactory) {
+                    purchaseOrders: function (ionicLoading, $stateParams, purchaseOrderFactory) {
                         ionicLoading.load('Loading');
-                        return purchaseOrderFactory.ready($stateParams.index,$stateParams.rel_grp)
+                        return purchaseOrderFactory.purchaseOrdersinit($stateParams.index, $stateParams.rel_grp)
                             .then(function () {
                                 ionicLoading.unload();
                                 return purchaseOrderFactory.purchaseOrderArray
@@ -91,13 +91,14 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin' ])
                 }
             })
             .state('purchaseOrder', {
-                url: '/purchaseOrders/:index',
+                url: '/purchaseOrder/:index',
                 templateUrl: 'templates/purchase-order-index.html',
                 controller: 'messageHeaderCtrl',
                 resolve: {
-                    purchaseOrder: function ($stateParams, myMessage) {
-                        return myMessage.purchaseOrderindexObject($stateParams.index).$loaded().then(function () {
-                                return myMessage.purchaseOrderindexObject($stateParams.index)
+                    purchaseOrder: function ($stateParams, purchaseOrderFactory) {
+                        return purchaseOrderFactory.purchaseOrder($stateParams.index).$loaded().then(function (data) {
+                                console.log(data);
+                                return data
                             }
                         )
                     }

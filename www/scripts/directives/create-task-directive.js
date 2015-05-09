@@ -8,9 +8,7 @@ angular.module('myApp.directives.createTask', [])
         return {
             restrict: "E",
             scope: {
-                releaseGroup: "=",
                 message: "="// Use @ for One Way Text Binding;Use = for Two Way Binding;Use & to Execute Functions in the Parent Scope
-
             },
             controller: function ($scope) {
                 $scope.btnText = '';
@@ -23,7 +21,7 @@ angular.module('myApp.directives.createTask', [])
                 var componentId = 'E0002';
                 var inputParas = '';
                 var P01, P02, P03;
-
+                $scope.releaseGroup = '02_PU';
                 ionicLoading.load();
                 $scope.inputPObj = myTask.getInputP(componentId);
                 $scope.inputPObj.$loaded().then(
@@ -49,10 +47,7 @@ angular.module('myApp.directives.createTask', [])
                     P01 = $scope.releaseGroup.substr(3);
                     P02 = newVal.id;
                     P03 = newVal.serverUserid;
-
                     myMessage.markStatus($scope.componentId, $scope.messageId, 'lock');
-
-
                 });
                 $scope.$on('lock.update', function (event) {
                     $scope.lock = myMessage.getStatus($scope.componentId, $scope.messageId, 'lock');
@@ -76,21 +71,17 @@ angular.module('myApp.directives.createTask', [])
                 $scope.click = function () {
                     $scope.btnText = 'processing...';
                     ionicLoading.load();
-
                     myTask.createTask(componentId,
-                        inputParas, $scope.message.id, $scope.clickEvent, buildParms());
+                        inputParas, $scope.message.id, 'Approve', buildParms());
                 };
-
 
                 function buildParms() {
                     return {
-
                         callback: function (err) {
                             if (err == null) {
                                 ionicLoading.load();
                                 myMessage.markStatus($scope.componentId, $scope.messageId, 'lock', true);
                             }
-
                             if (err) {
                                 $scope.err = err;
                             }

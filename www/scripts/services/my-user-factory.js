@@ -15,8 +15,7 @@ angular.module('myApp.services.myUser',
                     ;
             },
             getServerUser: function () {
-                return syncObject(['users', currentUser, 'setting/mapping/ServerUser'])
-                    ;
+                return syncObject(['users', currentUser, 'setting/mapping/ServerUser']);
             },
             getSAPSys: function(){
                 return syncArray([SAPSystemRefStr]);
