@@ -91,7 +91,8 @@ angular.module('myApp.controllers.messagesInOneComponent', [])
 //        };
     })
     .controller('purchaseOrdersCtrl', function
-        (purchaseOrders, purchaseOrderFactory, $state, myComponent, myMessage, $location, $timeout, $scope, ionicLoading) {
+        (purchaseOrders, $firebaseArray,purchaseOrderFactory,
+         $state, myComponent, myMessage, $location, $timeout, $scope, ionicLoading) {
 
         $scope.$state = $state;
 
@@ -116,5 +117,20 @@ angular.module('myApp.controllers.messagesInOneComponent', [])
             $scope.loadMore();
         });
 
-
+//        // create a connection to Firebase
+//        var baseRef = new Firebase('https://40288b8147cd16ce0147cd236df20000.firebaseio.com/Event/E0002/100001');
+//        // create a scrollable reference
+//        var scrollRef = new Firebase.util.Scroll( baseRef,' ');
+//        console.log($firebaseArray(scrollRef).$ref().toString());
+//        // create a synchronized array on scope
+//        $scope.items = $firebaseArray(scrollRef);
+//        // load the first three contacts
+//        scrollRef.scroll.next(3);
+//
+//        // This function is called whenever the user reaches the bottom
+//        $scope.loadMore = function() {
+//            // load the next contact
+//            scrollRef.scroll.next(1);
+//            $scope.$broadcast('scroll.infiniteScrollComplete');
+//        };
     });

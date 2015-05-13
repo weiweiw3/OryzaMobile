@@ -10,10 +10,12 @@ var dependencyModules = [
     'ionic.service.deploy',
     'ionic.service.analytics',
     'ngMessages',
+    'elasticsearch',
+    'LocalStorageModule',
 //    'ui.router',
-//  'elasticsearch',
     'angular-momentjs'];
 var myAppComponents = [
+
     'myApp.routes',
 //  'myApp.animate',
     'myApp.config',
@@ -24,11 +26,10 @@ var myAppComponents = [
     'myApp.directives.createTask',
     'myApp.controllers.setting',
     'myApp.controllers.login',
-    'myApp.controllers.SAPUserValidation',
     'myApp.controllers.contacts',
     'myApp.controllers.chatRoom',
     'myApp.controller.ionic',
-    'myApp.controllers.messagesIndex',
+    'myApp.home',
     'myApp.controllers.messagesInOneComponent',
     'myApp.controllers.messagesDetail',
     'myApp.controllers.material',
@@ -39,13 +40,32 @@ var myAppComponents = [
     'myApp.services.myMessage',
     'myApp.services.myTask',
     'myApp.services.myUser',
-    'ionic.utils'
+    'ionic.utils',
+    'myApp.login',
+    'firebase.auth',
+    'myApp.security',
+    'myApp.purchaseOrder',
+    'myApp.purchaseOrderList',
+    'myApp.purchaseOrderItems',
+    'myApp.search',
+    'myApp.sapValidation'
 ];
 
 // Declare app level module which depends on filters, and services
-var myApp = angular.module('starter', dependencyModules.concat(myAppComponents));
+angular.module('myApp',
+    dependencyModules.concat(myAppComponents))
 
-myApp
+    .run(['$rootScope', 'Auth', function($rootScope, Auth) {
+        // track status of authentication
+        Auth.$onAuth(function(user) {
+            $rootScope.loggedIn = !!user;
+        });
+    }])
+    .config(function (localStorageServiceProvider) {
+        localStorageServiceProvider
+            .setPrefix('myApp')
+            .setNotify(true, true);
+    })
     .config(function ($ionicConfigProvider) {
         $ionicConfigProvider.views.maxCache(5);
         //$ionicConfigProvider.platform.android.views.maxCache(5);
@@ -85,7 +105,8 @@ myApp
 
 
 // do all the things ionic needs to get going
-    .run(function ($ionicPlatform, $rootScope, FIREBASE_URL, $firebaseAuth, $firebase, $window, $location, $ionicLoading) {
+    .run(function ($ionicPlatform, $rootScope, FIREBASE_URL,
+                   $firebaseAuth, $firebase, $window, $location, $ionicLoading) {
 
         $ionicPlatform.ready(function (simpleLogin) {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -97,24 +118,6 @@ myApp
                 StatusBar.styleDefault();
             }
 
-            $rootScope.userEmail = null;
-            $rootScope.baseUrl = FIREBASE_URL;
-            var authRef = new Firebase($rootScope.baseUrl);
-            $rootScope.auth = $firebaseAuth(authRef);
-            $rootScope.auth.$onAuth(function (authData) {
-                if (authData) {
-                    isAuthenticated = true;
-                    $rootScope.authData = authData;
-                    console.log("Logged in email ", authData.password.email);
-                    console.log("Logged in as:", authData.uid);
-                } else {
-                    isAuthenticated = false;
-                    console.log("Logged out");
-                    $ionicLoading.hide();
-                    $location.path('/login');
-                }
-            });
-
             $rootScope.notify = function (text) {
                 $rootScope.show(text);
                 $window.setTimeout(function () {
@@ -122,28 +125,16 @@ myApp
                 }, 1999);
             };
 
-            $rootScope.$on("$stateChangeError",
-                function (event, toState, toParams, fromState, fromParams, error) {
-
-                    // We can catch the error thrown when the $requireAuth promise is rejected
-                    // and redirect the user back to the home page
-                    if (error === "AUTH_REQUIRED") {
-                        $location.path("/login");
-                    }
-                });
         });
 
-    });
+    })
 
 /** ROOT SCOPE AND UTILS *************************/
-myApp.run(['$rootScope', '$location', '$log', function ($rootScope, $location, $log) {
+.run(['$rootScope', '$location', '$log', function ($rootScope, $location, $log) {
     $rootScope.$log = $log;
-
     $rootScope.keypress = function (key, $event) {
         $rootScope.$broadcast('keypress', key, $event);
     };
-
-
 }]);
 
 

@@ -7,12 +7,16 @@
     "gulp-sass": "^1.3.3",
     "gulp-concat": "^2.2.0",
     "gulp-minify-css": "^0.3.0",
-    "gulp-rename": "^1.2.0"
+    "gulp-rename": "^1.2.0",
+    "replace": "~0.3.0"
   },
   "devDependencies": {
     "bower": "^1.3.3",
     "gulp-util": "^2.2.14",
     "shelljs": "^0.3.0"
+  },
+  "scripts": {
+    "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /\\/\\/@@NG_LOADER_START@@[\\s\\S]*\\/\\/@@NG_LOADER_END@@/, '//@@NG_LOADER_START@@\\n' + cat('www/lib/angular-loader/angular-loader.min.js') + '\\n//@@NG_LOADER_END@@', 'www/index-async.html');\""
   },
   "cordovaPlugins": [
     "org.apache.cordova.device",

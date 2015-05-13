@@ -1,7 +1,34 @@
 angular.module('myApp.config', [])
     .constant('version', '1.0')
+    .constant('ApiEndpoint', {
+        url: 'http://localhost:8100/data-app/rs/task'
 
+    })
+//    .constant('ApiEndpoint', {
+//        url: 'http://localhost:8100/data-app/rs/task/searchData'
+//
+//    })
+//    .constant('ApiEndpoint', {
+//   url: 'http://localhost:3000/api/endpoint'
+//})
     .constant('COMPANY', '40288b8147cd16ce0147cd236df20000')
+
+    // where to redirect users if they need to authenticate (see security.js)
+    .constant('loginRedirectPath', '/login')
+
+    // your Firebase data URL goes here, no trailing slash
+    .constant('FBURL', 'https://40288b8147cd16ce0147cd236df20000.firebaseio.com')
+
+    // double check that the app has been configured before running it and blowing up space and time
+    .run(['FBURL', '$timeout', function(FBURL, $timeout) {
+        if( FBURL.match('//INSTANCE.firebaseio.com') ) {
+            angular.element(document.body).html('<h1>Please configure app/config.js before running!</h1>');
+            $timeout(function() {
+                angular.element(document.body).removeClass('hide');
+            }, 250);
+        }
+    }])
+
     // end this with a trailing slash
     .constant('FIREBASE_URL', 'https://40288b8147cd16ce0147cd236df20000.firebaseio.com/')
 

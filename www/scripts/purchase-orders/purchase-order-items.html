@@ -1,0 +1,24 @@
+<ion-view view-title="PurchaseOrder {{PURCHASEORDER}}" hide-back-button="true">
+    <ion-content has-header="true" has-tabs="true" padding="true">
+        <ion-refresher on-refresh="refresh()"></ion-refresher>
+        <ion-list>
+            <ion-item class="item item-icon-right"
+                        ng-repeat="message in messages ">
+                    <h2>{{ message.po_ITEM}} {{ message.pur_MAT}}</h2>
+                    <p>{{ message.net_PRICE}} {{ message.disp_QUAN}}</p>
+                    {{ message.short_TEXT}}
+                    <i class="icon ion-ios-arrow-right muted"></i>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll
+                on-infinite="loadMore()"
+                icon="ion-loading-c"
+                distance="1%">
+        </ion-infinite-scroll>
+    </ion-content>
+</ion-view>
+
+
+
+
+

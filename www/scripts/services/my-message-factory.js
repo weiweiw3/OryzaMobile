@@ -86,9 +86,9 @@ angular.module('myApp.services.myMessage', ['firebase', 'firebase.utils', 'fireb
             return myMessages;
         }])
     .factory('myMessage',
-    function (currentUser, firebaseRef, $rootScope, syncArray, syncObject, simpleLogin, $q) {
-
-        var currentUser1 = simpleLogin.user.uid;
+    function ($rootScope,currentUser, firebaseRef,  syncArray, syncObject, simpleLogin, $q) {
+        var currentUser1 = $rootScope.authData.uid;
+//        var currentUser1 = simpleLogin.user.uid;
         var purchaseOrderListRef;
         var statusObj;
         var purchaseOrderArray = new Array();
@@ -211,19 +211,23 @@ angular.module('myApp.services.myMessage', ['firebase', 'firebase.utils', 'fireb
         };
         purchaseOrderFactory.purchaseOrder = function (purchaseOrderID) {
             purchaseOrderFactory.purchaseOrderHeaderRefStr =
-            purchaseOrderFactory.purchaseOrdersHeaderRefStr;
+                purchaseOrderFactory.purchaseOrdersHeaderRefStr;
             purchaseOrderFactory.purchaseOrderHeaderRefStr.push(purchaseOrderID);
             var ref= firebaseRef(purchaseOrderFactory.purchaseOrderHeaderRefStr);
             return $firebaseObject(ref);
         };
         purchaseOrderFactory.purchaseOrdersinit = function (component, rel_grp) {
+            //for E0001
             var promises = [];
             var deffered = $q.defer();
             purchaseOrderFactory.purchaseOrderArray = [];
             currentUser.getUser().then(function (user) {
+
                 purchaseOrderFactory.purchaseOrdersHeaderRefStr = ['Event', component, user,
-                    rel_grp, 'PO_HEADERS'];
-                purchaseOrderFactory.purchaseOrdersHeaderRef = firebaseRef(purchaseOrderFactory.purchaseOrdersHeaderRefStr);
+                        rel_grp, 'PO_HEADERS'];
+
+                purchaseOrderFactory.purchaseOrdersHeaderRef =
+                    firebaseRef(purchaseOrderFactory.purchaseOrdersHeaderRefStr);
                 purchaseOrderFactory.purchaseOrdersHeaderRef
                     .limitToFirst(3).on("child_added", function (snapshot) {
                         purchaseOrderFactory.purchaseOrderArray.push(snapshot.val());

@@ -2,27 +2,20 @@
   This template gets placed in the Setting tab's <ion-nav-view> directive.
   It was wired up in the app config (app.js) 
  -->
-<ion-view view-title="Setting1">
+<ion-view view-title="Setting">
     <ion-content>
-
         <ion-list>
-            <ion-item type="item-text-wrap" ng-controller="setting.profileCtrl">
+            <ion-item type="item-text-wrap" >
             {{ authData.password.email}}
             </ion-item>
-
-            <ion-item type="item-text-wrap" ui-sref="tab.sap-user-validation"> >
+            <ion-item type="item-text-wrap" ui-sref="SAPUserValidation">
                 SAP User validation
             </ion-item>
-
             <ion-item type="item-text-wrap" ng-controller="LogoutCtrl">
                 <button class="button button-assertive button-block" ng-click="tryLogout()">
                     logout
                 </button>
-
             </ion-item>
-
         </ion-list>
-
     </ion-content>
-
 </ion-view>

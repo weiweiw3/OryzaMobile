@@ -7,24 +7,9 @@
 angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin' ])
 
     .config(
-    function ($stateProvider, $urlRouterProvider) {
+    function ($stateProvider) {
 
         $stateProvider
-            .state('login', {            // setup an login page
-                url: "/login",
-                templateUrl: "templates/login.html",
-                controller: 'loginCtrl',
-                resolve: {
-                    // controller will not be loaded until $waitForAuth resolves
-                    // Auth refers to our $firebaseAuth wrapper in the example above
-                    "currentAuth": ["simpleLogin",
-                        function (simpleLogin) {
-                            // $waitForAuth returns a promise so the resolve waits for it to complete
-                            return simpleLogin.auth.$waitForAuth();
-                        }]
-                }
-            })
-
             .state('tab', {            // setup an abstract state for the tabs directive
                 url: "/tab",
                 abstract: true,
@@ -41,163 +26,28 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin' ])
                 }
             })
 
-            .state('tab.messages', {
-                url: '/messages',
-                views: {
-                    'messages-tab': {
-                        templateUrl: 'templates/messages-index.html',
-                        controller: 'messagesIndexCtrl'
-                    }},
-                resolve: {
-                    // controller will not be loaded until $requireAuth resolves
-                    // Auth refers to our $firebaseAuth wrapper in the example above
-                    "currentAuth": ["simpleLogin",
-                        function (simpleLogin) {
-                            // $requireAuth returns a promise so the resolve waits for it to complete
-                            // If the promise is rejected, it will throw a $stateChangeError (see above)
-                            return simpleLogin.auth.$requireAuth();
-                        }]
-                }
-            })
-
-            .state('component', {
-                url: '/component/:index',
-                templateUrl: 'templates/message-list.html',
-                controller: 'messagesInOneComponentCtrl',
-                resolve: {
-                    component: function ($stateParams, myComponent) {
-                        return myComponent.array.$loaded().then(function () {
-
-                                return myComponent.getComponent($stateParams.index)
-                            }
-                        )
-                    }
-                }
-            })
-            .state('purchaseOrders', {
-                url: '/purchaseOrders/:index?rel_grp',
-                templateUrl: 'templates/purchase-order-list.html',
-                controller: 'purchaseOrdersCtrl',
-                resolve: {
-                    purchaseOrders: function (ionicLoading, $stateParams, purchaseOrderFactory) {
-                        ionicLoading.load('Loading');
-                        return purchaseOrderFactory.purchaseOrdersinit($stateParams.index, $stateParams.rel_grp)
-                            .then(function () {
-                                ionicLoading.unload();
-                                return purchaseOrderFactory.purchaseOrderArray
-                            }
-                        )
-                    }
-                }
-            })
-            .state('purchaseOrder', {
-                url: '/purchaseOrder/:index',
-                templateUrl: 'templates/purchase-order-index.html',
-                controller: 'messageHeaderCtrl',
-                resolve: {
-                    purchaseOrder: function ($stateParams, purchaseOrderFactory) {
-                        return purchaseOrderFactory.purchaseOrder($stateParams.index).$loaded().then(function (data) {
-                                console.log(data);
-                                return data
-                            }
-                        )
-                    }
-                }
-            })
-            .state('message', {
-                url: '/message',
-                templateUrl: 'templates/message.html',
-                controller: 'messageHeaderCtrl'
-
-            })
-
-            .state('material', {
-                url: '/material',
-                templateUrl: 'templates/material.html',
-                controller: 'materialCtrl'
-            })
-            .state('components-management', {
-                url: '/components-management',
-                templateUrl: 'templates/components-management.html'
-
-            })
-
             // the setting tab has its own child nav-view and history
             .state('tab.setting', {
                 url: '/setting',
                 views: {
                     'setting-tab': {
-                        templateUrl: 'templates/setting.html'
+                        templateUrl: 'scripts/setting/setting.html'
                     }
                 }
-            })
-            .state('tab.profile-detail', {
-                url: '/myprofile',
-                views: {
-                    'setting-tab': {
-                        templateUrl: 'templates/profile-detail.html'
-                    }
-                }
-            })
-            .state('tab.sap-user-validation', {
-                url: '/sap-user-validation',
-                views: {
-                    'setting-tab': {
-                        controller: 'SAPUserValidationCtrl',
-                        templateUrl: 'templates/sap-user-validation.html'
-                    }
-                }
-            })
-        ;
+            });
 
         // if none of the above states are matched, use this as the fallback
         //isAuthenticated is set below in the .run() command
-        $urlRouterProvider.otherwise(
-            function () {
-                if (isAuthenticated) {
-                    console.log('isAuthenticated', isAuthenticated);
-                    return '/tab/setting'
-                } else {
-                    console.log('isAuthenticated', isAuthenticated);
-                    return '/login'
-                }
-            }
-        );
+//        $urlRouterProvider.otherwise(
+//            function () {
+//                if (isAuthenticated) {
+//                    console.log('isAuthenticated', isAuthenticated);
+//                    return '/tab/setting'
+//                } else {
+//                    console.log('isAuthenticated', isAuthenticated);
+//                    return '/login'
+//                }
+//            }
+//        );
     }
 );
-///**
-// * Apply some route security. Any route's resolve method can reject the promise with
-// * { authRequired: true } to force a redirect. This method enforces that and also watches
-// * for changes in auth status which might require us to navigate away from a path
-// * that we can no longer view.
-// */
-//    .run(['$rootScope', '$location', 'simpleLogin', 'ROUTES', 'loginRedirectPath',
-//        function ($rootScope, $location, simpleLogin, ROUTES, loginRedirectPath) {
-//            // watch for login status changes and redirect if appropriate
-//            simpleLogin.watch(check, $rootScope);
-//
-//            // some of our routes may reject resolve promises with the special {authRequired: true} error
-//            // this redirects to the login page whenever that is encountered
-//            $rootScope.$on("$routeChangeError", function (e, next, prev, err) {
-//                if (angular.isObject(err) && err.authRequired) {
-//                    $location.path(loginRedirectPath);
-//                }
-//            });
-//
-//            function check(user) {
-//                // used by the changeEmail functionality so the user
-//                // isn't redirected to the login screen while we switch
-//                // out the accounts (see changeEmail.js)
-//                if ($rootScope.authChangeInProgress) {
-//                    return;
-//                }
-//                if (!user && authRequired($location.path())) {
-//                    $location.path(loginRedirectPath);
-//                }
-//            }
-//
-//            function authRequired(path) {
-//                return ROUTES.hasOwnProperty(path) && ROUTES[path].authRequired;
-//            }
-//        }
-//    ]);

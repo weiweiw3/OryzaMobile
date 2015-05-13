@@ -2,15 +2,18 @@
   "name": "OryzaMobile",
   "private": "true",
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.0.0-rc.4",
-      "ionic-material": "0.0.1",
-      "angularfire": null,
-      "angular-route": null,
-      "underscore": "~1.6.0",
-      "moment": "~2.7.0",
-      "angular-momentjs": null,
-      "elasticsearch": "~2.4.0",
-      "angular-mocks": "~1.2.17",
-      "angular-scenario": "~1.2.17"
+    "ionic": "driftyco/ionic-bower#1.0.0-rc.5",
+    "elasticsearch": "~4.0.2",
+    "angularfire": null,
+    "angular-route": null,
+    "angular-loader": "~1.3.15",
+    "underscore": "~1.6.0",
+    "moment": "~2.7.0",
+    "angular-momentjs": null,
+    "angular-mocks": "~1.2.17",
+    "angular-scenario": "~1.2.17"
+  },
+  "dependencies": {
+    "angular-local-storage": "~0.2.0"
   }
 }
