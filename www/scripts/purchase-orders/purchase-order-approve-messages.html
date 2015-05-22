@@ -3,7 +3,7 @@
         <ion-refresher on-refresh="refresh()"></ion-refresher>
         <ion-list>
             <ion-item ng-repeat="message in messages  "
-                      ui-sref="purchaseOrder({ref:messagesRef, index: message.po_NUMBER})">
+                      ui-sref="purchaseOrder({ref:message.TASK_INFO.fb_FROM_PATH, index:message.TASK_INFO.purchaseorder})">
                 <!--">
     ui-sref="purchaseOrder({index: $index})">
                           -->
@@ -13,10 +13,10 @@
                     </strong></div>
                     {{ message.$ref().toString()}}
                     {{ message.TASK_INFO.message}}
+                    task_status:{{message.TASK_INFO.task_status}}
                     <div class="card-footer text-right">
-                         {{ message.TASK_INFO.task_status}}
-                        <i ng-show="message.TASK_INFO.task_status==3" class="icon ion-checkmark-circled positive"></i>
-                        <i ng-show="message.TASK_INFO.task_status==9" class="icon ion-close-circled assertive"></i>
+                        <i ng-show="message.TASK_INFO.task_status==3" class="icon ion-checkmark-circled positive">successful</i>
+                        <i ng-show="message.TASK_INFO.task_status==9" class="icon ion-close-circled assertive">error</i>
                         <div class="pull-left">
                             <i class="icon ion-clock"></i> <span am-time-ago="message.TASK_INFO.endTime"></span>
                         </div>

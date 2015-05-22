@@ -5,25 +5,16 @@
         <h1 class="title">SAP User Validation</h1>
     </div>
     <ion-content has-header="true" has-tabs="true" padding="true">
-        <div class="list">
-            <div class="item item-divider">
-                SAP_System
-            </div>
-            <a ng-repeat="data in SAPSysArray" class="item">
-                {{ data.$id+': '+data.$value }}
-            </a>
-        </div>
+
         <form name="validation" ng-submit="tryValidation()">
             <div class="list list-inset">
+
                 <label class="item item-input">
-                    <input type="text" placeholder="Username" name="username" ng-model="model.user" ng-required="true"
-                           ng-minlength="4"
-                           ng-maxlength="10">
+                    <input ng-disabled="!ischeck" type="text" placeholder="Username" name="username" ng-model="model.user" >
                 </label>
 
                 <label class="item item-input">
-                    <input type="password" placeholder="Password" ng-model="model.password" ng-required="true"
-                           ng-minlength="1">
+                    <input ng-disabled="!ischeck" type="password" placeholder="Password" ng-model="model.password" >
                 </label>
 
                 <label class="item item-input item-select">
@@ -35,6 +26,11 @@
                             ng-options="language.$id as language.$value for language in languages">
                     </select>
                 </label>
+                <li class="item item-checkbox">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-checked="false" ng-model="ischeck">
+                    </label>edit
+                </li>
             </div>
             <button ng-show="validation.username.$error.required"
                     class="button button-clear button-assertive">
@@ -57,7 +53,14 @@
                 <span class="item-note" am-time-ago="message.last.date"></span>
             </div>
         </form>
-
+        <div class="list">
+            <div class="item item-divider">
+                SAP_System
+            </div>
+            <a ng-repeat="data in SAPSysArray" class="item">
+                {{ data.$id+': '+data.$value }}
+            </a>
+        </div>
     </ion-content>
 </ion-view>
 

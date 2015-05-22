@@ -3,7 +3,6 @@ angular.module('myApp.controllers.chatRoom', [])
     .controller('RoomListCtrl', function ($scope, $timeout, $firebase, $location) {
         var ref = new Firebase('https://miller1.firebaseio.com/opened_rooms');
         $scope.rooms = $firebase(ref);
-
         $scope.rightButtons = [
             {
                 type: 'button-energized',

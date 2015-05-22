@@ -4,7 +4,7 @@
 angular.module('myApp.services.myTask',
     ['firebase', 'firebase.utils', 'firebase.simpleLogin'])
     .factory('myTask',
-    function (firebaseRef, $rootScope, $q, syncArray, syncObject, $timeout, simpleLogin, myMessage, myUser) {
+    function (firebaseRef, $rootScope, $q, syncArray, syncObject, $timeout, simpleLogin) {
         var currentUser = simpleLogin.user.uid;
         var date = Date.now();
         var messageLog = {

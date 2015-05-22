@@ -32,7 +32,9 @@
     app.controller('purchaseOrdersApproveMessagesCtrl',
         function (ionicLoading,purchaseOrdersApproveMessages, $firebaseArray, $state,
                   $location, $timeout, $scope) {
+            console.log('x');
             // create a scrollable reference
+
             var scrollRef = new Firebase.util.Scroll(purchaseOrdersApproveMessages, 'key()');
             // create a synchronized array on scope
             $scope.messages = $firebaseArray(scrollRef);
@@ -90,6 +92,7 @@
                 resolve: {
                     purchaseOrdersApproveMessages: function ($firebaseObject,fbutil,ionicLoading, $stateParams) {
                         ionicLoading.load('Loading');
+                        console.log($stateParams.index);
                         var ref = fbutil.ref([$stateParams.index]);
                         return $firebaseObject(ref)
                             .$loaded().then(function(){

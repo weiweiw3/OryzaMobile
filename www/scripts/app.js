@@ -83,7 +83,7 @@ angular.module('myApp',
             // The write key your app will use for analytics
             api_write_key: '5f6e17f6815844344b1d843ab9c4c1513ce379a8fa0ab2f329311f2646411c786e6ad5fd08b138cc3135b90c676b1f414090a1f494d2e67b7ef5c721cd58af597a826f07c3aa17b7f77a207bf852250b80cba251720bcc13b9a08581e0ac7ee12b8326c7457db36a30e61e075dea915001e0ce559d8635c41c16777967e935f39996b6cc067e467eeaeba0744d1bc5e9'
             // The GCM project ID (project number) from your Google Developer Console (un-comment if used)
-            // gcm_id: '466583810362'
+
         });
     }])
     .run(function($rootScope, $state,$stateParams) {
