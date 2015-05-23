@@ -2,15 +2,13 @@ angular.module('myApp.config', [])
     .constant('version', '1.0')
     .constant('ApiEndpoint', {
         url: 'http://localhost:8100/data-app/rs/task'
-
     })
+
+//当切换到手机app时不用localhost来proxy
 //    .constant('ApiEndpoint', {
-//        url: 'http://localhost:8100/data-app/rs/task/searchData'
-//
-//    })
-//    .constant('ApiEndpoint', {
-//   url: 'http://localhost:3000/api/endpoint'
+//    url: 'http://114.215.185.243:8080/data-app/rs/task'
 //})
+
     .constant('COMPANY', '40288b8147cd16ce0147cd236df20000')
 
     // where to redirect users if they need to authenticate (see security.js)
