@@ -1,0 +1,52 @@
+<ion-view view-title="Search Customers" hide-back-button="true">
+    <ion-header-bar class="bar-dark">
+        <h1 class="title">Search</h1>
+    </ion-header-bar>
+    <!--
+    <ion-content>
+        <ion-autocomplete ng-model="model" items-method="callbackMethod(query)" />
+    <input ion-autocomplete type="text" readonly="readonly" class="ion-autocomplete" autocomplete="off" />
+    </ion-content>
+    -->
+    <!--
+    <div id="search-bar">
+        <div class="item item-input-inset">
+            <label class="item-input-wrapper" id="search-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="text" placeholder="Search" ng-model="query" ng-change="search()">
+            </label>
+        </div>
+    </div>
+
+    <ion-content id="content" push-search>
+        <div id="photos" class="clearfix">
+            <div class="photo" ng-repeat="photo in photos.items">
+                <img ng-src="{{ photo.media.m }}">
+            </div>
+        </div>
+    </ion-content>
+    -->
+    <div id="search-bar">
+        <div class="item item-input-inset">
+            <label class="item-input-wrapper" id="search-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="search" placeholder="Search" ng-model="query" ng-change="search(query)" autocorrect="off">
+            </label>
+        </div>
+    </div>
+    <ion-content>
+        <ion-list>
+            <ion-item class="item-remove-animate item-icon-right" ng-repeat="result in results">
+                <h2 class="icon-left">{{result.title}}</h2>
+                <p>{{result.LAND1}}</p>{{result.KUNNR}}
+                <div class="icon-left ion-ios-home location_info">
+                    {{result.NAME1}}
+                    {{ result.TELF1 }}
+                </div>
+                <a ng-href="tel: {{result.KUNNR}}" class="button button-calm button-outline icon-left ion-ios-telephone ">{{result.phone_number}}</a>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
+
+
