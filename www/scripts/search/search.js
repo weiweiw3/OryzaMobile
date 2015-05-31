@@ -9,8 +9,9 @@
     app.factory('Api', function ($http, $q, ApiEndpoint) {
         var getApiData = function (customerID) {
             var q = $q.defer();
-            $http.get(ApiEndpoint.url +
-                '/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=e0015_KNA1&str_where=KUNNR=/' + customerID + '/')
+			var str = ApiEndpoint.url +               '/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=e0015_KNA1&str_where=KUNNR=/' + customerID + '/';
+            console.log(str);
+			$http.get(str)
                 .success(function (jsonObj) {
                     if (typeof jsonObj == 'object' && jsonObj instanceof Array) {
                         for (var i = 0; i < jsonObj.length; i++) {
@@ -143,6 +144,7 @@
                     angular.forEach(results, function (value, key) {
                         Api.getApiData(value.KUNNR)
                             .then(function (data) {
+							console.log(data);
                                 $scope.results[key].TELF1 = data[0].TELF1;
 //                                console.log(data[0].TELF1);
                             })

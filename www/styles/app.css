@@ -1,5 +1,7 @@
 /* Your app's CSS, go crazy, make it your own */
-
+.selectable{
+    -webkit-user-select: auto;
+}
 .ionic-logo {
   display: block;
   margin: 15px auto;

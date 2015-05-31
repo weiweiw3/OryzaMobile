@@ -9,12 +9,16 @@
 
             ionicLoading.load('Loading');
             $scope.$watch('data.lock', function (newVal) {
+                if (typeof $scope.data != "undefined"){
+                    if (newVal ) {
+                        $scope.data.approveButtonText = 'SEND OUT';
+                    } else {
+                        console.log($scope.data);
 
-                if (newVal) {
-                    $scope.data.approveButtonText = 'SEND OUT';
-                } else {
-                    $scope.data.approveButtonText = 'Approve';
+                        $scope.data.approveButtonText = 'Approve';
+                    }
                 }
+
             });
             purchaseOrder.$bindTo($scope, "data").then(function () {
                 $scope.data.read = true;

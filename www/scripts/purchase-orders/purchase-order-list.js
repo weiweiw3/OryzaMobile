@@ -30,11 +30,16 @@
             };
         });
     app.controller('purchaseOrdersApproveMessagesCtrl',
-        function (ionicLoading,purchaseOrdersApproveMessages, $firebaseArray, $state,
-                  $location, $timeout, $scope) {
-            console.log('x');
+        function (ionicLoading,purchaseOrdersApproveMessages, $firebaseArray, $state,fbutil,
+                  $location, $timeout, $scope,$q) {
             // create a scrollable reference
-
+            $scope.condition = function(ref) {
+                var deferred = $q.defer();
+                fbutil.ref([ref]).once('value', function (snap) {
+                    deferred.resolve(snap.val()===null);
+                });
+                return deferred.promise;
+            };
             var scrollRef = new Firebase.util.Scroll(purchaseOrdersApproveMessages, 'key()');
             // create a synchronized array on scope
             $scope.messages = $firebaseArray(scrollRef);
@@ -55,7 +60,38 @@
 //                }
                 $scope.$broadcast('scroll.infiniteScrollComplete');
             };
-        });
+        })
+        .directive('eatClickIf', ['$parse', '$rootScope',
+            function($parse, $rootScope) {
+                return {
+                    priority: 100,
+                    restrict: 'A',
+                    compile: function($element, attr) {
+                        var fn = $parse(attr.eatClickIf);
+                        return {
+                            pre: function link(scope, element) {
+                                var eventName = 'click';
+                                element.on(eventName, function(event) {
+                                    var callback = function() {
+                                        if (fn(scope, {$event: event})) {
+                                            event.stopImmediatePropagation();
+                                            event.preventDefault();
+                                            return false;
+                                        }
+                                    };
+                                    if ($rootScope.$$phase) {
+                                        scope.$evalAsync(callback);
+                                    } else {
+                                        scope.$apply(callback);
+                                    }
+                                });
+                            },
+                            post: function() {}
+                        }
+                    }
+                }
+            }
+        ]);
 //    app.factory('purchaseOrderListFactory',
 //        function (currentUser, $firebaseObject, fbutil, $q) {
 //            return {
