@@ -9,9 +9,9 @@
     app.factory('Api', function ($http, $q, ApiEndpoint) {
         var getApiData = function (customerID) {
             var q = $q.defer();
-            var str = ApiEndpoint.url + '/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=e0015_KNA1&str_where=KUNNR=/' + customerID + '/';
+//            var str = 'http://114.215.185.243:8080/data-app/rs/task/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=e0015_KNA1&str_where=KUNNR=/' + customerID + '/';
 
-//            var str = 'https://114.215.185.243/data-app/rs/task/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=task_message&str_where=1=1';
+            var str = 'http://114.215.185.243:8080/data-app/rs/task/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=task_message&str_where=id=/1001/';
             console.log(str);
             $http.get(str)
                 .success(function (jsonObj) {
