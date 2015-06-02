@@ -9,9 +9,11 @@
     app.factory('Api', function ($http, $q, ApiEndpoint) {
         var getApiData = function (customerID) {
             var q = $q.defer();
-			var str = ApiEndpoint.url +               '/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=e0015_KNA1&str_where=KUNNR=/' + customerID + '/';
+            var str = ApiEndpoint.url + '/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=e0015_KNA1&str_where=KUNNR=/' + customerID + '/';
+
+//            var str = 'https://114.215.185.243/data-app/rs/task/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=task_message&str_where=1=1';
             console.log(str);
-			$http.get(str)
+            $http.get(str)
                 .success(function (jsonObj) {
                     if (typeof jsonObj == 'object' && jsonObj instanceof Array) {
                         for (var i = 0; i < jsonObj.length; i++) {
@@ -36,6 +38,7 @@
             var client = elasticsearch({
 //                host: $location.host() + ":9200"
                 host: "https://a1b5amni:7smeg06ujbchru2l@apricot-2272737.us-east-1.bonsai.io/"
+//                host: "https://114.215.185.243:9200/jdbc/_search"
             });
             var search = function (term, offset) {
                 var deferred = $q.defer(), query, sort;
@@ -63,21 +66,21 @@
                     }
                 }
 
-                var position = $localstorage.get('position');
+//                var position = $localstorage.get('position');
 
-                if (position) {
-                    sort = [
-                        {
-                            "_geo_distance": {
-                                "location": position,
-                                "order": "asc",
-                                "unit": "km"
-                            }
-                        }
-                    ];
-                } else {
-                    sort = [];
-                }
+//                if (position) {
+//                    sort = [
+//                        {
+//                            "_geo_distance": {
+//                                "location": position,
+//                                "order": "asc",
+//                                "unit": "km"
+//                            }
+//                        }
+//                    ];
+//                } else {
+//                    sort = [];
+//                }
 
                 client.search({
                     "index": 'firebase',
@@ -144,7 +147,7 @@
                     angular.forEach(results, function (value, key) {
                         Api.getApiData(value.KUNNR)
                             .then(function (data) {
-							console.log(data);
+                                console.log(data);
                                 $scope.results[key].TELF1 = data[0].TELF1;
 //                                console.log(data[0].TELF1);
                             })

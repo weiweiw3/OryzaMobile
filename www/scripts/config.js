@@ -3,7 +3,9 @@ angular.module('myApp.config', [])
     .constant('ApiEndpoint', {
         url: 'http://localhost:8100/data-app/rs/task'
     })
-
+    .constant('SearchUrl', {
+        url: 'http://localhost:8100/search'
+    })
 //当切换到手机app时不用localhost来proxy
 //    .constant('ApiEndpoint', {
 //    url: 'http://114.215.185.243:8080/data-app/rs/task'

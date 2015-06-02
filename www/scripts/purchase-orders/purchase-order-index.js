@@ -81,7 +81,7 @@
                                 .then(function (data) {
                                     // promise fulfilled
                                     console.log('Success!', data);
-                                    //$scope.data.lock = true;
+
 //                                if (data.forecast==='good') {
 //                                    prepareFishingTrip();
 //                                } else {
@@ -92,6 +92,7 @@
 //                                prepareSundayRoastDinner();
                                 })
                                 .finally(function(){
+                                    $scope.data.lock = true;
                                     ionicLoading.unload();
                                 });
                             console.log('approve');

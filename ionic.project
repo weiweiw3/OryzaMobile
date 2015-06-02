@@ -1,6 +1,7 @@
 {
   "name": "OryzaMobile",
-  "app_id": "a04798c7",
+  "app_id": "a04798c7"
+  ,
   "proxies": [
     {
       "path": "/data-app/rs/task",
