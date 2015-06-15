@@ -20,19 +20,21 @@
      */
 
         // do all the things ionic needs to get going
-        .run(function ($rootScope, FIREBASE_URL, Auth, loginRedirectPath, $firebaseAuth, $firebase, $window, $location, $ionicLoading) {
+        .run(function ($rootScope, FIREBASE_URL, Auth, loginRedirectPath, $firebaseAuth, $firebase, $window, $location, ionicLoading,firebaseRef,$firebaseObject) {
 
 //            $rootScope.userEmail = null;
             Auth.$onAuth(function (authData) {
                 if (authData) {
 //                    isAuthenticated = true;
                     $rootScope.authData = authData;
+
+
                     console.log("Logged in email ", authData.password.email);
                     console.log("Logged in as:", authData.uid);
                 } else {
 //                    isAuthenticated = false;
                     console.log("Logged out");
-                    $ionicLoading.hide();
+                    ionicLoading.unload();
                     $location.path(loginRedirectPath);
                 }
             });

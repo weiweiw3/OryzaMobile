@@ -83,12 +83,11 @@ angular.module('firebase.simpleLogin', ['firebase', 'firebase.utils', 'changeEma
     }])
     .factory('currentUser',function($rootScope,firebaseRef,$firebaseObject){
 
-        var fbUser = $rootScope.authData.uid;
-
-        var ref=firebaseRef(['users',fbUser,'setting/mapping/ServerUser']);
         return {
-            user:$firebaseObject(ref).$value,
+            //user:$firebaseObject(ref).$value,
             getUser: function(){
+                var fbUser = $rootScope.authData.uid;
+                var ref=firebaseRef(['users',fbUser,'setting/mapping/ServerUser']);
                 return $firebaseObject(ref).$loaded().then(function (data) {
                     console.log(data.$value);
                     return data.$value;

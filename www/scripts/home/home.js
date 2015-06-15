@@ -1,31 +1,42 @@
 (function (angular) {
     "use strict";
 
-    var app = angular.module('myApp.home', [ 'ionic', 'firebase.simpleLogin',
+    var app = angular.module('myApp.home', ['ionic', 'firebase.simpleLogin',
         'firebase.utils', 'firebase']);
-    app.controller('homeCtrl', function (localStorageService,$q, $localstorage, fbutil, homeFactory, purchaseOrderFactory,
-                                         currentUser, simpleLogin, firebaseRef, $scope, $state, $log, ionicLoading) {
+    app.controller('homeCtrl', function (localStorageService, $q, $localstorage, fbutil, homeFactory, purchaseOrderFactory,
+                                         simpleLogin, firebaseRef, $scope, $state, $log, ionicLoading) {
 
 //        ionicLoading.load();
-        var E0001 = localStorageService.get('E0001');
-        if (typeof E0001 !== 'undefined' && E0001 !== null) {
-            console.log(E0001);
-            $scope.E0001 = E0001;
-        } else {
-            homeFactory.ready('E0001').then(function (data) {
-                $scope.E0001 = data;
-                localStorageService.set('E0001', $scope.E0001);
-            });
+        function scopeInit() {
+            var events = ['E0001', 'E0002', 'E0004'];
+            angular.forEach(events, function (event) {
+
+                    var str = localStorageService.get(event);
+                    //var model = $parse(event);
+                    //// Assigns a value to it
+                    //model.assign($scope, 42);
+                    //
+                    //// Apply it to the scope
+                    //$scope.$apply();
+                    if (typeof  str !== 'undefined'
+                        && str !== null) {
+                        console.log(str);
+                        $scope[event] = str;
+                    } else {
+                        homeFactory.ready(event).then(function (data) {
+                            console.log(data);
+                            $scope[event] = data;
+                            localStorageService.set(event, $scope[event]);
+                        });
+                    }
+                    console.log($scope.$eval(event));
+                }
+            );
         }
-        var E0002 = localStorageService.get('E0002');
-        if (typeof E0002 !== 'undefined' && E0002 !== null) {
-            $scope.E0002 = E0002;
-        } else {
-            homeFactory.ready('E0002').then(function (data) {
-                $scope.E0002 = data;
-                localStorageService.set('E0002', $scope.E0002);
-            });
-        }
+
+        scopeInit();
+
+
         $scope.$state = $state;
 
         $scope.$on('$viewContentLoaded', function () {
@@ -33,19 +44,12 @@
             $log.info('has loaded');
         });
         $scope.refresh = function () {
-            homeFactory.ready('E0001').then(function (data) {
-                $scope.E0001 = data;
-                localStorageService.set('E0001', $scope.E0001);
-            });
-            homeFactory.ready('E0002').then(function (data) {
-                $scope.E0002 = data;
-                localStorageService.set('E0002', $scope.E0002);
-            });
+            scopeInit();
+
             console.log('$scope.refresh');
             $scope.$broadcast('scroll.refreshComplete');
         };
         $scope.$log = $log;
-
 
 
         $scope.$on('$destroy', function () {
@@ -55,15 +59,16 @@
     });
 
     app.factory('homeFactory',
-        function ($rootScope,currentUser, $firebaseObject, fbutil, $q) {
+        function ($rootScope, currentUser, $firebaseObject, fbutil, $q) {
             var homeFactory = {};
             homeFactory.ready = function (event) {
-                console.log(event);
+                //console.log(event);
                 var promises = [];
                 var deffered = $q.defer();
+                //var user=$rootScope.currentUser;
+                //console.log(user);
                 currentUser.getUser().then(function (user) {
-                    console.log(user);
-                    $rootScope.serverUser=user;
+                    //console.log(user);
                     fbutil.ref(['Event', event])
                         .startAt(user)
                         .endAt(user)
@@ -87,11 +92,13 @@
                             });
                         });
                 });
+
+
                 promises.push(deffered.promise);
                 return $q.all(promises);
             };
 
-            return  homeFactory;
+            return homeFactory;
         });
 
     app.config(['$stateProvider', function ($stateProvider) {
@@ -102,7 +109,10 @@
                     'messages-tab': {
                         templateUrl: 'scripts/home/home.html',
                         controller: 'homeCtrl'
-                    }},
+                    }
+                },
+                //cache: false,
+
                 resolve: {
                     // controller will not be loaded until $requireAuth resolves
                     // Auth refers to our $firebaseAuth wrapper in the example above

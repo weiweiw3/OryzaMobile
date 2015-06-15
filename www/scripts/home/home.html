@@ -28,6 +28,19 @@
             </div>
             -->
         </div>
+        <div class="card-gallery item item-text-wrap" ng-show="E0004[0].show || E0004[0].show">
+            <div class="item item-divider positive ">
+                Purchase
+                Request
+                Approve
+            </div>
+            <div class="item item-text-wrap item-icon-right positive" ng-repeat="array in E0004[0].array  "
+                 ui-sref="purchaseOrders({index:array.url})">
+                Purchase Request Approve/rel_grp:{{array.name}}
+                {{array.url}}
+                <i class="icon ion-ios-arrow-right muted"></i>
+            </div>
+        </div>
         <div class="card-gallery item item-text-wrap">
             <div class="item item-divider positive ">
                 Search
