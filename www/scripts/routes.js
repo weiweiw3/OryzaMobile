@@ -4,11 +4,10 @@
 
 "use strict";
 
-angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin' ])
+angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
 
     .config(
-    function ($stateProvider,$httpProvider) {
-        //$httpProvider.defaults.headers.common['Access-Control-Allow-Headers'] ="*";
+    function ($stateProvider) {
         $stateProvider
             .state('tab', {            // setup an abstract state for the tabs directive
                 url: "/tab",
@@ -34,20 +33,22 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin' ])
                         templateUrl: 'scripts/setting/setting.html'
                     }
                 }
-            });
+            })
+            ;
+
 
         // if none of the above states are matched, use this as the fallback
         //isAuthenticated is set below in the .run() command
-//        $urlRouterProvider.otherwise(
-//            function () {
-//                if (isAuthenticated) {
-//                    console.log('isAuthenticated', isAuthenticated);
-//                    return '/tab/setting'
-//                } else {
-//                    console.log('isAuthenticated', isAuthenticated);
-//                    return '/login'
-//                }
-//            }
-//        );
+        //$urlRouterProvider.otherwise(
+        //    function () {
+        //if (isAuthenticated) {
+        //    console.log('isAuthenticated', isAuthenticated);
+        //    return '/tab/setting'
+        //} else {
+        //    console.log('isAuthenticated', isAuthenticated);
+        //    return '/login'
+        //}
+        //    }
+        //);
     }
 );

@@ -26,8 +26,6 @@ var myAppComponents = [
     'myApp.directives.createTask',
     'myApp.controllers.setting',
     'myApp.controllers.login',
-    'myApp.controllers.contacts',
-    'myApp.controllers.chatRoom',
     'myApp.controller.ionic',
     'myApp.home',
     'myApp.controllers.messagesInOneComponent',

@@ -1,15 +1,12 @@
 angular.module('myApp.config', [])
     .constant('version', '1.0')
     .constant('ApiEndpoint', {
-        url: 'http://localhost:8100/data-app/rs/task'
+    //  url: 'http://localhost:8100/data-app/rs/task'
+        url: 'http://114.215.185.243:8080/data-app/rs/task'
     })
     .constant('SearchUrl', {
         url: 'http://localhost:8100/search'
     })
-//当切换到手机app时不用localhost来proxy
-//    .constant('ApiEndpoint', {
-//    url: 'http://114.215.185.243:8080/data-app/rs/task'
-//})
 
     .constant('COMPANY', '40288b8147cd16ce0147cd236df20000')
 
@@ -20,10 +17,10 @@ angular.module('myApp.config', [])
     .constant('FBURL', 'https://40288b8147cd16ce0147cd236df20000.firebaseio.com')
 
     // double check that the app has been configured before running it and blowing up space and time
-    .run(['FBURL', '$timeout', function(FBURL, $timeout) {
-        if( FBURL.match('//INSTANCE.firebaseio.com') ) {
+    .run(['FBURL', '$timeout', function (FBURL, $timeout) {
+        if (FBURL.match('//INSTANCE.firebaseio.com')) {
             angular.element(document.body).html('<h1>Please configure app/config.js before running!</h1>');
-            $timeout(function() {
+            $timeout(function () {
                 angular.element(document.body).removeClass('hide');
             }, 250);
         }
@@ -58,7 +55,7 @@ angular.module('myApp.config', [])
 //        { id: 'twitter',  name: 'Twitter',  icon: 'icon-twitter'  },
 //        { id: 'facebook', name: 'Facebook', icon: 'icon-facebook' },
 //        { id: 'github',   name: 'GitHub',   icon: 'icon-github'   },
-        { id: 'password', name: 'Email', icon: 'icon-envelope' }
+        {id: 'password', name: 'Email', icon: 'icon-envelope'}
     ])
 
     .config(function ($logProvider) {

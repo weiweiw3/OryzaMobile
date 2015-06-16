@@ -7,7 +7,7 @@
             // routes which are not in our map are redirected to /tab/setting
             $urlRouterProvider.otherwise(
                 function () {
-                    return '/tab/setting'
+                    return '/tab/messages'
                 }
             );
         }])
