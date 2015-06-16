@@ -7,8 +7,8 @@
 angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin' ])
 
     .config(
-    function ($stateProvider) {
-
+    function ($stateProvider,$httpProvider) {
+        //$httpProvider.defaults.headers.common['Access-Control-Allow-Headers'] ="*";
         $stateProvider
             .state('tab', {            // setup an abstract state for the tabs directive
                 url: "/tab",

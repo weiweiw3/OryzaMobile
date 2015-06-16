@@ -1,0 +1,36 @@
+<ion-view view-title="{{title}}" hide-back-button="true">
+    <ion-content has-header="true" has-tabs="true" padding="true">
+        <ion-refresher on-refresh="refresh()"></ion-refresher>
+        <div class="item item-divider positive ">
+            info
+        </div>
+        <ion-list>
+            <ion-item class="item item-icon-right"
+                      ng-repeat="(key,value) in info ">
+                {{key}}:{{value}}
+
+            </ion-item>
+        </ion-list>
+        <div class="item item-divider positive ">
+            stock
+        </div>
+        <ion-list>
+
+            <ion-item class="item item-icon-right"
+                      ng-repeat="(key,value) in stock ">
+                {{key}}:{{value}}
+
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll
+                on-infinite="loadMore()"
+                icon="ion-loading-c"
+                distance="1%">
+        </ion-infinite-scroll>
+    </ion-content>
+</ion-view>
+
+
+
+
+

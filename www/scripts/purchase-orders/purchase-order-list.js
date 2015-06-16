@@ -29,6 +29,32 @@
                 $scope.$broadcast('scroll.infiniteScrollComplete');
             };
         });
+    app.controller('purchaseRequestListCtrl',
+        function (ionicLoading,purchaseRequests, $firebaseArray, $state,
+                  $location, $timeout, $scope) {
+            // create a scrollable reference
+            var scrollRef = new Firebase.util.Scroll(purchaseRequests,'$priority');
+
+            // create a synchronized array on scope
+            $scope.messages = $firebaseArray(scrollRef);
+            $scope.messagesRef = scrollRef.toString().replace(scrollRef.root().toString(),'');
+            // load the first three contacts
+            scrollRef.scroll.next(3);
+            $scope.refresh = function () {
+                //TODO refresh event
+                console.log('$scope.refresh');
+                $scope.$broadcast('scroll.refreshComplete');
+            };
+            // This function is called whenever the user reaches the bottom
+            $scope.loadMore = function () {
+                // load the next contact
+                scrollRef.scroll.next(1);
+//                if(!scrollRef.scroll.hasNext()){
+//                    console.log('no more');
+//                }
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+            };
+        });
     app.controller('purchaseOrdersApproveMessagesCtrl',
         function (ionicLoading,purchaseOrdersApproveMessages, $firebaseArray, $state,fbutil,
                   $location, $timeout, $scope,$q) {
@@ -105,6 +131,24 @@
 
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider
+            .state('purchaseRequests', {
+                url: '/purchaseRequests/:index',
+                templateUrl: 'scripts/purchase-orders/purchase-request-list.html',
+                controller: 'purchaseRequestListCtrl',
+                resolve: {
+                    purchaseRequests: function ($firebaseObject,fbutil,ionicLoading, $stateParams) {
+                        ionicLoading.load('Loading');
+                        console.log($stateParams.index);
+                        var ref = fbutil.ref([$stateParams.index, 'REQUIREMENT_ITEMS']);
+                        return $firebaseObject(ref)
+                            .$loaded().then(function(snap){
+                                console.log(snap);
+                                ionicLoading.unload();
+                                return ref;
+                            });
+                    }
+                }
+            })
             .state('purchaseOrders', {
             url: '/purchaseOrders/:index',
             templateUrl: 'scripts/purchase-orders/purchase-order-list.html',

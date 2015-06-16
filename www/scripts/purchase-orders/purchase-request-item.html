@@ -1,0 +1,20 @@
+<ion-view view-title="PurchaseRequest {{ data.preq_NO }} {{data.preq_ITEM}}" hide-back-button="true">
+    <ion-content>
+        <div class="ink dark-bg">
+            <h2>{{ data.preq_NO }}</h2>
+        </div>
+        <div class="content">
+            <h3>{{data.preq_ITEM}}</h3>
+            <h3>{{ data.purch_ORG_TEXT }}</h3>
+            <h3>{{ data.doc_DATE }}</h3>
+            <span am-time-ago="data.doc_DATE"></span>
+        </div>
+        <div>
+            <button ng-disabled="data.lock" class="button button-block button-positive" ng-click="showConfirm()">
+                {{data.approveButtonText}}
+            </button>
+        </div>
+
+
+    </ion-content>
+</ion-view>

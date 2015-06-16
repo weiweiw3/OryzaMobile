@@ -53,10 +53,10 @@ angular.module('myApp.services.myTask',
                     $http({
                         method: "POST",
                         headers: headers,
-                        url: ApiEndpoint.url + '/createTask',
-//                        url: 'http://114.215.185.243:8080/data-app/rs/task/createTask',
-                        data: data
-//                        data: {"category": 0, "companyId": "40288b8147cd16ce0147cd236df20000", "eventType": "E0002", "inputParas": "PO_REL_CODE=PU;PURCHASEORDER=4500017437;FIRST_LOAD=X;FB_PUSH=X;FB_PATH=Event/E0002/100001/4500017437;FB_FROM_PATH=Event/E0001/100001/02_PU/PO_HEADERS/4500017437;SAP_SYSTEM=sap_system_guid_default;task_FB=-Jp6ZiCfhd1HpRmNuDPx", "taskPriority": 0, "taskStatus": 0, "triggerTime": "immediate", "userId": "100001"}
+                        //url: ApiEndpoint.url + '/createTask',
+                        url: 'http://114.215.185.243:8080/data-app/rs/task/createTask',
+                        //data: data
+                        data: {"category": 0, "companyId": "40288b8147cd16ce0147cd236df20000", "eventType": "E0002", "inputParas": "PO_REL_CODE=PU;PURCHASEORDER=4500017437;FIRST_LOAD=X;FB_PUSH=X;FB_PATH=Event/E0002/100001/4500017437;FB_FROM_PATH=Event/E0001/100001/02_PU/PO_HEADERS/4500017437;SAP_SYSTEM=sap_system_guid_default;task_FB=-Jp6ZiCfhd1HpRmNuDPx", "taskPriority": 0, "taskStatus": 0, "triggerTime": "immediate", "userId": "100001"}
                     }).success(function (jsonObj) {
 //                        if (typeof jsonObj == 'object' && jsonObj instanceof Array) {
 //                            console.log(jsonObj);

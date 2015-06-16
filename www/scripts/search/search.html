@@ -1,7 +1,8 @@
-<ion-view view-title="Search Customers" hide-back-button="true">
+<ion-view view-title="Search {{searchObj.text}}" hide-back-button="true">
     <ion-header-bar class="bar-dark">
-        <h1 class="title">Search</h1>
+        <h1 class="title">Search {{searchObj.text}}</h1>
     </ion-header-bar>
+
     <!--
     <ion-content>
         <ion-autocomplete ng-model="model" items-method="callbackMethod(query)" />
@@ -37,13 +38,33 @@
     <ion-content>
         <ion-list>
             <ion-item class="item-remove-animate item-icon-right" ng-repeat="result in results">
-                <h2 class="icon-left">{{result.title}}</h2>
-                <p>{{result.LAND1}}</p>{{result.KUNNR}}
-                <div class="icon-left ion-ios-home location_info">
-                    {{result.NAME1}}
-                    {{ result.TELF1 }}
+                <div ng-show="searchObj.text==='material'"
+                     ui-sref="searchDetail({key:'material',index:result.MATNR})">
+                    <p>{{result.MAKTX}}</p>
+                    {{result.MATNR}}
+                    <i class="icon ion-ios-arrow-right muted"></i>
                 </div>
-                <a ng-href="tel: {{result.KUNNR}}" class="button button-calm button-outline icon-left ion-ios-telephone ">{{result.phone_number}}</a>
+                <div ng-show="searchObj.text==='customer'"
+                     ui-sref="searchDetail({key:'customer',index:result.KUNNR})">
+
+                    <h2 class="icon-left">{{result.title}}</h2>
+                    <p>{{result.LIFNR}}</p>{{result.NAME1}}
+                    <div class="icon-left ion-ios-home location_info">
+                        {{result.KUNNR}}
+                        {{ result.TELF1 }}
+                    </div>
+                    <a ng-href="tel: {{result.KUNNR}}" class="button button-calm button-outline icon-left ion-ios-telephone ">{{result.TELF1}}</a>
+                </div>
+                <div ng-show="searchObj.text==='vendor'"
+                     ui-sref="searchDetail({key:'vendor',index:result.LIFNR})">
+                    <h2 class="icon-left">{{result.title}}</h2>
+                    <p>{{result.LIFNR}}</p>{{result.NAME1}}
+                    <div class="icon-left ion-ios-home location_info">
+                        {{result.KUNNR}}
+                        {{ result.TELF1 }}
+                    </div>
+                    <a ng-href="tel: {{result.KUNNR}}" class="button button-calm button-outline icon-left ion-ios-telephone ">{{result.TELF1}}</a>
+                </div>
             </ion-item>
         </ion-list>
     </ion-content>

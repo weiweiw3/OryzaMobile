@@ -32,7 +32,6 @@ var myAppComponents = [
     'myApp.home',
     'myApp.controllers.messagesInOneComponent',
     'myApp.controllers.messagesDetail',
-    'myApp.controllers.material',
     'myApp.services.ionic',
     'myApp.services',
     'myApp.services.auth',
