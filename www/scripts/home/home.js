@@ -8,7 +8,7 @@
 
 //        ionicLoading.load();
         function scopeInit() {
-            var events = ['E0001', 'E0002', 'E0004'];
+            var events = ['E0001', 'E0002', 'E0004','E0005'];
             angular.forEach(events, function (event) {
 
                     var str = localStorageService.get(event);
@@ -20,7 +20,7 @@
                     //$scope.$apply();
                     if (typeof  str !== 'undefined'
                         && str !== null) {
-                        console.log(str);
+                        //console.log(str);
                         $scope[event] = str;
                     } else {
                         homeFactory.ready(event).then(function (data) {
@@ -29,13 +29,12 @@
                             localStorageService.set(event, $scope[event]);
                         });
                     }
-                    console.log($scope.$eval(event));
+                    //console.log($scope.$eval(event));
                 }
             );
         }
 
         scopeInit();
-
 
         $scope.$state = $state;
 
