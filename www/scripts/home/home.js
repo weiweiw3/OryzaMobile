@@ -8,7 +8,7 @@
 
 //        ionicLoading.load();
         function scopeInit() {
-            var events = ['E0001', 'E0002', 'E0004','E0005'];
+            var events = ['E0001', 'E0002', 'E0004', 'E0005'];
             angular.forEach(events, function (event) {
 
                     var str = localStorageService.get(event);
@@ -61,13 +61,13 @@
         function ($rootScope, currentUser, $firebaseObject, fbutil, $q) {
             var homeFactory = {};
             homeFactory.ready = function (event) {
-                //console.log(event);
+                console.log(event);
                 var promises = [];
                 var deffered = $q.defer();
                 //var user=$rootScope.currentUser;
                 //console.log(user);
                 currentUser.getUser().then(function (user) {
-                    //console.log(user);
+                    console.log(user+' '+event);
                     fbutil.ref(['Event', event])
                         .startAt(user)
                         .endAt(user)
@@ -80,12 +80,14 @@
                                         "url": childSnapshot.ref().toString().replace(childSnapshot.ref().root().toString(), '')
                                     });
                                 });
+
                                 var node = {
                                     "name": event,
                                     "show": true,
                                     "url": snap.ref().toString().replace(snap.ref().root().toString(), ''),
                                     "array": Array
                                 };
+                                if(Array.length===0){node.show=false}
                                 console.log(node);
                                 deffered.resolve(node);
                             });

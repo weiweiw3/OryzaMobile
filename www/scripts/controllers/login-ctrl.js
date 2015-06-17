@@ -67,7 +67,7 @@ angular.module('myApp.controllers.login', [ ])
                 return
             }
             ionicLoading.load('logout......');
-            localStorageService.remove('E0001', 'E0002');
+            localStorageService.remove('E0001', 'E0002','E0004', 'E0005');
             simpleLogin.logout();
 
         });
