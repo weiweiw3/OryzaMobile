@@ -12,7 +12,7 @@
             $scope.$watch('data.lock', function (newVal) {
                 if (typeof $scope.data != "undefined") {
                     if (newVal) {
-                        $scope.data.approveButtonText = 'SEND OUT';
+                        $scope.data.approveButtonText = 'Finished';
                     } else {
                         console.log($scope.data);
 
@@ -38,17 +38,19 @@
                     $scope.refStr = ref.toString()
                         .replace(ref.root().toString(), '');
 
-                    //通过检查对应E0005,如果审批错误即返回值等于9，那么改变lock可以继续审批
+                    //通过检查对应E0005,如果审批错误即返回值等于null，那么改变lock可以继续审批
                     fbutil.ref(['Event/' + approveItem.event, $scope.ServerUserID])
                         .startAt($scope.PURCHASEREQUEST)
                         .endAt($scope.PURCHASEREQUEST)
                         .once('value', function (snap) {
-                            snap.child($scope.PURCHASEREQUEST).child($scope.ITEM).child('TASK_INFO').child('task_status')
+                            snap.child($scope.PURCHASEREQUEST).child($scope.ITEM).child('TASK_INFO')
                                 .ref().once('value', function (snap) {
-                                    console.log(snap.val());
-                                    //if (snap.val() == 9) {
+                                    if(snap.exportVal()!=null)$scope.history = snap.exportVal();
+                                    if (snap.child('task_status').val() != null) {
                                         $scope.data.lock = true;
-                                    //}
+                                    } else {
+                                        $scope.data.lock = false;
+                                    }
                                 });
                         });
 
@@ -77,7 +79,7 @@
                         okText: ' ',
                         okType: 'button icon ion-checkmark-round button-balanced'
                     };
-                    $scope.orderID=$scope.PURCHASEREQUEST+' '+$scope.ITEM;
+                    $scope.orderID = $scope.PURCHASEREQUEST + ' ' + $scope.ITEM;
                 }
 
                 if (approveItem.event === 'E0002') {
@@ -90,14 +92,19 @@
                     $scope.purchaseOrderItemsRef = $scope.purchaseOrderHeaderRefStr
                         .replace('PO_HEADERS', 'PO_ITEMS');
 
-                    //通过检查对应E0002,如果审批错误即返回值等于9，那么改变lock可以继续审批
+                    //通过检查对应E0002,如果审批错误即返回值等于null，那么改变lock可以继续审批
                     fbutil.ref(['Event/' + approveItem.event, $scope.ServerUserID])
                         .startAt($scope.PURCHASEORDER)
                         .endAt($scope.PURCHASEORDER)
                         .once('value', function (snap) {
-                            snap.child($scope.PURCHASEORDER).child('TASK_INFO').child('task_status')
+                            snap.child($scope.PURCHASEORDER).child('TASK_INFO')
                                 .ref().once('value', function (snap) {
-                                    if (snap.val() == 9) {
+                                    if(snap.exportVal()!=null)$scope.history = snap.exportVal();
+
+                                    console.log(snap.exportVal());
+                                    if (snap.child('task_status').val() != null) {
+                                        $scope.data.lock = true;
+                                    } else {
                                         $scope.data.lock = false;
                                     }
                                 });
@@ -127,11 +134,11 @@
                         okText: ' ',
                         okType: 'button icon ion-checkmark-round button-balanced'
                     };
-                    $scope.orderID=$scope.PURCHASEORDER;
+                    $scope.orderID = $scope.PURCHASEORDER;
 
                 }
                 if ($scope.data.lock) {
-                    $scope.data.approveButtonText = 'SEND OUT';
+                    $scope.data.approveButtonText = 'Finished';
                 } else {
                     $scope.data.approveButtonText = 'Approve';
                 }

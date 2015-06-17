@@ -332,14 +332,10 @@
                 templateUrl: 'scripts/search/search_detail.html',
                 controller: 'searchDetailCtrl'
             })
-            .state('customer', {
-                url: '/customer/:index',
-                templateUrl: 'scripts/search/customer_detail.html',
-                controller: 'customerCtrl'
-            })
+
             .state('searchOption', {
                 url: '/searchOption',
-                templateUrl: 'scripts/search/searchOption.html',
+                templateUrl: 'scripts/search/search-option.html',
                 controller: 'searchOptionCtrl'
             });
     }]);

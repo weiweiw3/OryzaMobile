@@ -3,28 +3,27 @@
 
     var app = angular.module('myApp.home', ['ionic', 'firebase.simpleLogin',
         'firebase.utils', 'firebase']);
-    app.controller('homeCtrl', function (localStorageService, $q, $localstorage, fbutil, homeFactory, purchaseOrderFactory,
-                                         simpleLogin, firebaseRef, $scope, $state, $log, ionicLoading) {
+    app.controller('homeCtrl', function (localStorageService, homeFactory,
+                                         $scope, $state, $log, ionicLoading, $ionicSideMenuDelegate, events) {
 
+        $scope.openMenu = function () {
+            $ionicSideMenuDelegate.toggleLeft();
+        }
+        $scope.viewtitle = angular.uppercase($state.current.name);
 //        ionicLoading.load();
         function scopeInit() {
-            var events = ['E0001', 'E0002', 'E0004', 'E0005'];
+            //var events = ['E0001', 'E0002', 'E0004', 'E0005'];
             angular.forEach(events, function (event) {
-
+                    //console.log(event);
                     var str = localStorageService.get(event);
-                    //var model = $parse(event);
-                    //// Assigns a value to it
-                    //model.assign($scope, 42);
-                    //
-                    //// Apply it to the scope
-                    //$scope.$apply();
+
                     if (typeof  str !== 'undefined'
                         && str !== null) {
                         //console.log(str);
                         $scope[event] = str;
                     } else {
                         homeFactory.ready(event).then(function (data) {
-                            console.log(data);
+                            //console.log(data);
                             $scope[event] = data;
                             localStorageService.set(event, $scope[event]);
                         });
@@ -43,6 +42,7 @@
             $log.info('has loaded');
         });
         $scope.refresh = function () {
+            localStorageService.remove('E0001', 'E0002', 'E0004', 'E0005');
             scopeInit();
 
             console.log('$scope.refresh');
@@ -67,7 +67,7 @@
                 //var user=$rootScope.currentUser;
                 //console.log(user);
                 currentUser.getUser().then(function (user) {
-                    console.log(user+' '+event);
+                    console.log(user + ' ' + event);
                     fbutil.ref(['Event', event])
                         .startAt(user)
                         .endAt(user)
@@ -87,7 +87,9 @@
                                     "url": snap.ref().toString().replace(snap.ref().root().toString(), ''),
                                     "array": Array
                                 };
-                                if(Array.length===0){node.show=false}
+                                if (Array.length === 0) {
+                                    node.show = false
+                                }
                                 console.log(node);
                                 deffered.resolve(node);
                             });
@@ -104,15 +106,17 @@
 
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider
-            .state('tab.messages', {
-                url: '/messages',
-                views: {
-                    'messages-tab': {
-                        templateUrl: 'scripts/home/home.html',
-                        controller: 'homeCtrl'
-                    }
-                },
+            .state('home', {
+                url: '/',
+                //views: {
+                //'messages-tab': {
+                templateUrl: 'scripts/home/home.html',
+                controller: 'homeCtrl',
+
+                //}
+                //},
                 //cache: false,
+                //}
 
                 resolve: {
                     // controller will not be loaded until $requireAuth resolves
@@ -123,6 +127,26 @@
                             // If the promise is rejected, it will throw a $stateChangeError (see above)
                             return simpleLogin.auth.$requireAuth();
                         }]
+                    ,
+                    events: function () {
+                        return ['E0001', 'E0004'];
+                    }
+                }
+            })
+            .state('notification', {
+                url: '/notification',
+                templateUrl: 'scripts/home/home.html',
+                controller: 'homeCtrl',
+
+                resolve: {
+                    "currentAuth": ["simpleLogin",
+                        function (simpleLogin) {
+                            return simpleLogin.auth.$requireAuth();
+                        }]
+                    ,
+                    events: function () {
+                        return ['E0002', 'E0005'];
+                    }
                 }
             });
     }]);

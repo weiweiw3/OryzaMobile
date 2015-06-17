@@ -40,7 +40,7 @@ angular.module('myApp.login', ['firebase.utils', 'firebase.auth', 'ngRoute'])
             )
                 .then(function (/* user */) {
 //                    $localstorage.setObject('loginemail', $scope.logindata.email);
-                    $state.go('tab.messages',{
+                    $state.go('home',{
                         reload: true
                     });
                     ionicLoading.unload();

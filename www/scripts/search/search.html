@@ -48,7 +48,7 @@
                      ui-sref="searchDetail({key:'customer',index:result.KUNNR})">
 
                     <h2 class="icon-left">{{result.title}}</h2>
-                    <p>{{result.LIFNR}}</p>{{result.NAME1}}
+                    <p>{{result.KUNNR}}</p>{{result.NAME1}}
                     <div class="icon-left ion-ios-home location_info">
                         {{result.KUNNR}}
                         {{ result.TELF1 }}
@@ -59,11 +59,9 @@
                      ui-sref="searchDetail({key:'vendor',index:result.LIFNR})">
                     <h2 class="icon-left">{{result.title}}</h2>
                     <p>{{result.LIFNR}}</p>{{result.NAME1}}
-                    <div class="icon-left ion-ios-home location_info">
-                        {{result.KUNNR}}
-                        {{ result.TELF1 }}
+                    <div>
+                    <a ng-href="tel: {{result.LIFNR}}" class="button button-calm button-outline icon-left ion-ios-telephone ">{{result.TELF1}}</a>
                     </div>
-                    <a ng-href="tel: {{result.KUNNR}}" class="button button-calm button-outline icon-left ion-ios-telephone ">{{result.TELF1}}</a>
                 </div>
             </ion-item>
         </ion-list>

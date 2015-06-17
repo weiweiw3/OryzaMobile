@@ -9,32 +9,34 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
     .config(
     function ($stateProvider) {
         $stateProvider
-            .state('tab', {            // setup an abstract state for the tabs directive
-                url: "/tab",
-                abstract: true,
-                templateUrl: "templates/tabs.html",
-                resolve: {
-                    // controller will not be loaded until $requireAuth resolves
-                    // Auth refers to our $firebaseAuth wrapper in the example above
-                    "currentAuth": ["simpleLogin",
-                        function (simpleLogin) {
-                            // $requireAuth returns a promise so the resolve waits for it to complete
-                            // If the promise is rejected, it will throw a $stateChangeError (see above)
-                            return simpleLogin.auth.$requireAuth();
-                        }]
-                }
-            })
+            //.state('tab', {            // setup an abstract state for the tabs directive
+            //    url: "/tab",
+            //    abstract: true,
+            //    templateUrl: "templates/tabs.html",
+            //    resolve: {
+            //        // controller will not be loaded until $requireAuth resolves
+            //        // Auth refers to our $firebaseAuth wrapper in the example above
+            //        "currentAuth": ["simpleLogin",
+            //            function (simpleLogin) {
+            //                // $requireAuth returns a promise so the resolve waits for it to complete
+            //                // If the promise is rejected, it will throw a $stateChangeError (see above)
+            //                return simpleLogin.auth.$requireAuth();
+            //            }]
+            //    }
+            //})
 
             // the setting tab has its own child nav-view and history
-            .state('tab.setting', {
+            .state('setting', {
                 url: '/setting',
-                views: {
-                    'setting-tab': {
-                        templateUrl: 'scripts/setting/setting.html'
-                    }
-                }
+                templateUrl: 'templates/setting.html'
+
             })
-            ;
+            .state('about', {
+                url: '/about',
+                templateUrl: 'templates/about.html'
+
+            })
+        ;
 
 
         // if none of the above states are matched, use this as the fallback

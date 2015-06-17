@@ -15,7 +15,6 @@ var dependencyModules = [
 //    'ui.router',
     'angular-momentjs'];
 var myAppComponents = [
-
     'myApp.routes',
 //  'myApp.animate',
     'myApp.config',
@@ -24,17 +23,10 @@ var myAppComponents = [
     'myApp.directives',
     'myApp.directives.favoriteMessage',
     'myApp.directives.createTask',
-    'myApp.controllers.setting',
     'myApp.controllers.login',
-    'myApp.controller.ionic',
     'myApp.home',
-    'myApp.controllers.messagesInOneComponent',
-    'myApp.controllers.messagesDetail',
     'myApp.services.ionic',
     'myApp.services',
-    'myApp.services.auth',
-    'myApp.services.myComponent',
-    'myApp.services.myMessage',
     'myApp.services.myTask',
     'myApp.services.myUser',
     'ionic.utils',

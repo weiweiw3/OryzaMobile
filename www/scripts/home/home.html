@@ -1,11 +1,20 @@
-<ion-view view-title="Home">
+<ion-view view-title="{{viewtitle}}">
+    <ion-nav-buttons side="right">
+
+        <button class="button button-icon button-clear ion-search" ui-sref="searchOption"></button>
+        <!--<button class="button button-icon button-clear ion-plus" ng-click="openModal()"></button>-->
+    </ion-nav-buttons>
+    <ion-nav-buttons side="left">
+    <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        <!--<span class="badge badge-assertive">3</span>-->
+    </ion-nav-buttons>
     <ion-content>
         <ion-refresher on-refresh="refresh()"></ion-refresher>
-        <div class="card-gallery item item-text-wrap" ng-show="E0001[0].show || E0002[0].show">
+        <div class="card-gallery item item-text-wrap" ng-show="E0001[0].show ">
             <div class="item item-divider positive ">
                 Purchase
                 Order
-                Approve
+                Approve<span class="badge badge-assertive">3</span>
             </div>
             <div class="item item-text-wrap item-icon-right positive" ng-repeat="array in E0001[0].array  "
                  ui-sref="purchaseOrders({index:array.url})">
@@ -13,14 +22,13 @@
                 {{array.url}}
                 <i class="icon ion-ios-arrow-right muted"></i>
             </div>
-            <div class="item item-text-wrap item-icon-right positive"
-                 ui-sref="purchaseOrdersApproveMessages({index:E0002[0].url})" ng-show="E0002[0].show">
-                History Messages
-                <i class="icon ion-ios-arrow-right muted"></i>
-            </div>
-
         </div>
-        <div class="card-gallery item item-text-wrap" ng-show="E0004[0].show || E0004[0].show">
+        <div class="item item-text-wrap item-icon-right positive"
+             ui-sref="purchaseOrdersApproveMessages({index:E0002[0].url})" ng-show="E0002[0].show">
+            Purchase Order History Messages
+            <i class="icon ion-ios-arrow-right muted"></i>
+        </div>
+        <div class="card-gallery item item-text-wrap" ng-show="E0004[0].show ">
             <div class="item item-divider positive ">
                 Purchase
                 Request
@@ -31,20 +39,27 @@
                 {{array.url}}
                 <i class="icon ion-ios-arrow-right muted"></i>
             </div>
-            <div class="item item-text-wrap item-icon-right positive"
-                 ui-sref="purchaseRequestApproveList({index:E0005[0].url})" ng-show="E0005[0].show">
-                History Messages
-                <i class="icon ion-ios-arrow-right muted"></i>
-            </div>
-        </div>
-        <div class="card-gallery item item-text-wrap">
 
-            <div class="item item-text-wrap item-icon-right positive"
-                 ui-sref="searchOption">
-                Search
-                <i class="icon ion-ios-arrow-right muted"></i>
-            </div>
         </div>
-
+        <div class="item item-text-wrap item-icon-right positive"
+             ui-sref="purchaseRequestApproveList({index:E0005[0].url})" ng-show="E0005[0].show">
+            Purchase Request History Messages
+            <i class="icon ion-ios-arrow-right muted"></i>
+        </div>
     </ion-content>
 </ion-view>
+
+
+<!--<ion-view title="Home">-->
+    <!--<ion-nav-buttons side="right">-->
+        <!--<button class="button button-icon button-clear ion-plus" ng-click="openModal()"></button>-->
+    <!--</ion-nav-buttons>-->
+    <!--<ion-nav-buttons side="left">-->
+        <!--<button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button><span class="badge badge-assertive">3</span>-->
+    <!--</ion-nav-buttons>        <ion-content has-header="true" has-tabs="false" padding="true">-->
+    <!--<h4>The Stooges</h4>-->
+    <!--<ion-list>-->
+        <!--<ion-item ng-repeat="stooge in stooges" href="#/{{stooge.name}}">{{stooge.name}}</ion-item>-->
+    <!--</ion-list>-->
+<!--</ion-content>-->
+<!--</ion-view>-->

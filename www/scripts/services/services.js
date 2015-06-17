@@ -109,9 +109,6 @@
         });
 
 
-
-
-
     appServices.factory('disposeOnLogout', ['$rootScope', function ($rootScope) {
         var disposables = [];
 

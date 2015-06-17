@@ -1,18 +1,40 @@
 <ion-view view-title="PurchaseOrder {{ data.po_NUMBER }}" hide-back-button="true">
+    <ion-nav-buttons side="right">
+
+        <button class="button button-icon button-clear ion-plus" ></button>
+        <!--<button class="button button-icon button-clear ion-plus" ng-click="openModal()"></button>-->
+    </ion-nav-buttons>
+
     <ion-content>
-        <div class="ink dark-bg">
-            <h2>{{ data.po_NUMBER }}</h2>
-        </div>
-        <div class="content">
-            <h3>{{ data.co_CODE_TEXT }}</h3>
-            <h3>{{ data.purch_ORG_TEXT }}</h3>
-            <h3>{{ data.doc_DATE }}</h3>
-            <span am-time-ago="data.doc_DATE"></span>
-        </div>
+        <ion-list>
+            <ion-item >
+                {{ data.po_NUMBER }}
+            </ion-item>
+            <ion-item >
+                {{ data.co_CODE_TEXT }}
+            </ion-item>
+            <ion-item >
+                {{ data.purch_ORG_TEXT }}
+            </ion-item>
+            <ion-item >
+                {{ data.doc_DATE }}
+                <span am-time-ago="data.doc_DATE"></span>
+            </ion-item>
+        </ion-list>
+
         <div>
             <button ng-disabled="data.lock" class="button button-block button-positive" ng-click="showConfirm()">
                 {{data.approveButtonText}}
             </button>
+            <div>
+                <ion-list>
+                    <ion-item ng-show="value" class="item item-icon-right"
+                              ng-repeat="(key,value) in history ">
+                        {{key}}:{{value}}
+
+                    </ion-item>
+                </ion-list>
+            </div>
         </div>
         <a ui-sref="purchaseOrderHeader({index: data.po_NUMBER})"
            class="item item-icon-right" class="item">

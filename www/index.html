@@ -63,9 +63,6 @@
     <!-- services:js -->
     <script src="scripts/services/services.js"></script>
     <script src="scripts/services/ionic.js"></script>
-    <script src="scripts/services/auth_service.js"></script>
-    <script src="scripts/services/my-component-factory.js"></script>
-    <script src="scripts/services/my-message-factory.js"></script>
     <script src="scripts/services/my-task-factory.js"></script>
     <script src="scripts/services/my-user-factory.js"></script>
 
@@ -100,9 +97,7 @@
     <script src="scripts/search/search.js"></script>
     <script src="scripts/controllers/ionic.demo.js"></script>
     <script src="scripts/home/home.js"></script>
-    <script src="scripts/controllers/messages-in-one-component-ctrl.js"></script>
-    <script src="scripts/controllers/message-detail-ctrl.js"></script>
-    <script src="scripts/controllers/login-ctrl.js"></script>
+    <script src="scripts/setting/login-ctrl.js"></script>
     <!-- endcontrollers -->
     <!-- firebase:js -->
 
@@ -115,23 +110,58 @@
 </head>
 
 <body ng-cloak ng-app="myApp">
-<div>
-    <ion-nav-bar class="bar-assertive-900"
-                 align-title="left">
-        <ion-nav-buttons side="left">
+
+<ion-side-menus>
+    <ion-pane ion-side-menu-content>
+        <ion-nav-bar class="bar-positive nav-title-slide-ios7">
+            <ion-nav-buttons side="left">
             <button ng-if="$root.showCustomBack" ng-click="$root.goBack()"
-                    class="button button-icon button-clear ion-arrow-left-c">
+            class="button button-icon button-clear ion-arrow-left-c">
             </button>
-        </ion-nav-buttons>
-        <!--<ion-nav-buttons side="right">-->
-            <!--<button class="button button-icon button-clear-->
-            <!--ion-android-more-vertical">-->
+            </ion-nav-buttons>
+        </ion-nav-bar>
+        <ion-nav-view ></ion-nav-view>
+    </ion-pane>
+
+    <ion-side-menu side="left">
+        <ion-header-bar class="bar bar-header bar-dark">{{ authData.password.email}}</ion-header-bar>
+        <ion-content has-header="true">
+            <ion-list>
+                <ion-item href="#/" menu-close  ng-click="sideMenuController.toggleLeft()">Home</ion-item>
+                <ion-item menu-close  href="#/notification">Notifications <span class="badge badge-assertive">3</span></ion-item>
+                <ion-item menu-close  href="#/setting">Setting</ion-item>
+                <ion-item menu-close  href="#/about">About</ion-item>
+                <!--<ion-item menu-close  href="#/setting">Log Out</ion-item>-->
+            </ion-list>
+        </ion-content>
+    </ion-side-menu>
+
+    <ion-side-menu side="right" >
+        <ion-header-bar class="bar bar-header bar-dark" title="Search"></ion-header-bar>
+        <ion-content has-header="true">
+
+        </ion-content>
+    </ion-side-menu>
+</ion-side-menus>
+<!--<ion-nav-view></ion-nav-view>-->
+
+<!--<div>-->
+    <!--<ion-nav-bar class="bar-assertive-900"-->
+                 <!--align-title="left">-->
+        <!--<ion-nav-buttons side="left">-->
+            <!--<button ng-if="$root.showCustomBack" ng-click="$root.goBack()"-->
+                    <!--class="button button-icon button-clear ion-arrow-left-c">-->
             <!--</button>-->
         <!--</ion-nav-buttons>-->
-    </ion-nav-bar>
-    <ion-nav-view></ion-nav-view>
-</div>
-
+        <!--&lt;!&ndash;<ion-nav-buttons side="right">&ndash;&gt;-->
+            <!--&lt;!&ndash;<button class="button button-icon button-clear&ndash;&gt;-->
+            <!--&lt;!&ndash;ion-android-more-vertical">&ndash;&gt;-->
+            <!--&lt;!&ndash;</button>&ndash;&gt;-->
+        <!--&lt;!&ndash;</ion-nav-buttons>&ndash;&gt;-->
+    <!--</ion-nav-bar>-->
+    <!--<ion-nav-view></ion-nav-view>-->
+<!--</div>-->
+<!--<ion-nav-view></ion-nav-view>-->
 
 </body>
 </html>
