@@ -35,7 +35,6 @@ var myAppComponents = [
     'myApp.security',
     'myApp.purchaseOrder',
     'myApp.purchaseOrderList',
-    'myApp.purchaseOrderItems',
     'myApp.search',
     'myApp.sapValidation'
 ];

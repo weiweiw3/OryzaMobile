@@ -8,7 +8,7 @@
     app.controller('purchaseRequestListCtrl',
         function (ionicLoading, list, $firebaseArray, $state,
                   $location, $timeout, $scope) {
-            $scope.viewtitle=list.title;
+            $scope.viewtitle = list.title;
             // create a scrollable reference
             $scope.condition = function (ref) {
                 var deferred = $q.defer();
@@ -97,11 +97,25 @@
                 templateUrl: 'scripts/purchase-orders/purchase-order-list.html',
                 controller: 'purchaseRequestListCtrl',
                 resolve: {
-                    list: function ($firebaseObject, fbutil, ionicLoading, $stateParams) {
+                    list: function (fbutil, ionicLoading, $stateParams) {
                         return {
-                            title:'Purchase Orders',
+                            title: 'Purchase Orders',
                             ref: fbutil.ref([$stateParams.index, 'PO_HEADERS']),
                             scroll: 'po_NUMBER'
+                        };
+                    }
+                }
+            })
+            .state('purchaseOrderItems', {
+                url: '/purchaseOrderItems/:index?key',
+                templateUrl: 'scripts/purchase-orders/purchase-order-items.html',
+                controller: 'purchaseRequestListCtrl',
+                resolve: {
+                    list: function (fbutil, ionicLoading, $stateParams) {
+                        return {
+                            title: 'Purchase Order ' + $stateParams.key,
+                            ref: fbutil.ref([$stateParams.index]),
+                            scroll: '-po_ITEM'
                         };
                     }
                 }
@@ -111,9 +125,9 @@
                 templateUrl: 'scripts/purchase-orders/purchase-order-approve-messages.html',
                 controller: 'purchaseRequestListCtrl',
                 resolve: {
-                    list: function ($firebaseObject, fbutil, ionicLoading, $stateParams) {
+                    list: function (fbutil, ionicLoading, $stateParams) {
                         return {
-                            title:'History Messages',
+                            title: 'History Messages',
                             ref: fbutil.ref([$stateParams.index]),
                             scroll: 'key()'
                         };
@@ -125,9 +139,9 @@
                 templateUrl: 'scripts/purchase-orders/purchase-request-list.html',
                 controller: 'purchaseRequestListCtrl',
                 resolve: {
-                    list: function ($firebaseObject, fbutil, ionicLoading, $stateParams) {
+                    list: function (fbutil, ionicLoading, $stateParams) {
                         return {
-                            title:'Purchase Requests',
+                            title: 'Purchase Requests',
                             ref: fbutil.ref([$stateParams.index, 'REQUIREMENT_ITEMS']),
                             scroll: '$priority'
                         };
@@ -139,9 +153,9 @@
                 templateUrl: 'scripts/purchase-orders/purchase-request-index.html',
                 controller: 'purchaseRequestListCtrl',
                 resolve: {
-                    list: function ($firebaseObject, fbutil, ionicLoading, $stateParams) {
+                    list: function (fbutil, ionicLoading, $stateParams) {
                         return {
-                            title: 'Purchase Request '+$stateParams.key,
+                            title: 'Purchase Request ' + $stateParams.key,
                             ref: fbutil.ref([$stateParams.index]),
                             scroll: '-preq_ITEM'
                         };
@@ -153,9 +167,9 @@
                 templateUrl: 'scripts/purchase-orders/purchase-request-approve-list.html',
                 controller: 'purchaseRequestListCtrl',
                 resolve: {
-                    list: function ($firebaseObject, fbutil, ionicLoading, $stateParams) {
+                    list: function (fbutil, ionicLoading, $stateParams) {
                         return {
-                            title:'History Messages',
+                            title: 'History Messages',
                             ref: fbutil.ref([$stateParams.index]),
                             scroll: 'key()'
                         };
@@ -167,9 +181,9 @@
                 templateUrl: 'scripts/purchase-orders/purchase-request-approve-message.html',
                 controller: 'purchaseRequestListCtrl',
                 resolve: {
-                    list: function ($firebaseObject, fbutil, ionicLoading, $stateParams) {
+                    list: function (fbutil, ionicLoading, $stateParams) {
                         return {
-                            title:'Purchase Request '+$stateParams.key,
+                            title: 'Purchase Request ' + $stateParams.key,
                             ref: fbutil.ref([$stateParams.index]),
                             scroll: 'key()'
                         };
