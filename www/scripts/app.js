@@ -1,4 +1,4 @@
-var isAuthenticated = false;
+//var isAuthenticated = false;
 var dependencyModules = [
     'firebase.utils',
     'firebase.simpleLogin',
@@ -48,6 +48,9 @@ angular.module('myApp',
         Auth.$onAuth(function(user) {
             $rootScope.loggedIn = !!user;
         });
+
+
+
     }])
     .config(function (localStorageServiceProvider) {
         localStorageServiceProvider
@@ -83,7 +86,7 @@ angular.module('myApp',
         };
 
         $rootScope.$on('$stateChangeSuccess', function () {
-            if ($state.$current == 'tab.messages' || $state.$current == 'tab.setting') {
+            if ($state.$current == 'home' || $state.$current == 'setting') {
                 $rootScope.showCustomBack = false;
             }else{
                 $rootScope.showCustomBack = true;

@@ -5,7 +5,14 @@
 "use strict";
 
 angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
-
+    .config(['$urlRouterProvider', function ($urlRouterProvider) {
+        // routes which are not in our map are redirected to /tab/setting
+        $urlRouterProvider.otherwise(
+            function () {
+                return '/'
+            }
+        );
+    }])
     .config(
     function ($stateProvider) {
         $stateProvider

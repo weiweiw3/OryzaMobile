@@ -3,14 +3,7 @@
 
     angular.module('myApp.security', ['firebase.auth', 'myApp.config'])
 
-        .config(['$urlRouterProvider', function ($urlRouterProvider) {
-            // routes which are not in our map are redirected to /tab/setting
-            $urlRouterProvider.otherwise(
-                function () {
-                    return 'home'
-                }
-            );
-        }])
+
 
     /**
      * Apply some route security. Any route's resolve method can reject the promise with
