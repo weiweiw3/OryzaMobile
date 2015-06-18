@@ -49,7 +49,7 @@
         ['$q', 'esFactory', '$location', '$localstorage', function ($q, elasticsearch, $location, $localstorage) {
             var client = elasticsearch({
 //                host: "https://a1b5amni:7smeg06ujbchru2l@apricot-2272737.us-east-1.bonsai.io/"
-                host: "http://114.215.185.243:9200"
+                host: "https://114.215.185.243:9443"
             });
             var search = function (table, term, offset) {
                 var deferred = $q.defer(), query, sort;
