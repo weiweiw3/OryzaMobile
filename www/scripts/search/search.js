@@ -21,7 +21,7 @@
 //            var str = 'http://114.215.185.243:8080/data-app/rs/task/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=e0015_KNA1&str_where=KUNNR=/' + customerID + '/';
 
             //var str = 'http://114.215.185.243:8080/data-app/rs/task/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=e0015_LFA1&str_where=LIFNR=/' + customerID + '/';
-            var str = 'http://114.215.185.243:8080/data-app/rs/task/searchData?company_guid=40288b8147cd16ce0147cd236df20000&' +
+            var str = ApiEndpoint.url + '/searchData?company_guid=40288b8147cd16ce0147cd236df20000&' +
                 'table_name=' + table +
                 '&str_where=' + where;
             console.log(str);
