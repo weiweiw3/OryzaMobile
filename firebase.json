@@ -1,0 +1,10 @@
+{
+  "firebase": "40288b8147cd16ce0147cd236df20000",
+  
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**",
+    "**/www/res**"
+  ]
+}

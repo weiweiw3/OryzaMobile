@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Oryzasoft App</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        .wrapper,
+        body {
+            /*padding: 35px;*/
+            /*padding-top: 9px;*/
+            /*text-align: center;*/
+            background-color: black;
+            background: radial-gradient(black 15%, transparent 16%) 0 0, radial-gradient(black 15%, transparent 16%) 8px 8px, radial-gradient(rgba(255, 255, 255, .1) 15%, transparent 20%) 0 1px, radial-gradient(rgba(255, 255, 255, .1) 15%, transparent 20%) 8px 9px;
+            background-color: #282828;
+            background-size: 16px 16px;
+        }
+        /*.wrapper iframe {*/
+        /*    width: 320px;*/
+        /*    height: 568px;*/
+        /*    border: 18px solid #787878;*/
+        /*    border-radius: 9px;*/
+        /*}*/
+        iframe {
+position: absolute;
+width: 320px !important;
+height: 568px;
+top: 104px;
+left: 37px; 
+}
+        #phone-case {
+            position: relative;
+            z-index: 1;
+            width: 380px;
+            height: 810px;
+            background: url("http://ionicframework.com/img/phone-case.png") no-repeat right top;
+            margin-left: 20px;
+        }
+        h3,
+        label {
+            color: white;
+            float: left;
+        }
+        h4 {
+            float: right;
+        }
+        a {
+            color: white;
+            text-align: right;
+            top: 0px;
+        }
+        label {
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!--<h3>Oryzasoft App V0.1</h3>-->
+        <label>
+            Username: user01@test.com
+            <br/>password: 123
+        </label>
+        <div id="phone-case">
+            <iframe src="www"></iframe>
+        </div>
+    </div>
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        // ga('create', 'UA-47722912-1', 'arvindr21.github.io');
+        // ga('send', 'pageview');
+    </script>
+</body>
+
+</html>
