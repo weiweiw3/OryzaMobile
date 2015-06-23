@@ -36,7 +36,17 @@
         </div>
     </div>
     <ion-content>
+
         <ion-list>
+            <ion-item class="item-remove-animate item-icon-right" >
+                <div>{{searchObj.text}} searchHistory</div>
+            </ion-item>
+            <ion-item class="item item-icon-right" ng-repeat="result in searchHistory">
+                <div ui-sref="searchDetail({key:searchObj.text,index:result})">
+                    {{result}}
+                </div>
+                <i class="icon ion-trash-a muted" ng-click="deleteHistory(result)"></i>
+            </ion-item>
             <ion-item class="item-remove-animate item-icon-right" ng-repeat="result in results">
                 <div ng-show="searchObj.text==='material'"
                      ui-sref="searchDetail({key:'material',index:result.MATNR})">

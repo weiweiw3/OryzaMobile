@@ -46,10 +46,10 @@
         };
     })
         .factory('ESService',
-        ['$q', 'esFactory', '$location', '$localstorage', function ($q, elasticsearch, $location, $localstorage) {
+        ['$q', 'esFactory', '$location', '$localstorage','SearchUrl', function ($q, elasticsearch, $location, $localstorage,SearchUrl) {
             var client = elasticsearch({
-//                host: "https://a1b5amni:7smeg06ujbchru2l@apricot-2272737.us-east-1.bonsai.io/"
-                host: "https://114.215.185.243:9443"
+                host: "https://a1b5amni:7smeg06ujbchru2l@apricot-2272737.us-east-1.bonsai.io/"
+                //host: SearchUrl.url
             });
             var search = function (table, term, offset) {
                 var deferred = $q.defer(), query, sort;
@@ -94,8 +94,11 @@
 //                }
                 console.log(table);
                 client.search({
-                    "index": '40288b8147cd16ce0147cd236df20000',
-                    "type": table,
+                    "index": 'firebase',
+                 "type": 'customer',
+
+                    //"index": '40288b8147cd16ce0147cd236df20000',
+                    //"type": table,
                     "body": {
                         "filter": {
                             "limit": {"value": 5}
@@ -128,10 +131,24 @@
             };
         }]
     )
-        .controller('searchDetailCtrl', function ($scope, $stateParams, Api) {
+        .controller('searchDetailCtrl', function ($scope, $stateParams, Api,localStorageService) {
             //console.log($stateParams.index);
             $scope.searchObj=$stateParams.key;
             $scope.title = $stateParams.key + ' ' + $stateParams.index;
+
+            if (typeof  localStorageService.get($stateParams.key) !== 'undefined'
+                && localStorageService.get($stateParams.key) !== null) {
+                $scope.searchHistory=localStorageService.get($stateParams.key);
+
+            }else{
+                $scope.searchHistory=[];
+
+            }
+            if($scope.searchHistory.indexOf($stateParams.index)===-1){
+                $scope.searchHistory.push($stateParams.index);
+            };
+
+            localStorageService.set($stateParams.key, $scope.searchHistory);
             var querys = [
                     {
                         key: 'material',
@@ -283,26 +300,34 @@
 
         })
         .
-        controller('searchCtrl', function (searchObj, $http, $q, Api, $resource, $scope, ESService) {
+        controller('searchCtrl', function (searchObj, $http, $q, Api, $resource, $scope, ESService,localStorageService) {
             $scope.searchObj = searchObj;
             $scope.query = "";
+            if (typeof  localStorageService.get($scope.searchObj.text) !== 'undefined'
+                && localStorageService.get($scope.searchObj.text) !== null) {
+                $scope.searchHistory=localStorageService.get($scope.searchObj.text);
+
+            }else{
+                $scope.searchHistory=[];
+
+            }
+
+
+            $scope.deleteHistory=function (result){
+                var index=$scope.searchHistory.indexOf(result);
+                //console.log(index+' '+$scope.searchHistory.indexOf(index));
+                if (index > -1) {
+                    $scope.searchHistory.splice(index, 1);
+                    localStorageService.set($scope.searchObj.text, $scope.searchHistory);
+                }
+
+            };
+            console.log($scope.searchObj.text+' '+$scope.searchHistory);
             var doSearch = ionic.debounce(function (query) {
                 ESService.search($scope.searchObj.value, query, 0).then(function (results) {
                     console.log(results);
                     $scope.results = results;
-//                    angular.forEach(results, function (value, key) {
-//                        Api.getApiData(value.LIFNR)
-//                            .then(function (data) {
-//                                console.log(data);
-//                                $scope.results[key].TELF1 = data[0].TELF1;
-////                                console.log(data[0].TELF1);
-//                            })
-//                            .catch(function () {
-//                                console.log('Assign only failure callback to promise');
-//                                // This is a shorthand for `promise.then(null, errorCallback)`
-//                            });
-////                        console.log(value.KUNNR, key);
-//                    });
+
                 });
             }, 500);
 
@@ -318,6 +343,7 @@
                 url: '/search/:text?value',
                 templateUrl: 'scripts/search/search.html',
                 controller: 'searchCtrl',
+                cache: false,
                 resolve: {
                     searchObj: function ($stateParams) {
                         return {

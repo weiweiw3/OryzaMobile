@@ -1,6 +1,5 @@
 <ion-view view-title="{{viewtitle}}">
     <ion-nav-buttons side="right">
-
         <button class="button button-icon button-clear ion-search" ui-sref="searchOption"></button>
         <!--<button class="button button-icon button-clear ion-plus" ng-click="openModal()"></button>-->
     </ion-nav-buttons>
@@ -18,7 +17,6 @@
             </div>
             <div class="item item-text-wrap item-icon-right positive" ng-repeat="array in E0001[0].array  "
                  ui-sref="purchaseOrders({index:array.url})">
-
                 {{array.url}}
                 <i class="icon ion-ios-arrow-right muted"></i>
             </div>
@@ -39,7 +37,6 @@
                 {{array.url}}
                 <i class="icon ion-ios-arrow-right muted"></i>
             </div>
-
         </div>
         <div class="item item-text-wrap item-icon-right positive"
              ui-sref="purchaseRequestApproveList({index:E0005[0].url})" ng-show="E0005[0].show">

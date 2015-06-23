@@ -6,7 +6,7 @@
 
 
     app.controller('purchaseRequestItemCtrl',
-        function (myTask, ionicLoading, approveItem, $ionicPopup, $timeout, $scope, fbutil) {
+        function (myTask, ionicLoading, approveItem, $ionicPopup, $timeout, $scope, fbutil,$state,approveInfoService) {
 
             ionicLoading.load('Loading');
             $scope.$watch('data.lock', function (newVal) {
@@ -71,15 +71,11 @@
                         }
                     );
 
-                    $scope.ionicPopup = {
-                        title: 'Purchase Request Approve',
-                        template: $scope.PURCHASEREQUEST + ' ' + $scope.ITEM,
-                        cancelText: ' ',
-                        cancelType: 'button icon ion-close button-assertive',
-                        okText: ' ',
-                        okType: 'button icon ion-checkmark-round button-balanced'
-                    };
-                    $scope.orderID = $scope.PURCHASEREQUEST + ' ' + $scope.ITEM;
+                    $scope.keyText='Purchase Request Approve';
+                    $scope.keyID = $scope.PURCHASEREQUEST + ' ' + $scope.ITEM;
+
+
+
                 }
 
                 if (approveItem.event === 'E0002') {
@@ -125,18 +121,17 @@
                             $scope.inputParas = inputParas;
                         }
                     );
-
-                    $scope.ionicPopup = {
-                        title: 'Purchase Order Approve',
-                        template: $scope.data.po_NUMBER,
-                        cancelText: ' ',
-                        cancelType: 'button icon ion-close button-assertive',
-                        okText: ' ',
-                        okType: 'button icon ion-checkmark-round button-balanced'
-                    };
-                    $scope.orderID = $scope.PURCHASEORDER;
-
+                    $scope.keyText='Purchase Order Approve';
+                    $scope.keyID = $scope.PURCHASEORDER;
                 }
+                $scope.ionicPopup = {
+                    title: $scope.keyText,
+                    template: $scope.keyID,
+                    cancelText: ' ',
+                    cancelType: 'button icon ion-close button-assertive',
+                    okText: ' ',
+                    okType: 'button icon ion-checkmark-round button-balanced'
+                };
                 if ($scope.data.lock) {
                     $scope.data.approveButtonText = 'Finished';
                 } else {
@@ -148,18 +143,37 @@
                         if (res) {
                             ionicLoading.load('Sending out');
                             myTask.createTask(approveItem.event, $scope.ServerUserID,
-                                $scope.inputParas, $scope.orderID, 'Approve')
+                                $scope.inputParas, $scope.keyID, 'Approve')
                                 .then(function (data) {
                                     // promise fulfilled
                                     console.log('Success!', data);
+                                    ionicLoading.unload();
+                                    approveInfoService.addApproveInfo({
+                                        keyText: $scope.keyText,
+                                        keyID: $scope.keyID,
+                                        createTime:new Date().getTime()
+
+                                    });
+                                    $state.go('approve-conformation');
 
                                 }, function (error) {
-                                    // promise rejected, could log the error with: console.log('error', error);
-//                                prepareSundayRoastDinner();
+                                    ionicLoading.load(error);
+                                    console.log(error);
+                                    $timeout(function(){
+                                        ionicLoading.unload();
+                                    }, 1000);
+                                    approveInfoService.addApproveInfo({
+                                        keyText: $scope.keyText,
+                                        keyID: $scope.keyID,
+                                        createTime:new Date().getTime()
+                                    });
+                                    $scope.approveInfo = approveInfoService.getApproveInfo();
+                                    console.log($scope.approveInfo );
+                                    $state.go('approve-conformation');
                                 })
                                 .finally(function () {
                                     //$scope.data.lock = true;
-                                    ionicLoading.unload();
+
                                 });
                             console.log('approve');
                         } else {
@@ -169,8 +183,32 @@
                 };
             });
         });
+    app.service('approveInfoService', function() {
+        var approveInfo = [];
+
+        var addApproveInfo = function(newObj) {
+            //productList.push(newObj);
+            approveInfo=newObj;
+        };
 
 
+        var getApproveInfo = function(){
+            return approveInfo;
+        };
+
+        return {
+            addApproveInfo: addApproveInfo,
+            getApproveInfo: getApproveInfo
+        };
+
+    });
+    app.controller('approveConformationCtrl', function($scope, approveInfoService) {
+        $scope.approveInfo = approveInfoService.getApproveInfo();
+        console.log($scope.approveInfo );
+        $scope.approveInfo.returnTime= new Date($scope.approveInfo.createTime  + 1000*60*10)
+        console.log($scope.approveInfo.returnTime );
+
+    });
     //app.factory('purchaseOrderIndexFactory',
     //    function (fbutil, $firebaseObject) {
     //        return function (ref) {
@@ -181,7 +219,12 @@
 
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider
-
+            .state('approve-conformation', {
+                url: '/approve-conformation',
+                templateUrl: 'scripts/purchase-orders/approve-conformation.html',
+                controller: 'approveConformationCtrl',
+                cache: false
+            })
             .state('purchaseOrder', {
                 url: '/purchaseOrder/:ref',
                 templateUrl: 'scripts/purchase-orders/purchase-order-index.html',

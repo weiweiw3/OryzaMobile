@@ -5,9 +5,11 @@ angular.module('myApp.config', [])
         url: 'https://114.215.185.243/data-app/rs/task'
     })
     .constant('SearchUrl', {
-        url: 'http://localhost:8100/search'
+        url: 'https://114.215.185.243:9443'
     })
-
+    .constant('config',{
+        timeout:3000
+    })
     .constant('COMPANY', '40288b8147cd16ce0147cd236df20000')
 
     // where to redirect users if they need to authenticate (see security.js)

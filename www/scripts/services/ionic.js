@@ -9,6 +9,9 @@ angular.module('myApp.services.ionic', ['ionic'])
                 noBackdrop: false
             });
         };
+
+
+
         this.unload = function () {
             $ionicLoading.hide();
         };

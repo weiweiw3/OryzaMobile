@@ -26,7 +26,6 @@ var myAppComponents = [
     'myApp.controllers.login',
     'myApp.home',
     'myApp.services.ionic',
-    'myApp.services',
     'myApp.services.myTask',
     'myApp.services.myUser',
     'ionic.utils',

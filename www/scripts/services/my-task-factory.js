@@ -4,7 +4,7 @@
 angular.module('myApp.services.myTask',
     ['firebase', 'firebase.utils', 'firebase.simpleLogin'])
     .factory('myTask',
-    function ($http, $q, ApiEndpoint, firebaseRef, $rootScope, syncArray, syncObject, $timeout, simpleLogin) {
+    function ($http, $q, ApiEndpoint, firebaseRef, $rootScope, syncArray, syncObject, $timeout, simpleLogin,config) {
         var currentUser = simpleLogin.user.uid;
         var date = Date.now();
         var messageLog = {
@@ -41,33 +41,58 @@ angular.module('myApp.services.myTask',
 //                        cb && cb(null)
 //                    }, cb)
 //                    .catch(errorFn);
-                function postTask(data) {
-                    console.log('Success!', data);
-                    var d = $q.defer();
-                    //var headers = {
-                    //    'Access-Control-Allow-Origin': '*',
-                    //    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT',
-                    //    'Content-Type': 'application/json',
-                    //    'Accept': 'application/json'
-                    //};
-                    $http({
-                        method: "POST",
-                        //headers: headers,
-                        url: ApiEndpoint.url + '/createTask',
-                        data: data
-                    }).success(function (jsonObj) {
-//                        if (typeof jsonObj == 'object' && jsonObj instanceof Array) {
-//                            console.log(jsonObj);
-//                            d.resolve(angular.toJson(snap.val()));
-//                        }
-                        d.resolve(jsonObj);
-                    }).error(function (data, status, headers, config) {
-                        console.log(data);
-                        console.log(status);
-                        console.log(headers);
-                        console.log(config);
-                        d.reject(data);
+                function httpRequestHandler (method,url,data,timeoutNum) {
+                    var timeout = $q.defer(),
+                        result = $q.defer(),
+                        timedOut = false,
+                        httpRequest;
+
+                    setTimeout(function () {
+                        timedOut = true;
+                        timeout.resolve();
+                    }, (1000 * timeoutNum));
+
+                    httpRequest = $http({
+                        method : method,
+                        url: url,
+                        data: data,
+                        cache: false,
+                        timeout: timeout.promise
                     });
+
+                    httpRequest.success(function(data, status, headers, config) {
+                        result.resolve(data);
+                    });
+
+                    httpRequest.error(function(data, status, headers, config) {
+                        if (timedOut) {
+                            //result.reject({
+                            //    error: 'timeout',
+                            //    message: 'Request took longer than ' + timeoutNum + ' seconds.'
+                            //});
+                            result.reject('Could not connect to server, Please try again later.');
+                        } else {
+                            result.reject(data);
+                        }
+                    });
+
+                    return result.promise;
+                }
+
+                function postTask(data) {
+                    var d = $q.defer();
+                    var httpRequest = httpRequestHandler('POST',ApiEndpoint.url + '/createTask',data,3);
+                    httpRequest.then(function (jsonObj) {
+                        //$scope.status = 'Complete';
+                        console.log(jsonObj);
+                        d.resolve(jsonObj);
+
+                    }, function (error) {
+                        //$scope.status = 'Error';
+                        console.log(error);
+                        d.reject(error);
+                    });
+
                     return d.promise;
                 }
 

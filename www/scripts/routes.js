@@ -5,6 +5,9 @@
 "use strict";
 
 angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
+    .config(['$httpProvider', function($httpProvider) {
+        $httpProvider.defaults.timeout = 5000;
+    }])
     .config(['$urlRouterProvider', function ($urlRouterProvider) {
         // routes which are not in our map are redirected to /tab/setting
         $urlRouterProvider.otherwise(
@@ -38,6 +41,7 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
                 templateUrl: 'templates/setting.html'
 
             })
+
             .state('about', {
                 url: '/about',
                 templateUrl: 'templates/about.html'
