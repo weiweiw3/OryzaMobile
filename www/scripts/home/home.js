@@ -135,7 +135,7 @@
             })
             .state('notification', {
                 url: '/notification',
-                templateUrl: 'scripts/home/home.html',
+                templateUrl: 'scripts/home/notification.html',
                 controller: 'homeCtrl',
 
                 resolve: {

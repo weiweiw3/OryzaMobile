@@ -48,8 +48,8 @@
         .factory('ESService',
         ['$q', 'esFactory', '$location', '$localstorage','SearchUrl', function ($q, elasticsearch, $location, $localstorage,SearchUrl) {
             var client = elasticsearch({
-                host: "https://a1b5amni:7smeg06ujbchru2l@apricot-2272737.us-east-1.bonsai.io/"
-                //host: SearchUrl.url
+                //host: "https://a1b5amni:7smeg06ujbchru2l@apricot-2272737.us-east-1.bonsai.io/"
+                host: SearchUrl.url
             });
             var search = function (table, term, offset) {
                 var deferred = $q.defer(), query, sort;
@@ -94,11 +94,11 @@
 //                }
                 console.log(table);
                 client.search({
-                    "index": 'firebase',
-                 "type": 'customer',
+                 //   "index": 'firebase',
+                 //"type": 'customer',
 
-                    //"index": '40288b8147cd16ce0147cd236df20000',
-                    //"type": table,
+                    "index": '40288b8147cd16ce0147cd236df20000',
+                    "type": table,
                     "body": {
                         "filter": {
                             "limit": {"value": 5}

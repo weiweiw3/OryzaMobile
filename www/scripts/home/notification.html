@@ -1,40 +1,14 @@
-<ion-view view-title="OryzaMobile">
-    <ion-nav-buttons side="right">
-        <button class="button button-icon button-clear ion-search" ui-sref="searchOption"></button>
-        &nbsp;&nbsp;&nbsp;
-        <button class="button button-icon button-clear ion-email" ui-sref="notification" ></button>
-        <!--<button class="button button-icon button-clear ion-plus" ng-click="openModal()"></button>-->
-    </ion-nav-buttons>
-    <ion-nav-buttons side="left">
-    <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+<ion-view view-title="{{viewtitle}}">
 
 
-        <!--<span class="badge badge-assertive">3</span>-->
 
-    </ion-nav-buttons>
-
-
-    <ion-content >
+    <ion-content>
         <ion-refresher on-refresh="refresh()"></ion-refresher>
-        <!--<ion-list show-delete="false" can-swipe="true">-->
-            <!--<ion-item href="#">-->
-                <!--Item 1-->
-                <!--<ion-option-button class="button-light icon ion-heart"></ion-option-button>-->
-                <!--<ion-option-button class="button-light icon ion-email"></ion-option-button>-->
-                <!--<ion-option-button class="button-assertive icon ion-trash-a"></ion-option-button>-->
-            <!--</ion-item>-->
-            <!--<ion-item href="#">-->
-                <!--Item 2-->
-                <!--<ion-option-button class="button-light icon ion-heart"></ion-option-button>-->
-                <!--<ion-option-button class="button-light icon ion-email"></ion-option-button>-->
-                <!--<ion-option-button class="button-assertive icon ion-trash-a"></ion-option-button>-->
-            <!--</ion-item>-->
-        <!--</ion-list>-->
         <div class="card-gallery item item-text-wrap" ng-show="E0001[0].show ">
-
-            <div class="item item-divider  positive">
-                <h2>Purchase Order Approve</h2>
-                <span class="badge badge-assertive">3</span>
+            <div class="item item-divider positive ">
+                Purchase
+                Order
+                Approve<span class="badge badge-assertive">3</span>
             </div>
             <div class="item item-text-wrap item-icon-right positive" ng-repeat="array in E0001[0].array  "
                  ui-sref="purchaseOrders({index:array.url})">
