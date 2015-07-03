@@ -1,0 +1,39 @@
+<ion-view view-title="leave request" hide-back-button="true">
+    <ion-nav-buttons side="right">
+
+        <button class="button button-icon button-clear ion-plus"></button>
+        <!--<button class="button button-icon button-clear ion-plus" ng-click="openModal()"></button>-->
+    </ion-nav-buttons>
+
+    <ion-content>
+        From Date
+        <ionic-datepicker idate="fromDate" disablepreviousdates="true" callback="fromDatePickerCallback">
+            <button class="button button-block button-positive"> {{ fromDate | date:'dd - MMMM - yyyy' }}</button>
+        </ionic-datepicker>
+        <ionic-timepicker etime="fromTimeslots.epochTime" format="fromTimeslots.format" step="fromTimeslots.step"
+                          callback="fromTimePickerCallback">
+            <button class="button button-block button-positive overflowShow">
+                <standard-time-meridian etime='fromTimeslots.epochTime'></standard-time-meridian>
+            </button>
+        </ionic-timepicker>
+        ToDate
+        <ionic-datepicker idate="toDate" disablepreviousdates="true" callback="toDatePickerCallback">
+            <button class="button button-block button-positive"> {{ toDate | date:'dd - MMMM - yyyy' }}</button>
+        </ionic-datepicker>
+        <ionic-timepicker etime="toTimeslots.epochTime" format="toTimeslots.format" step="toTimeslots.step"
+                          callback="toTimePickerCallback">
+            <button class="button button-block button-positive overflowShow">
+                <standard-time-meridian etime='toTimeslots.epochTime'></standard-time-meridian>
+            </button>
+        </ionic-timepicker>
+        <line>---------</line>
+        <div>
+            <button class="button button-block button-positive" ng-click="showConfirm()">
+                apply
+            </button>
+        </div>
+    </ion-content>
+</ion-view>
+
+
+

@@ -53,7 +53,15 @@
     <script src="lib/elasticsearch/elasticsearch.angular.min.js"></script>
     <script src="lib/angular-local-storage/dist/angular-local-storage.min.js"></script>
 
+    <link href="lib/ionic-datepicker/dist/style.css" rel="stylesheet">
+    <!-- path to ionic/angularjs js -->
+    <script src="lib/ionic-datepicker/dist/templates.js"></script>
+    <script src="lib/ionic-datepicker/dist/ionic-datepicker.js"></script>
+    <link href="lib/ionic-timepicker/dist/style.css" rel="stylesheet">
 
+    <!-- path to ionic/angularjs js -->
+    <script src="lib/ionic-timepicker/dist/templates.js"></script>
+    <script src="lib/ionic-timepicker/dist/ionic-timepicker.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
@@ -61,7 +69,6 @@
     <script src="scripts/routes.js"></script>
     <script src="scripts/config.js"></script>
     <!-- services:js -->
-    <script src="scripts/services/services.js"></script>
     <script src="scripts/services/ionic.js"></script>
     <script src="scripts/services/my-task-factory.js"></script>
     <script src="scripts/services/my-user-factory.js"></script>
@@ -73,7 +80,7 @@
     <script src="scripts/directives/profile.js"></script>
     <script src="scripts/directives/favorite-message-directive.js"></script>
     <script src="scripts/directives/create-task-directive.js"></script>
-
+    <script src="scripts/directives/ionic-timepicker-directive.js"></script>
     <!-- enddirectives -->
     <!-- filters:js -->
     <script src="scripts/filters/filters.js"></script>
@@ -95,6 +102,8 @@
     <script src="scripts/search/search.js"></script>
     <script src="scripts/home/home.js"></script>
     <script src="scripts/setting/login-ctrl.js"></script>
+    <script src="scripts/hr/leave-request.js"></script>
+
     <!-- endcontrollers -->
     <!-- firebase:js -->
 

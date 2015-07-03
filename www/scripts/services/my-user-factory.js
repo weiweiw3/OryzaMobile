@@ -2,7 +2,7 @@
  * Created by C5155394 on 2015/3/5.
  */
 angular.module('myApp.services.myUser',
-    ['firebase', 'firebase.utils', 'firebase.simpleLogin'])
+    [])
     .factory('myUser',
     function ($rootScope, $q, syncArray,syncObject, $timeout, simpleLogin) {
         var currentUser = simpleLogin.user.uid;

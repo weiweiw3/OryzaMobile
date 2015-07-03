@@ -1,8 +1,7 @@
 (function (angular) {
     "use strict";
 
-    var app = angular.module('myApp.purchaseOrder', ['ionic', 'firebase.simpleLogin',
-        'firebase.utils', 'firebase']);
+    var app = angular.module('myApp.purchaseOrder', [ ]);
 
 
     app.controller('purchaseRequestItemCtrl',

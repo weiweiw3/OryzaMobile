@@ -12,6 +12,8 @@ var dependencyModules = [
     'ngMessages',
     'elasticsearch',
     'LocalStorageModule',
+    'ionic-datepicker',
+    'ionic-timepicker',
 //    'ui.router',
     'angular-momentjs'];
 var myAppComponents = [
@@ -20,6 +22,7 @@ var myAppComponents = [
     'myApp.config',
     'myApp.filters',
 //  'appServices',
+    'myApp.directives.timepicker',
     'myApp.directives',
     'myApp.directives.favoriteMessage',
     'myApp.directives.createTask',
@@ -36,6 +39,8 @@ var myAppComponents = [
     'myApp.purchaseOrderList',
     'myApp.search',
     'myApp.sapValidation'
+    ,
+    'myApp.leaveRequest'
 ];
 
 // Declare app level module which depends on filters, and services
