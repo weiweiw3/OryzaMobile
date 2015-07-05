@@ -1,9 +1,10 @@
 <ion-view view-title="{{viewtitle}} " hide-back-button="true">
     <ion-content has-header="true" has-tabs="true" padding="true">
         <ion-refresher on-refresh="refresh()"></ion-refresher>
-        <ion-list show-delete="false"
-                  show-reorder="false"
-                  can-swipe="true">
+        <ion-list can-swipe="true">
+            <!--show-delete="false"-->
+                  <!--show-reorder="false"-->
+                  <!---->
             <ion-item class="item-text-wrap item-thumbnail-left" ng-repeat="message in messages">
                 <!--ui-sref="purchaseOrder({ref:messagesRef+'/'+ message.po_NUMBER})"-->
                 {{ message.employeenumber}}  {{message.abs_ATT_TYPE}} <p>{{message.shorttext}}</p>
@@ -17,20 +18,23 @@
                 <div>{{message.workdate}} {{message.catshours}}</div>
                 <div>{{message.creationdate}} {{message.entrytime}}</div>
                 <div><p>{{message.approving_ADMIN}} {{message.date_OF_APPROVAL}}</p></div>
+                <div ng-controller="leaveRequestListItemCtrl">
                 <ion-option-button class="button-positive"
-                                   ng-click="share(item)">
+                                   ng-click="share(message.$id)">
                     Share
                 </ion-option-button>
                 <ion-option-button class="button-info"
                                    ng-click="edit(item)">
                     Edit
                 </ion-option-button>
-                <ion-delete-button class="ion-minus-circled"
-                                   ng-click="items.splice($index, 1)">
-                </ion-delete-button>
-                <ion-reorder-button class="ion-navicon"
-                                    on-reorder="reorderItem(item, $fromIndex, $toIndex)">
-                </ion-reorder-button>
+                </div>
+
+                <!--<ion-delete-button class="ion-minus-circled"-->
+                                   <!--ng-click="items.splice($index, 1)">-->
+                <!--</ion-delete-button>-->
+                <!--<ion-reorder-button class="ion-navicon"-->
+                                    <!--on-reorder="reorderItem(item, $fromIndex, $toIndex)">-->
+                <!--</ion-reorder-button>-->
 
             </ion-item>
         </ion-list>

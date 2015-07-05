@@ -4,7 +4,124 @@
     var app = angular.module('myApp.leaveRequest', []);
 
 
-    app.controller('leaveRequestCtrl',
+    app
+        .controller('leaveRequestListItemCtrl',
+        function (myTask, ionicLoading, $ionicPopup, $timeout, $scope, fbutil, $state, approveInfoService) {
+console.log('x');
+            $scope.share=function(item){
+                $scope.COUNTER=item;
+
+
+            var approveItem={
+                event : 'E0025'
+            };
+            if (approveItem.event === 'E0025') {
+
+                $scope.ServerUserID = '100001';
+                //$scope.PO_REL_CODE = res[6].substr(3);
+                //$scope.PURCHASEORDER = res[8];
+                //$scope.purchaseOrderHeaderRefStr = ref.toString()
+                //    .replace(ref.root().toString(), '');
+                //$scope.purchaseOrderItemsRef = $scope.purchaseOrderHeaderRefStr
+                //    .replace('PO_HEADERS', 'PO_ITEMS');
+
+                //通过检查对应E0002,如果审批错误即返回值等于null，那么改变lock可以继续审批
+                //fbutil.ref(['Event/' + approveItem.event, $scope.ServerUserID])
+                //    .startAt($scope.PURCHASEORDER)
+                //    .endAt($scope.PURCHASEORDER)
+                //    .once('value', function (snap) {
+                //        snap.child($scope.PURCHASEORDER).child('TASK_INFO')
+                //            .ref().once('value', function (snap) {
+                //                if(snap.exportVal()!=null)$scope.history = snap.exportVal();
+                //
+                //                console.log(snap.exportVal());
+                //                if (snap.child('task_status').val() != null) {
+                //                    $scope.data.lock = true;
+                //                } else {
+                //                    $scope.data.lock = false;
+                //                }
+                //            });
+                //    });
+
+                //E0001->E0002
+                myTask.getInputP(approveItem.event).$loaded().then(
+                    function (data) {
+                        var inputParas = data.$value;
+                        //inputParas = inputParas.replace('$P01$', $scope.PO_REL_CODE);//PO_REL_CODE
+                        //inputParas = inputParas.replace('$P01$', $scope.PO_REL_CODE);//PO_REL_CODE
+                        ////TODO replace P02 twice , in the furture use replace-all function
+                        //inputParas = inputParas.replace('$P02$', $scope.PURCHASEORDER);//PURCHASEORDER
+                        //inputParas = inputParas.replace('$P02$', $scope.PURCHASEORDER);//PURCHASEORDER
+                        //inputParas = inputParas.replace('$P03$', $scope.ServerUserID);//ServerUserID
+                        //inputParas = inputParas + ';FB_FROM_PATH=' + $scope.purchaseOrderHeaderRefStr;
+                        console.log(inputParas);
+                        //$scope.inputParas = inputParas;
+                    }
+                );
+                $scope.keyText='Purchase Order Approve';
+                $scope.keyID = $scope.COUNTER;
+            }
+            $scope.ionicPopup = {
+                title: $scope.keyText,
+                template: $scope.keyID,
+                cancelText: ' ',
+                cancelType: 'button icon ion-close button-assertive',
+                okText: ' ',
+                okType: 'button icon ion-checkmark-round button-balanced'
+            };
+            //if ($scope.data.lock) {
+            //    $scope.data.approveButtonText = 'Finished';
+            //} else {
+            //    $scope.data.approveButtonText = 'Approve';
+            //}
+            $scope.showConfirm = function () {
+                var confirmPopup = $ionicPopup.confirm($scope.ionicPopup);
+                confirmPopup.then(function (res) {
+                    if (res) {
+                        ionicLoading.load('Sending out');
+                        myTask.createTask(approveItem.event, $scope.ServerUserID,
+                            $scope.inputParas, $scope.keyID, 'Approve')
+                            .then(function (data) {
+                                // promise fulfilled
+                                console.log('Success!', data);
+                                ionicLoading.unload();
+                                approveInfoService.addApproveInfo({
+                                    keyText: $scope.keyText,
+                                    keyID: $scope.keyID,
+                                    createTime:new Date().getTime()
+
+                                });
+                                //$state.go('approve-conformation');
+
+                            }, function (error) {
+                                ionicLoading.load(error);
+                                console.log(error);
+                                $timeout(function(){
+                                    ionicLoading.unload();
+                                }, 1000);
+                                approveInfoService.addApproveInfo({
+                                    keyText: $scope.keyText,
+                                    keyID: $scope.keyID,
+                                    createTime:new Date().getTime()
+                                });
+                                $scope.approveInfo = approveInfoService.getApproveInfo();
+                                console.log($scope.approveInfo );
+                                $state.go('approve-conformation');
+                            })
+                            .finally(function () {
+                                //$scope.data.lock = true;
+
+                            });
+                        console.log('approve');
+                    } else {
+                        console.log('cancel');
+                    }
+                });
+            };
+            };
+        })
+
+            .controller('leaveRequestCtrl',
         function (myTask, ionicLoading, $ionicPopup, $timeout, $scope, fbutil, $state, approveInfoService) {
 
             //$scope.fromDate = new Date();
