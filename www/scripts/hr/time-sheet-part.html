@@ -1,0 +1,28 @@
+<ion-item class="item-text-wrap" ng-repeat="message in messages"
+          ui-sref="timeSheet({index:messagesRef+'/'+ message.$id})">
+    <div>{{message.$id}} {{ message.EMPLOYEENUMBER}} {{message.ABS_ATT_TYPE}}</div>
+    <div>
+        <strong ng-class="{positive: message.read, energized: message.favorite}">
+            <i class="icon ion-calendar positive">{{message.WORKDATE}}</i> <i class="icon ion-clock positive">{{message.CATSHOURS}}</i>
+            Status:{{message.STATUS}}
+        </strong>
+    </div>
+    <div>{{message.SHORTTEXT}}</div>
+    <div ng-show="message.STATUS==30"><p><i class="icon ion-checkmark positive">approveBy {{message.APPROVING_ADMIN}}
+        {{message.DATE_OF_APPROVAL}}</i></p></div>
+    <div><p>createAt {{message.CREATIONDATE}} {{message.ENTRYTIME}}</p></div>
+    <!--<ion-delete-button class="ion-minus-circled"-->
+    <!--ng-click="items.splice($index, 1)">-->
+    <!--</ion-delete-button>-->
+    <!--<ion-reorder-button class="ion-navicon"-->
+    <!--on-reorder="reorderItem(item, $fromIndex, $toIndex)">-->
+    <!--</ion-reorder-button>-->
+    <div ng-controller="leaveRequestListItemCtrl">
+        <ion-option-button class="button-assertive" ng-click="delete(message.$id)">
+            Delete
+        </ion-option-button>
+        <ion-option-button class="button-info" ui-sref="timeSheet({index:messagesRef+'/'+ message.$id})">
+            Edit
+        </ion-option-button>
+    </div>
+</ion-item>

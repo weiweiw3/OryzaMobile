@@ -1,37 +1,21 @@
-<ion-view view-title="{{viewtitle}}" hide-back-button="true">
-    <ion-content has-header="true" has-tabs="true" padding="true">
-        <ion-refresher on-refresh="refresh()"></ion-refresher>
-        <ion-list>
-            <ion-item ng-repeat="message in messages  "
-                      ui-sref="purchaseOrder({ref:messagesRef+'/'+ message.po_NUMBER})">
-                <div>
-                    <strong ng-class="{positive: message.read, energized: message.favorite}">
-                        {{ message.po_NUMBER}}
-                    </strong>
-                    <i ng-show="message.lock" class="icon ion-locked positive"></i>
+<ion-item ng-repeat="message in ionList"
+          ui-sref="purchaseOrder({ref:messagesRef+'/'+ message.po_NUMBER})">
+    <div>
+        <strong ng-class="{positive: message.read, energized: message.favorite}">
+            {{ message.PO_NUMBER}}
+        </strong>
+        <i ng-show="message.lock" class="icon ion-locked positive"></i>
+    </div>
+    <div>
+        {{ message.VEND_NAME}}
+    </div>
+    <div>{{ message.TARGET_VAL| currency:message.CURRENCY}}</div>
+    <div class="pull-left">{{ message.PURCH_ORG_TEXT}}</div>
+    <div class="card-footer text-right">
+        <i ng-show="message.favorite" class="icon ion-heart assertive"></i>
 
-                </div>
-                <div>
-                    {{ message.vend_NAME}}
-                </div>
-                <div>{{ message.target_VAL| currency:message.currency}}</div>
-                <div class="pull-left">{{ message.purch_ORG_TEXT}}</div>
-
-                <div class="card-footer text-right">
-                    <i ng-show="message.favorite" class="icon ion-heart assertive"></i>
-
-                    <div class="pull-left">
-                        <i class="icon ion-clock"></i> <span am-time-ago="message.doc_DATE"></span>
-                    </div>
-                </div>
-            </ion-item>
-        </ion-list>
-        <ion-infinite-scroll
-                on-infinite="loadMore()"
-                icon="ion-loading-c"
-                distance="1%">
-        </ion-infinite-scroll>
-    </ion-content>
-</ion-view>
-
-
+        <div class="pull-left">
+            <i class="icon ion-clock"></i> <span am-time-ago="message.DOC_DATE"></span>
+        </div>
+    </div>
+</ion-item>

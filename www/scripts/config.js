@@ -5,7 +5,7 @@ angular.module('myApp.config', [])
         url: 'https://114.215.185.243/data-app/rs/task'
     })
     .constant('SearchUrl', {
-        url: 'https://114.215.185.243:9443'
+        url: 'https://218.244.136.132'
     })
     .constant('config',{
         timeout:3000

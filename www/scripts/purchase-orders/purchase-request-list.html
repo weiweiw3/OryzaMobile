@@ -1,14 +1,12 @@
 <ion-view view-title="{{viewtitle}}" hide-back-button="true">
     <ion-content has-header="true" has-tabs="true" padding="true">
         <ion-refresher on-refresh="refresh()"></ion-refresher>
-
         <ion-list>
             <ion-item class="item item-icon-right"
                       ng-repeat="message in messages  "
                       ui-sref="purchaseRequest({index:messagesRef+'/'+ message.$id,key:message.$id})"
                     >
                 {{ message.$id}}<i class="icon ion-ios-arrow-right muted"></i>
-
             </ion-item>
         </ion-list>
         <ion-infinite-scroll

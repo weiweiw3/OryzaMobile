@@ -10,10 +10,10 @@
                       ng-repeat="message in messages "
                       ui-sref="purchaseRequestItem({ref:messagesRef+'/'+ message.$id})"
                     >
-                <h2>{{ message.preq_ITEM}} {{ message.pur_MAT}}</h2>
-                <p>{{ message.net_PRICE}} {{ message.disp_QUAN}}</p>
+                <h2>{{ message.PREQ_ITEM}} {{ message.PUR_MAT}}</h2>
+                <p>{{ message.NET_PRICE}} {{ message.DISP_QUAN}}</p>
                 <i ng-show="message.lock" class="icon ion-locked positive"></i>
-                {{ message.short_TEXT}}
+                {{ message.SHORT_TEXT}}
                 <!--<i class="icon ion-ios-arrow-right muted"></i>-->
             </ion-item>
         </ion-list>

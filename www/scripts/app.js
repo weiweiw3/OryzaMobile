@@ -100,7 +100,7 @@ angular.module('myApp',
 
 
 // do all the things ionic needs to get going
-    .run(function ($ionicPlatform, $rootScope, FIREBASE_URL,
+    .run(function ($ionicPlatform, $rootScope, FIREBASE_URL,$ionicPopup,
                    $firebaseAuth, $firebase, $window, $location, $ionicLoading) {
 
         $ionicPlatform.ready(function (simpleLogin) {

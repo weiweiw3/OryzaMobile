@@ -1,0 +1,39 @@
+<ion-view view-title="time sheet" hide-back-button="true">
+    <ion-nav-buttons side="right">
+        <button class="button button-icon button-clear ion-plus"></button>
+        <!--<button class="button button-icon button-clear ion-plus" ng-click="openModal()"></button>-->
+    </ion-nav-buttons>
+    <ion-content>
+        <form name="validation" ng-submit="tryValidation()">
+            <div ng-show="test" >From</div>
+            <ionic-datepicker ng-show="test" idate="fromDate" disablepreviousdates="true"
+                              callback="fromDatePickerCallback">
+                <button class="button button-block button-positive"> {{ fromDate | date:'dd - MMMM - yyyy' }}</button>
+            </ionic-datepicker>
+            ToDate
+            <ionic-datepicker idate="toDate" disablepreviousdates="true" callback="toDatePickerCallback">
+                <button class="button button-block button-positive"> {{ toDate | date:'dd - MMMM - yyyy' }}</button>
+            </ionic-datepicker>
+            <div class="item range range-positive">
+                <i class="icon ion-ios-bolt-outline"></i>
+                <input type="range" name="volume" min="0" max="8" ng-model="catsHours">
+                <i class="icon ion-ios-bolt"></i>
+            </div>
+            {{catsHours}}
+            <label class="item item-input">
+                <input type="text" placeholder="SHORTTEXT" name="SHORTTEXT" ng-model="data.SHORTTEXT">
+            </label>
+            <ion-toggle ng-model="test" ng-checked="test">
+                test
+            </ion-toggle>
+            <div>
+                <button class="button button-block button-positive">
+                    edit
+                </button>
+            </div>
+        </form>
+    </ion-content>
+</ion-view>
+
+
+

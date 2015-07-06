@@ -18,21 +18,28 @@ angular.module('myApp.services.myTask',
             getInputP: function (event) {
                 return syncObject([taskDefaultRefStr, event, 'inputParas']);
             },
+            getjsonContent: function (event) {
+                return syncObject([taskDefaultRefStr, event, 'jsonContent']);
+            },
+            createTask: function (componentId, ServerUser, inputPStr, logId, nextAction, jsonContent) {
 
-            createTask: function (componentId, ServerUser, inputPStr, logId, nextAction, opt) {
-
-                var logRef = firebaseRef(['users', currentUser, 'log', componentId, logId]);
+                //var logRef = firebaseRef(['users', currentUser, 'log', componentId, logId]);
                 var taskRef = firebaseRef(['tasks']);
                 messageLog.action = nextAction;
 //                var cb = opt.callback || function () {
 //                };
-                var cb = function () {
-                };
-                var errorFn = function (err) {
-                    $timeout(function () {
-                        cb(err);
+//                var cb = function () {
+//                };
+//                var errorFn = function (err) {
+//                    $timeout(function () {
+//                        cb(err);
+//                    });
+//                };
+
+                return addNewTask(taskRef, inputPStr, componentId, ServerUser,jsonContent)
+                    .then(function (data) {
+                        return postTask(data);
                     });
-                };
                 //promise process
 //                promise
 //                    .then(log4task(logRef, componentId))
@@ -82,6 +89,8 @@ angular.module('myApp.services.myTask',
                 function postTask(data) {
                     var d = $q.defer();
                     var httpRequest = httpRequestHandler('POST',ApiEndpoint.url + '/createTask',data,3);
+                    console.log(ApiEndpoint.url );
+                    console.log(data);
                     httpRequest.then(function (jsonObj) {
                         //$scope.status = 'Complete';
                         console.log(jsonObj);
@@ -96,18 +105,24 @@ angular.module('myApp.services.myTask',
                     return d.promise;
                 }
 
-                function addNewTask(taskRef, inputP, componentId, ServerUser) {
+                function addNewTask(taskRef, inputPStr, componentId, ServerUser,jsonContent) {
                     var d = $q.defer();
                     console.log(taskDefaultRefStr);
+
                     firebaseRef([taskDefaultRefStr, componentId])
                         .on("value", function (snap) {
                             var taskData = snap.val();
                             taskData.userId = ServerUser;
+                            if (!angular.isUndefined(jsonContent) && jsonContent != null){
+                                console.log(jsonContent);
+                                //taskData.jsonContent=jsonContent;
+                            }
+                            console.log(inputPStr);
                             taskData.inputParas = '';
                             //push完新task后，把新生成的key也存下来。
                             var onComplete = function () {
-                                inputP = inputP + ';task_FB=' + newTaskRef.key();
-                                newTaskRef.child('inputParas').set(inputP, function (error) {
+                                inputPStr = inputPStr + ';task_FB=' + newTaskRef.key();
+                                newTaskRef.child('inputParas').set(inputPStr, function (error) {
                                     if (error) {
                                         d.reject(error);
                                         console.log("Error:", error);
@@ -123,24 +138,21 @@ angular.module('myApp.services.myTask',
                     return d.promise;
                 }
 
-                function log4task(logRef, componentId) {
-                    var ref = logRef;
-                    var d = $q.defer();
-                    messageLog.action = componentId;
-                    ref.push(messageLog, function (error) {
-                        if (error) {
-                            d.reject(error);
-                        } else {
-                            d.resolve();
-                        }
-                    });
-                    return d.promise;
-                }
+                //function log4task(logRef, componentId) {
+                //    var ref = logRef;
+                //    var d = $q.defer();
+                //    messageLog.action = componentId;
+                //    ref.push(messageLog, function (error) {
+                //        if (error) {
+                //            d.reject(error);
+                //        } else {
+                //            d.resolve();
+                //        }
+                //    });
+                //    return d.promise;
+                //}
 
-                return addNewTask(taskRef, inputPStr, componentId, ServerUser)
-                    .then(function (data) {
-                        return postTask(data);
-                    });
+
             }
         };
         return myTask;

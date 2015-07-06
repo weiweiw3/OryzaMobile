@@ -5,10 +5,10 @@
         'firebase.utils', 'firebase']);
 
 
-    app.controller('purchaseRequestListCtrl',
+    app.controller('ionListViewCtrl',
         function (ionicLoading, list, $firebaseArray, $state,
                   $location, $timeout, $scope) {
-            $scope.viewtitle = list.title;
+            $scope.viewTitle = list.title;
             // create a scrollable reference
             $scope.condition = function (ref) {
                 var deferred = $q.defer();
@@ -22,12 +22,12 @@
             var scrollRef = new Firebase.util.Scroll(list.ref, list.scroll);
             ionicLoading.load('loading');
             // create a synchronized array on scope
-            $scope.messages = $firebaseArray(scrollRef);
+            $scope.ionList = $firebaseArray(scrollRef);
             $scope.messagesRef = scrollRef.toString().replace(scrollRef.root().toString(), '');
 
             // load the first three contacts
             scrollRef.scroll.next(3);
-            $scope.messages.$loaded()
+            $scope.ionList.$loaded()
                 .then(function () {
                     ionicLoading.unload();
                 });
@@ -47,6 +47,7 @@
                 $scope.$broadcast('scroll.infiniteScrollComplete');
             };
         })
+
         .directive('eatClickIf', ['$parse', '$rootScope',
             function ($parse, $rootScope) {
                 return {
@@ -89,13 +90,35 @@
 //                }
 //            };
 //        });
-
+app.directive('purchaseOrderList', function () {
+    return {
+        restrict: 'E',
+        scope: {ionList: '='},
+        templateUrl: 'scripts/purchase-orders/purchase-order-list.html'
+    };
+});
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider
+            .state('ionListView', {
+                url: '/:viewName/:index?key',
+                templateUrl: 'scripts/hr/time-sheet-list.html',
+                controller: 'ionListViewCtrl',
+                resolve: {
+                    list: function (fbutil, ionicLoading, $stateParams) {
+                        console.log($stateParams.viewName);
+                        return {
+                            title: 'Purchase Orders',
+                            ref: fbutil.ref([$stateParams.index, 'PO_HEADERS']),
+                            scroll: 'po_NUMBER'
+                        };
+                    }
+                }
+            })
+
             .state('purchaseOrders', {
                 url: '/purchaseOrders/:index',
                 templateUrl: 'scripts/purchase-orders/purchase-order-list.html',
-                controller: 'purchaseRequestListCtrl',
+                controller: 'ionListViewCtrl',
                 resolve: {
                     list: function (fbutil, ionicLoading, $stateParams) {
                         return {
@@ -109,7 +132,7 @@
             .state('purchaseOrderItems', {
                 url: '/purchaseOrderItems/:index?key',
                 templateUrl: 'scripts/purchase-orders/purchase-order-items.html',
-                controller: 'purchaseRequestListCtrl',
+                controller: 'ionListViewCtrl',
                 resolve: {
                     list: function (fbutil, ionicLoading, $stateParams) {
                         return {
@@ -123,7 +146,7 @@
             .state('purchaseOrdersApproveMessages', {
                 url: '/purchaseOrdersApproveMessages/:index',
                 templateUrl: 'scripts/purchase-orders/purchase-order-approve-messages.html',
-                controller: 'purchaseRequestListCtrl',
+                controller: 'ionListViewCtrl',
                 resolve: {
                     list: function (fbutil, ionicLoading, $stateParams) {
                         return {
@@ -137,7 +160,7 @@
             .state('purchaseRequests', {
                 url: '/purchaseRequests/:index',
                 templateUrl: 'scripts/purchase-orders/purchase-request-list.html',
-                controller: 'purchaseRequestListCtrl',
+                controller: 'ionListViewCtrl',
                 resolve: {
                     list: function (fbutil, ionicLoading, $stateParams) {
                         return {
@@ -151,7 +174,7 @@
             .state('purchaseRequest', {
                 url: '/purchaseRequest/:index?key',
                 templateUrl: 'scripts/purchase-orders/purchase-request-index.html',
-                controller: 'purchaseRequestListCtrl',
+                controller: 'ionListViewCtrl',
                 resolve: {
                     list: function (fbutil, ionicLoading, $stateParams) {
                         return {
@@ -165,7 +188,7 @@
             .state('purchaseRequestApproveList', {
                 url: '/purchaseRequestApproveList:index',
                 templateUrl: 'scripts/purchase-orders/purchase-request-approve-list.html',
-                controller: 'purchaseRequestListCtrl',
+                controller: 'ionListViewCtrl',
                 resolve: {
                     list: function (fbutil, ionicLoading, $stateParams) {
                         return {
@@ -179,7 +202,7 @@
             .state('purchaseRequestApproveMessage', {
                 url: '/purchaseRequestApproveMessage/:index?key',
                 templateUrl: 'scripts/purchase-orders/purchase-request-approve-message.html',
-                controller: 'purchaseRequestListCtrl',
+                controller: 'ionListViewCtrl',
                 resolve: {
                     list: function (fbutil, ionicLoading, $stateParams) {
                         return {
