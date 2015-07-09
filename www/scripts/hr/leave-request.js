@@ -44,11 +44,8 @@
                 controller: function ($scope) {
                     var object=$scope.messages;
                     console.log(object);
-
                     //controller for your sub area.
                 }
-
-
             };
         })
         .controller('leaveRequestListItemCtrl',
@@ -87,7 +84,6 @@
                     //            });
                     //    });
 
-                    //E0001->E0002
                     $q.all([
                         myTask.getjsonContent(approveItem.event).$loaded(),
                         myTask.getInputP(approveItem.event).$loaded()
@@ -457,36 +453,11 @@
                         };
                     }
                 }
-
-            })
-            .state('timeSheetList', {
-                url: '/timeSheetList',
-                templateUrl: 'scripts/hr/time-sheet-list.html',
-                controller: 'ionListViewCtrl',
-                resolve: {
-                    list: function (fbutil, $stateParams) {
-                        return {
-                            title: 'Time-Sheet',
-                            ref: fbutil.ref(['Event/E0022/100001/CATSRECORDS_OUT']),
-                            scroll: '$priority'
-                        };
-                    }
-                }
             })
             .state('timeSheetCreate', {
                 url: '/timeSheetCreate',
                 templateUrl: 'scripts/hr/leave-request.html',
                 controller: 'timeSheetCtrl'
-                //,
-                //resolve: {
-                //    approveItem: function ($stateParams, fbutil, $firebaseObject) {
-                //        return {
-                //            event: 'E0005',
-                //            obj: $firebaseObject(fbutil.ref([$stateParams.ref]))
-                //        };
-                //    }
-                //}
-
             });
     }]);
 })(angular);

@@ -1,11 +1,17 @@
 <ion-view hide-nav-bar="true" hide-back-button="true">
-    <ion-content padding="true" style="background: url(img/login.jpg) center; background-size: cover;">
-        <div class="hero no-header flat">
-            <div class="content ">
-                <div class="app-icon"></div>
-                <h1>Oryzasoft</h1>
-            </div>
-        </div>
+    <!--img/login.jpg--background picture, login_ico.png--login-->
+    <!--<ion-content padding="true" style="background: url(img/login.jpg) center; background-size: cover;">-->
+    <ion-header-bar align-title="center" class="bar-dark" >
+        <!--<div class="buttons">-->
+            <!--<button class="button" ng-click="doSomething()">Left Button</button>-->
+        <!--</div>-->
+        <div class="app-icon"></div>
+        <!--<div class="buttons">-->
+            <!--<button class="button">Right Button</button>-->
+        <!--</div>-->
+    </ion-header-bar>
+        <ion-content padding="true" style="background-color: #444444;">
+
         <form name="signinForm" ng-submit="tryLogin()">
             <div class="list ">
                 <label style="background: white" class="item item-input"

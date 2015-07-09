@@ -73,11 +73,19 @@ p {
     background: url('../img/login_ico.png') center;
     background-size: cover;
     border-radius: 50%;
-    height: 125px;
+    height: 30px;
     margin: 0 auto;
     width: 125px;
 }
-
+.home-icon {
+    background-color: #fff;
+    background: url('../img/login_ico.png') center;
+    background-size: cover;
+    border-radius: 50%;
+    height: 30px;
+    margin: 0 auto;
+    width: 125px;
+}
 .social-login {
     position: fixed;
     bottom: 0;

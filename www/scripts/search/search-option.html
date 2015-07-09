@@ -4,15 +4,12 @@
     </ion-header-bar>
     <ion-content>
         <div class="list">
-
             <ion-item class="item item-icon-right"
                       ng-repeat="item in sideList "
                       ui-sref="search({text:item.text,value:item.value})"
                     >
                 {{ item.text}}<i class="icon ion-ios-arrow-right muted"></i>
-
             </ion-item>
         </div>
-
     </ion-content>
 </ion-view>

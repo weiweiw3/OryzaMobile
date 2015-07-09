@@ -6,9 +6,11 @@
 
 
     app.controller('ionListViewCtrl',
-        function (ionicLoading, list, $firebaseArray, $state,
+        function (ionicLoading, viewObject, $firebaseArray, $state,
                   $location, $timeout, $scope) {
-            $scope.viewTitle = list.title;
+            $scope.viewObject = viewObject;
+
+            //$scope.viewTitle = ionList.key;
             // create a scrollable reference
             $scope.condition = function (ref) {
                 var deferred = $q.defer();
@@ -19,15 +21,20 @@
             };
 
             // create a scrollable reference
-            var scrollRef = new Firebase.util.Scroll(list.ref, list.scroll);
+            var scrollRef = new Firebase.util.Scroll(viewObject.ref, viewObject.scroll);
             ionicLoading.load('loading');
             // create a synchronized array on scope
-            $scope.ionList = $firebaseArray(scrollRef);
-            $scope.messagesRef = scrollRef.toString().replace(scrollRef.root().toString(), '');
+            $scope.ionList ={
+                array:$firebaseArray(scrollRef),
+                ref:scrollRef.toString().replace(scrollRef.root().toString(), '')
+            };
+            //$scope.ionList = $firebaseArray(scrollRef);
+            //$scope.ionListRef = scrollRef.toString().replace(scrollRef.root().toString(), '');
+            //console.log($scope.ionListRef );
 
             // load the first three contacts
             scrollRef.scroll.next(3);
-            $scope.ionList.$loaded()
+            $scope.ionList.array.$loaded()
                 .then(function () {
                     ionicLoading.unload();
                 });
@@ -90,13 +97,55 @@
 //                }
 //            };
 //        });
-app.directive('purchaseOrderList', function () {
-    return {
-        restrict: 'E',
-        scope: {ionList: '='},
-        templateUrl: 'scripts/purchase-orders/purchase-order-list.html'
-    };
-});
+    app.directive('e0001', function () {
+        return {
+            restrict: 'E',
+            scope: {ionList: '='},
+            templateUrl: 'scripts/purchase-orders/e0001.html'
+        };
+    }).directive('e0001Item', function () {
+        return {
+            restrict: 'E',
+            scope: {ionList: '='},
+            templateUrl: 'scripts/purchase-orders/e0001-item.html'
+        };
+    }).directive('e0004', function () {
+        return {
+            restrict: 'E',
+            scope: {ionList: '='},
+            templateUrl: 'scripts/purchase-orders/e0004.html'
+        };
+    }).directive('e0004Item', function () {
+        return {
+            restrict: 'E',
+            scope: {ionList: '='},
+            templateUrl: 'scripts/purchase-orders/e0004-item.html'
+        };
+    }).directive('e0002', function () {
+        return {
+            restrict: 'E',
+            scope: {ionList: '='},
+            templateUrl: 'scripts/purchase-orders/e0002.html'
+        };
+    }).directive('e0005', function () {
+        return {
+            restrict: 'E',
+            scope: {ionList: '='},
+            templateUrl: 'scripts/purchase-orders/e0005.html'
+        };
+    }).directive('e0005Item', function () {
+        return {
+            restrict: 'E',
+            scope: {ionList: '='},
+            templateUrl: 'scripts/purchase-orders/e0005-item.html'
+        };
+    }).directive('e0022', function () {
+        return {
+            restrict: 'E',
+            scope: {ionList: '='},
+            templateUrl: 'scripts/purchase-orders/e0022.html'
+        };
+    });
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider
             .state('ionListView', {
@@ -104,115 +153,77 @@ app.directive('purchaseOrderList', function () {
                 templateUrl: 'scripts/hr/time-sheet-list.html',
                 controller: 'ionListViewCtrl',
                 resolve: {
-                    list: function (fbutil, ionicLoading, $stateParams) {
-                        console.log($stateParams.viewName);
-                        return {
-                            title: 'Purchase Orders',
-                            ref: fbutil.ref([$stateParams.index, 'PO_HEADERS']),
-                            scroll: 'po_NUMBER'
-                        };
+                    viewObject: function (fbutil, ionicLoading, $stateParams) {
+                        if ($stateParams.viewName === 'E0001') {
+                            return {
+                                key: $stateParams.viewName,
+                                title: 'Purchase Orders',
+                                ref: fbutil.ref([$stateParams.index, 'PO_HEADERS']),
+                                scroll: 'po_NUMBER'
+                            };
+                        }
+                        if ($stateParams.viewName === 'E0001-item') {
+                            return {
+                                key: $stateParams.viewName,
+                                title: 'Purchase Order ' + $stateParams.key,
+                                ref: fbutil.ref([$stateParams.index]),
+                                scroll: '-po_ITEM'
+                            };
+                        }
+                        if ($stateParams.viewName === 'E0004') {
+                            return {
+                                key: $stateParams.viewName,
+                                title: 'Purchase Requests',
+                                ref: fbutil.ref([$stateParams.index, 'REQUIREMENT_ITEMS']),
+                                scroll: '$priority'
+                            };
+                        }
+                        if ($stateParams.viewName === 'E0004-item') {
+                            return {
+                                key: $stateParams.viewName,
+                                title: 'Purchase Request ' + $stateParams.key,
+                                ref: fbutil.ref([$stateParams.index]),
+                                scroll: '-preq_ITEM'
+                            };
+                        }
+                        if ($stateParams.viewName === 'E0002') {
+                            return {
+                                key: $stateParams.viewName,
+                                title: 'PO Approve History Messages',
+                                ref: fbutil.ref([$stateParams.index]),
+                                scroll: 'key()'
+                            };
+                        }
+
+                        if ($stateParams.viewName === 'E0005') {
+                            return {
+                                key: $stateParams.viewName,
+                                title: 'PR Approve History Messages',
+                                ref: fbutil.ref([$stateParams.index]),
+                                scroll: 'key()'
+                            };
+                        }
+                        if ($stateParams.viewName === 'E0005-item') {
+                            return {
+                                key: $stateParams.viewName,
+                                title: 'Purchase Request ' + $stateParams.key,
+                                ref: fbutil.ref([$stateParams.index]),
+                                scroll: 'key()'
+                            };
+                        }
+                        if ($stateParams.viewName === 'E0022') {
+                            return {
+                                key: $stateParams.viewName,
+                                title: 'Time-Sheet',
+                                ref: fbutil.ref(['Event/E0022/100001/CATSRECORDS_OUT']),
+                                scroll: '$priority'
+                            };
+                        }
                     }
                 }
             })
 
-            .state('purchaseOrders', {
-                url: '/purchaseOrders/:index',
-                templateUrl: 'scripts/purchase-orders/purchase-order-list.html',
-                controller: 'ionListViewCtrl',
-                resolve: {
-                    list: function (fbutil, ionicLoading, $stateParams) {
-                        return {
-                            title: 'Purchase Orders',
-                            ref: fbutil.ref([$stateParams.index, 'PO_HEADERS']),
-                            scroll: 'po_NUMBER'
-                        };
-                    }
-                }
-            })
-            .state('purchaseOrderItems', {
-                url: '/purchaseOrderItems/:index?key',
-                templateUrl: 'scripts/purchase-orders/purchase-order-items.html',
-                controller: 'ionListViewCtrl',
-                resolve: {
-                    list: function (fbutil, ionicLoading, $stateParams) {
-                        return {
-                            title: 'Purchase Order ' + $stateParams.key,
-                            ref: fbutil.ref([$stateParams.index]),
-                            scroll: '-po_ITEM'
-                        };
-                    }
-                }
-            })
-            .state('purchaseOrdersApproveMessages', {
-                url: '/purchaseOrdersApproveMessages/:index',
-                templateUrl: 'scripts/purchase-orders/purchase-order-approve-messages.html',
-                controller: 'ionListViewCtrl',
-                resolve: {
-                    list: function (fbutil, ionicLoading, $stateParams) {
-                        return {
-                            title: 'History Messages',
-                            ref: fbutil.ref([$stateParams.index]),
-                            scroll: 'key()'
-                        };
-                    }
-                }
-            })
-            .state('purchaseRequests', {
-                url: '/purchaseRequests/:index',
-                templateUrl: 'scripts/purchase-orders/purchase-request-list.html',
-                controller: 'ionListViewCtrl',
-                resolve: {
-                    list: function (fbutil, ionicLoading, $stateParams) {
-                        return {
-                            title: 'Purchase Requests',
-                            ref: fbutil.ref([$stateParams.index, 'REQUIREMENT_ITEMS']),
-                            scroll: '$priority'
-                        };
-                    }
-                }
-            })
-            .state('purchaseRequest', {
-                url: '/purchaseRequest/:index?key',
-                templateUrl: 'scripts/purchase-orders/purchase-request-index.html',
-                controller: 'ionListViewCtrl',
-                resolve: {
-                    list: function (fbutil, ionicLoading, $stateParams) {
-                        return {
-                            title: 'Purchase Request ' + $stateParams.key,
-                            ref: fbutil.ref([$stateParams.index]),
-                            scroll: '-preq_ITEM'
-                        };
-                    }
-                }
-            })
-            .state('purchaseRequestApproveList', {
-                url: '/purchaseRequestApproveList:index',
-                templateUrl: 'scripts/purchase-orders/purchase-request-approve-list.html',
-                controller: 'ionListViewCtrl',
-                resolve: {
-                    list: function (fbutil, ionicLoading, $stateParams) {
-                        return {
-                            title: 'History Messages',
-                            ref: fbutil.ref([$stateParams.index]),
-                            scroll: 'key()'
-                        };
-                    }
-                }
-            })
-            .state('purchaseRequestApproveMessage', {
-                url: '/purchaseRequestApproveMessage/:index?key',
-                templateUrl: 'scripts/purchase-orders/purchase-request-approve-message.html',
-                controller: 'ionListViewCtrl',
-                resolve: {
-                    list: function (fbutil, ionicLoading, $stateParams) {
-                        return {
-                            title: 'Purchase Request ' + $stateParams.key,
-                            ref: fbutil.ref([$stateParams.index]),
-                            scroll: 'key()'
-                        };
-                    }
-                }
-            })
+
         ;
     }]);
 })(angular);

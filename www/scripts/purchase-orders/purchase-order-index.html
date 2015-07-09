@@ -1,47 +1,36 @@
-<ion-view view-title="PurchaseOrder {{ data.po_NUMBER }}" hide-back-button="true">
-    <ion-nav-buttons side="right">
-
-        <button class="button button-icon button-clear ion-plus" ></button>
-        <!--<button class="button button-icon button-clear ion-plus" ng-click="openModal()"></button>-->
-    </ion-nav-buttons>
-
+<ion-view view-title="PurchaseOrder {{ data.$id }}" hide-back-button="true">
     <ion-content>
         <ion-list>
             <ion-item >
-                {{ data.po_NUMBER }}
+                {{ data.CO_CODE }}CO_CODE_TEXT
             </ion-item>
             <ion-item >
-                {{ data.co_CODE_TEXT }}
+                {{ data.PURCH_ORG }}PURCH_ORG_TEXT
             </ion-item>
             <ion-item >
-                {{ data.purch_ORG_TEXT }}
-            </ion-item>
-            <ion-item >
-                {{ data.doc_DATE }}
-                <span am-time-ago="data.doc_DATE"></span>
+                {{ data.DOC_DATE }}
+                <span am-time-ago="data.DOC_DATE"></span>
             </ion-item>
         </ion-list>
-
         <div>
             <button ng-disabled="data.lock" class="button button-block button-positive" ng-click="showConfirm()">
                 {{data.approveButtonText}}
             </button>
-            <div>
-                <ion-list>
-                    <ion-item ng-show="value" class="item item-icon-right"
-                              ng-repeat="(key,value) in history ">
-                        {{key}}:{{value}}
-
-                    </ion-item>
-                </ion-list>
-            </div>
+            <!--<div>-->
+                <!--<ion-list>-->
+                    <!--<ion-item ng-show="value" class="item item-icon-right"-->
+                              <!--ng-repeat="(key,value) in history ">-->
+                        <!--{{key}}:{{value}}-->
+                    <!--</ion-item>-->
+                <!--</ion-list>-->
+            <!--</div>-->
         </div>
         <a ui-sref="purchaseOrderHeader({index: data.po_NUMBER})"
            class="item item-icon-right" class="item">
             <h2>more header informaiton</h2>
             <i class="icon ion-ios-arrow-right muted"></i>
         </a>
-        <a ui-sref="purchaseOrderItems({index: purchaseOrderItemsRef,key:data.po_NUMBER })"
+        <a ui-sref="ionListView({viewName:'E0001-item',index:purchaseOrderItemsRef,key:data.$id})"
            class="item item-icon-right" class="item">
             <h2>items</h2>
             <i class="icon ion-ios-arrow-right muted"></i>

@@ -25,6 +25,7 @@
                         homeFactory.ready(event).then(function (data) {
                             //console.log(data);
                             $scope[event] = data;
+
                             localStorageService.set(event, $scope[event]);
                         });
                     }
@@ -32,9 +33,7 @@
                 }
             );
         }
-
         scopeInit();
-
         $scope.$state = $state;
 
         $scope.$on('$viewContentLoaded', function () {
@@ -44,12 +43,10 @@
         $scope.refresh = function () {
             localStorageService.remove('E0001', 'E0002', 'E0004', 'E0005');
             scopeInit();
-
             console.log('$scope.refresh');
             $scope.$broadcast('scroll.refreshComplete');
         };
         $scope.$log = $log;
-
 
         $scope.$on('$destroy', function () {
 //            ionicLoading.unload();
@@ -61,7 +58,7 @@
         function ($rootScope, currentUser, $firebaseObject, fbutil, $q) {
             var homeFactory = {};
             homeFactory.ready = function (event) {
-                console.log(event);
+
                 var promises = [];
                 var deffered = $q.defer();
                 //var user=$rootScope.currentUser;
@@ -80,7 +77,6 @@
                                         "url": childSnapshot.ref().toString().replace(childSnapshot.ref().root().toString(), '')
                                     });
                                 });
-
                                 var node = {
                                     "name": event,
                                     "show": true,

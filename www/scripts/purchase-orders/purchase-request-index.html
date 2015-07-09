@@ -1,31 +1,12 @@
-<ion-view view-title="{{viewtitle}}" hide-back-button="true">
-    <ion-nav-buttons side="right">
-        <button class="button button-icon button-clear ion-home" ui-sref="home"></button>
-
-    </ion-nav-buttons>
-    <ion-content background-color="positive" ; has-header="true" has-tabs="true" padding="true">
-        <ion-refresher on-refresh="refresh()"></ion-refresher>
-        <ion-list>
-            <ion-item class="item item-icon-right"
-                      ng-repeat="message in messages "
-                      ui-sref="purchaseRequestItem({ref:messagesRef+'/'+ message.$id})"
-                    >
-                <h2>{{ message.PREQ_ITEM}} {{ message.PUR_MAT}}</h2>
-                <p>{{ message.NET_PRICE}} {{ message.DISP_QUAN}}</p>
-                <i ng-show="message.lock" class="icon ion-locked positive"></i>
-                {{ message.SHORT_TEXT}}
-                <!--<i class="icon ion-ios-arrow-right muted"></i>-->
-            </ion-item>
-        </ion-list>
-        <ion-infinite-scroll
-                on-infinite="loadMore()"
-                icon="ion-loading-c"
-                distance="1%">
-        </ion-infinite-scroll>
-    </ion-content>
-</ion-view>
-
-
+<ion-item class="item item-icon-right"
+          ng-repeat="message in ionList "
+          ui-sref="purchaseRequestItem({ref:ionListRef+'/'+ message.$id})">
+    <h2>{{ message.PREQ_ITEM}} {{ message.PUR_MAT}}</h2>
+    <p>{{ message.NET_PRICE}} {{ message.DISP_QUAN}}</p>
+    <i ng-show="message.lock" class="icon ion-locked positive"></i>
+    {{ message.SHORT_TEXT}}
+    <!--<i class="icon ion-ios-arrow-right muted"></i>-->
+</ion-item>
 
 
 

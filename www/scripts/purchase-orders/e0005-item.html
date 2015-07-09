@@ -1,0 +1,18 @@
+<ion-item class="item item-text-wrap"
+          ng-repeat="item in ionList.array ">
+    <!--ui-sref="purchaseOrder({ref:message.TASK_INFO.fb_FROM_PATH})"-->
+    <!--eat-click-if="message.TASK_INFO.task_status==3 ||-->
+    <!--message.TASK_INFO.message.includes('RELEASE_ALREADY_POSTED')"-->
+    <div>
+        <strong ng-class="{positive: item.read}">
+            {{ item.$id}}
+            <i ng-show="item.TASK_INFO.task_status==3" class="icon ion-checkmark-circled positive">successful</i>
+            <i ng-show="item.TASK_INFO.task_status==9" class="icon ion-close-circled assertive">error</i>
+        </strong>
+    </div>
+    <h6>{{ item.$ref().toString()}}
+        {{ item.TASK_INFO.message}}</h6>
+    <i class="icon ion-clock"></i> <span am-time-ago="item.TASK_INFO.endTime"></span>
+</ion-item>
+
+

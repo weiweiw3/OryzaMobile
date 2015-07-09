@@ -4,6 +4,10 @@ angular.module('myApp.config', [])
     //  url: 'http://localhost:8100/data-app/rs/task'
         url: 'https://114.215.185.243/data-app/rs/task'
     })
+    .constant('taskUrl', {
+        //  url: 'http://localhost:8100/data-app/rs/task'
+        url: 'https://114.215.185.243/data-app/rs/task'
+    })
     .constant('SearchUrl', {
         url: 'https://218.244.136.132'
     })

@@ -1,40 +1,13 @@
 <ion-view view-title="{{viewtitle}}">
-
-
-
     <ion-content>
         <ion-refresher on-refresh="refresh()"></ion-refresher>
-        <div class="card-gallery item item-text-wrap" ng-show="E0001[0].show ">
-            <div class="item item-divider positive ">
-                Purchase
-                Order
-                Approve<span class="badge badge-assertive">3</span>
-            </div>
-            <div class="item item-text-wrap item-icon-right positive" ng-repeat="array in E0001[0].array  "
-                 ui-sref="purchaseOrders({index:array.url})">
-                {{array.url}}
-                <i class="icon ion-ios-arrow-right muted"></i>
-            </div>
-        </div>
         <div class="item item-text-wrap item-icon-right positive"
-             ui-sref="purchaseOrdersApproveMessages({index:E0002[0].url})" ng-show="E0002[0].show">
-            Purchase Order History Messages
+             ui-sref="ionListView({viewName:'E0002',index:E0002[0].url})" ng-show="E0002[0].show">
+            Purchase Order History Messages{{E0002.url}}
             <i class="icon ion-ios-arrow-right muted"></i>
         </div>
-        <div class="card-gallery item item-text-wrap" ng-show="E0004[0].show ">
-            <div class="item item-divider positive ">
-                Purchase
-                Request
-                Approve
-            </div>
-            <div class="item item-text-wrap item-icon-right positive" ng-repeat="array in E0004[0].array  "
-                 ui-sref="purchaseRequests({index:array.url})">
-                {{array.url}}
-                <i class="icon ion-ios-arrow-right muted"></i>
-            </div>
-        </div>
         <div class="item item-text-wrap item-icon-right positive"
-             ui-sref="purchaseRequestApproveList({index:E0005[0].url})" ng-show="E0005[0].show">
+             ui-sref="ionListView({viewName:'E0005',index:E0005[0].url})" ng-show="E0005[0].show">
             Purchase Request History Messages
             <i class="icon ion-ios-arrow-right muted"></i>
         </div>

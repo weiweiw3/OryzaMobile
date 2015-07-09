@@ -22,7 +22,7 @@
             });
             approveItem.obj.$bindTo($scope, "data").then(function () {
                 ionicLoading.unload();
-
+                console.log($scope.data);
                 $scope.data.approveButtonText = 'Approve';
 
                 var ref = approveItem.obj.$ref();
@@ -189,7 +189,6 @@
             //productList.push(newObj);
             approveInfo=newObj;
         };
-
 
         var getApproveInfo = function(){
             return approveInfo;

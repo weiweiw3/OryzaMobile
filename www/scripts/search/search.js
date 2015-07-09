@@ -4,7 +4,7 @@
     var app = angular.module('myApp.search', ['ngResource', 'ionic', 'firebase.simpleLogin',
         'firebase.utils', 'firebase', 'elasticsearch']);
 
-    app.controller('searchOptionCtrl', function ($scope, $state) {
+    app.controller('searchOptionCtrl', function ($scope) {
 
         $scope.sideList = [
             {text: "customer", value: "view_customer_contact"},
@@ -12,16 +12,15 @@
             {text: "material", value: "e0015_makt"}
         ];
 
-
     });
     //NOTE: We are including the constant `ApiEndpoint` to be used here.
-    app.factory('Api', function ($http, $q, ApiEndpoint) {
+    app.factory('Api', function ($http, $q, taskUrl) {
         var getApiData = function (table, where) {
             var q = $q.defer();
 //            var str = 'http://114.215.185.243:8080/data-app/rs/task/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=e0015_KNA1&str_where=KUNNR=/' + customerID + '/';
             //elastic search的页面http://114.215.185.243:9200/_plugin/head/
             //var str = 'http://114.215.185.243:8080/data-app/rs/task/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=e0015_LFA1&str_where=LIFNR=/' + customerID + '/';
-            var str = ApiEndpoint.url + '/searchData?company_guid=40288b8147cd16ce0147cd236df20000&' +
+            var str = taskUrl.url + '/searchData?company_guid=40288b8147cd16ce0147cd236df20000&' +
                 'table_name=' + table +
                 '&str_where=' + where;
             console.log(str);
@@ -77,21 +76,6 @@
                     }
                 }
 
-//                var position = $localstorage.get('position');
-
-//                if (position) {
-//                    sort = [
-//                        {
-//                            "_geo_distance": {
-//                                "location": position,
-//                                "order": "asc",
-//                                "unit": "km"
-//                            }
-//                        }
-//                    ];
-//                } else {
-//                    sort = [];
-//                }
                 console.log(table);
                 client.search({
                  //   "index": 'firebase',
@@ -311,7 +295,6 @@
                 $scope.searchHistory=[];
 
             }
-
 
             $scope.deleteHistory=function (result){
                 var index=$scope.searchHistory.indexOf(result);
