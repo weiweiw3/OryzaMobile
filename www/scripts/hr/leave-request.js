@@ -5,36 +5,27 @@
 
     //
     app.controller('timeSheetCtrl',
-        function (myTask, timeSheet, ionicLoading, $ionicPopup, $timeout, $scope) {
+        function (myTask, timeSheet, ionicLoading, $ionicPopup, $timeout, $scope,$firebaseObject) {
             ionicLoading.load();
-            timeSheet.obj.$bindTo($scope, "data").then(function () {
-                console.log(new Date($scope.data.WORKDATE));
-                ionicLoading.unload();
+            console.log(timeSheet);
+            timeSheet.obj.$bindTo($scope, "data")
+                        .then(function () {
+                            $scope.fromDate = new Date($scope.data.WORKDATE);
+                            console.log($scope.fromDate);
+                            $scope.fromDatePickerCallback = function (val) {
+                                if (typeof(val) === 'undefined') {
+                                    console.log('Date not selected');
+                                } else {
+                                    console.log('Selected date is : ', val);
+                                    $scope.fromDate = val.getTime();
+                                    //$scope.toDate = $scope.fromDate + 130000;
 
-                $scope.fromDate = new Date($scope.data.WORKDATE);
-                $scope.fromDatePickerCallback = function (val) {
-                    if (typeof(val) === 'undefined') {
-                        console.log('Date not selected');
-                    } else {
-                        console.log('Selected date is : ', val);
-                        $scope.fromDate = val.getTime();
-                        $scope.toDate = $scope.fromDate + 130000;
-                        console.log($scope.toDate);
-                    }
-                };
-                $scope.toDatePickerCallback = function (val) {
-                    if (typeof(val) === 'undefined') {
-                        console.log('Date not selected');
-                    } else {
-                        console.log('Selected date is : ', val);
-                        $scope.toDate = val.getTime();
-                    }
-                };
+                                }
+                            };
+                            ionicLoading.unload();
+                        });
 
-
-            });
         })
-
         .controller('leaveRequestListItemCtrl',
         function (myTask, ionicLoading, $ionicPopup, $timeout, $scope, $q, fbutil, $state, approveInfoService) {
 
@@ -77,11 +68,11 @@
                     ]).then(function (results) {
                         var i = 0;
                         angular.forEach(results, function (data) {
-                            if (i===0) {
+                            if (i === 0) {
                                 $scope.jsonContent = data;
                                 $scope.jsonContent.CATSRECORDS[0].COUNTER = $scope.COUNTER;
                             }
-                            if (i===1) {
+                            if (i === 1) {
                                 var inputParas = data.$value;
                                 //inputParas = inputParas.replace('$P01$', $scope.PO_REL_CODE);//PO_REL_CODE
                                 //inputParas = inputParas.replace('$P01$', $scope.PO_REL_CODE);//PO_REL_CODE
@@ -121,7 +112,7 @@
                                     ionicLoading.load('Sending out');
                                     console.log($scope.inputParas);
                                     myTask.createTask(approveItem.event, $scope.ServerUserID,
-                                        $scope.inputParas, $scope.keyID, 'Approve', $scope.jsonContent)
+                                        $scope.inputParas, $scope.keyID, 'Approve',  $scope.COUNTER)
                                         .then(function (data) {
                                             // promise fulfilled
                                             console.log('Success!', data);
@@ -432,12 +423,38 @@
                 url: '/timeSheet/:index',
                 templateUrl: 'scripts/hr/time-sheet-index.html',
                 controller: 'timeSheetCtrl',
+                cache: false,
                 resolve: {
-                    timeSheet: function ($stateParams, fbutil, $firebaseObject) {
-                        return {
-                            //event: 'E0002',
-                            obj: $firebaseObject(fbutil.ref([$stateParams.index]))
-                        };
+                    timeSheet: function ($stateParams, fbutil, $firebaseObject,$q) {
+                        var ref=fbutil.ref([$stateParams.index]);
+                        var d = $q.defer();
+                        ref.once('value', function (data) {
+                            var obj = {
+                                COUNTER: data.key(),
+                                WORKDATE: data.val().WORKDATE,
+                                EMPLOYEENUMBER: data.val().EMPLOYEENUMBER,
+                                ABS_ATT_TYPE: data.val().ABS_ATT_TYPE,
+                                CATSHOURS: data.val().CATSHOURS,
+                                SHORTTEXT: data.val().SHORTTEXT,
+                                CREATIONDATE: data.val().CREATIONDATE,
+                                ENTRYTIME: data.val().ENTRYTIME,
+                                APPROVING_ADMIN: data.val().APPROVING_ADMIN,
+                                DATE_OF_APPROVAL: data.val().DATE_OF_APPROVAL,
+                                STATUS: data.val().STATUS
+                            };
+                            ref.child('draft').set(obj, function (error) {
+                                console.log(obj);
+                                if (error) {
+                                    d.reject(error);
+                                } else {
+                                    d.resolve({
+                                        obj:$firebaseObject(ref.child('draft'))
+                                    });
+                                }
+                            });
+                        });
+                        return d.promise;
+
                     }
                 }
             })

@@ -5,6 +5,7 @@
     </ion-nav-buttons>
     <ion-content>
         <form name="validation" ng-submit="tryValidation()">
+            {{fromDate}}
             <ionic-datepicker  idate="fromDate" disablepreviousdates="true"
                               callback="fromDatePickerCallback">
                 <button class="button button-block button-positive"> {{ fromDate | date:'dd - MMMM - yyyy' }}</button>
@@ -15,10 +16,10 @@
             <!--</ionic-datepicker>-->
             <div class="item range range-positive">
                 <i class="icon ion-ios-bolt-outline"></i>
-                <input type="range" name="volume" min="0" max="8" ng-model="catsHours">
+                <input type="range" name="volume" min="0" max="8" ng-model="data.CATSHOURS">
                 <i class="icon ion-ios-bolt"></i>
             </div>
-            {{catsHours}}
+            {{data.CATSHOURS}}
             <label class="item item-input">
                 <input type="text" placeholder="SHORTTEXT" name="SHORTTEXT" ng-model="data.SHORTTEXT">
             </label>
@@ -36,7 +37,7 @@
         <div class="buttons">
             <button class="button">Left Button</button>
         </div>
-        <h1 class="title">Title!</h1>
+        <h1 class="title">|</h1>
         <div class="buttons" ng-click="doSomething()">
             <button class="button">Right Button</button>
         </div>
