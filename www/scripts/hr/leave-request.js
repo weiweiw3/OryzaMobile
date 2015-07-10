@@ -8,7 +8,7 @@
         function (myTask, timeSheet, ionicLoading, $ionicPopup, $timeout, $scope) {
             ionicLoading.load();
             timeSheet.obj.$bindTo($scope, "data").then(function () {
-                console.log($scope.data);
+                console.log(new Date($scope.data.WORKDATE));
                 ionicLoading.unload();
 
                 $scope.fromDate = new Date($scope.data.WORKDATE);
@@ -34,20 +34,7 @@
 
             });
         })
-        .directive('mySubArea1', function () {
-            return {
-                restrict: 'E',
-                scope: {
-                    messages: '='
-                },
-                templateUrl: 'scripts/hr/time-sheet-part.html',
-                controller: function ($scope) {
-                    var object=$scope.messages;
-                    console.log(object);
-                    //controller for your sub area.
-                }
-            };
-        })
+
         .controller('leaveRequestListItemCtrl',
         function (myTask, ionicLoading, $ionicPopup, $timeout, $scope, $q, fbutil, $state, approveInfoService) {
 
@@ -85,17 +72,16 @@
                     //    });
 
                     $q.all([
-                        myTask.getjsonContent(approveItem.event).$loaded(),
+                        myTask.getjsonContent(approveItem.event),
                         myTask.getInputP(approveItem.event).$loaded()
                     ]).then(function (results) {
-
+                        var i = 0;
                         angular.forEach(results, function (data) {
-                            if (data.$id === "jsonContent") {
+                            if (i===0) {
                                 $scope.jsonContent = data;
                                 $scope.jsonContent.CATSRECORDS[0].COUNTER = $scope.COUNTER;
-                                console.log($scope.jsonContent);
                             }
-                            if (data.$id === "inputParas") {
+                            if (i===1) {
                                 var inputParas = data.$value;
                                 //inputParas = inputParas.replace('$P01$', $scope.PO_REL_CODE);//PO_REL_CODE
                                 //inputParas = inputParas.replace('$P01$', $scope.PO_REL_CODE);//PO_REL_CODE
@@ -107,6 +93,7 @@
                                 console.log(inputParas);
                                 $scope.inputParas = inputParas;
                             }
+                            i++;
                         })
                         $scope.keyText = 'Delete Timesheet';
                         $scope.keyID = $scope.COUNTER;

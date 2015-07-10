@@ -17,9 +17,6 @@
     app.factory('Api', function ($http, $q, taskUrl) {
         var getApiData = function (table, where) {
             var q = $q.defer();
-//            var str = 'http://114.215.185.243:8080/data-app/rs/task/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=e0015_KNA1&str_where=KUNNR=/' + customerID + '/';
-            //elastic search的页面http://114.215.185.243:9200/_plugin/head/
-            //var str = 'http://114.215.185.243:8080/data-app/rs/task/searchData?company_guid=40288b8147cd16ce0147cd236df20000&table_name=e0015_LFA1&str_where=LIFNR=/' + customerID + '/';
             var str = taskUrl.url + '/searchData?company_guid=40288b8147cd16ce0147cd236df20000&' +
                 'table_name=' + table +
                 '&str_where=' + where;
@@ -80,7 +77,6 @@
                 client.search({
                  //   "index": 'firebase',
                  //"type": 'customer',
-
                     "index": '40288b8147cd16ce0147cd236df20000',
                     "type": table,
                     "body": {
@@ -119,7 +115,7 @@
             //console.log($stateParams.index);
             $scope.searchObj=$stateParams.key;
             $scope.title = $stateParams.key + ' ' + $stateParams.index;
-
+            //var localStorageService.get($stateParams.key);
             if (typeof  localStorageService.get($stateParams.key) !== 'undefined'
                 && localStorageService.get($stateParams.key) !== null) {
                 $scope.searchHistory=localStorageService.get($stateParams.key);
@@ -209,80 +205,6 @@
             };
 
         })
-        .controller('customerCtrl', function ($scope, $stateParams, Api) {
-            //console.log($stateParams.index);
-            $scope.title = 'material ' + $stateParams.index;
-            var querys = [
-                    {
-                        name: 'info',
-                        text: 'bacis information',
-                        table: 'e0015_makt',
-                        where: 'MATNR=/' + $stateParams.index + '/'
-                    }, {
-                        name: 'stock',
-                        text: 'stock',
-                        table: 'view_material_stock',
-                        where: 'MATNR=/' + $stateParams.index + '/'
-                    }
-                ]
-                ;
-
-            angular.forEach(querys, function (query) {
-                Api.getApiData(query.table, query.where)
-                    .then(function (data) {
-                        console.log(data[0]);
-                        $scope[query.name] = data[0];
-                    })
-                    .catch(function () {
-                        console.log('Assign only failure callback to promise');
-                        // This is a shorthand for `promise.then(null, errorCallback)`
-                    });
-            });
-
-            $scope.refresh = function () {
-                //TODO refresh event
-                console.log('$scope.refresh');
-                $scope.$broadcast('scroll.refreshComplete');
-            };
-
-        })
-        .controller('vendorCtrl', function ($scope, $stateParams, Api) {
-            //console.log($stateParams.index);
-            $scope.title = 'material ' + $stateParams.index;
-            var querys = [
-                    {
-                        name: 'info',
-                        text: 'bacis information',
-                        table: 'e0015_makt',
-                        where: 'MATNR=/' + $stateParams.index + '/'
-                    }, {
-                        name: 'stock',
-                        text: 'stock',
-                        table: 'view_material_stock',
-                        where: 'MATNR=/' + $stateParams.index + '/'
-                    }
-                ]
-                ;
-
-            angular.forEach(querys, function (query) {
-                Api.getApiData(query.table, query.where)
-                    .then(function (data) {
-                        console.log(data[0]);
-                        $scope[query.name] = data[0];
-                    })
-                    .catch(function () {
-                        console.log('Assign only failure callback to promise');
-                        // This is a shorthand for `promise.then(null, errorCallback)`
-                    });
-            });
-
-            $scope.refresh = function () {
-                //TODO refresh event
-                console.log('$scope.refresh');
-                $scope.$broadcast('scroll.refreshComplete');
-            };
-
-        })
         .
         controller('searchCtrl', function (searchObj, $http, $q, Api, $resource, $scope, ESService,localStorageService) {
             $scope.searchObj = searchObj;
@@ -339,7 +261,15 @@
             .state('searchDetail', {
                 url: '/searchDetail/:key?index',
                 templateUrl: 'scripts/search/search_detail.html',
-                controller: 'searchDetailCtrl'
+                controller: 'searchDetailCtrl',
+                resolve: {
+                    searchObj: function ($stateParams) {
+                        return {
+                            key: $stateParams.key,
+                            index: $stateParams.index
+                        };
+                    }
+                }
             })
 
             .state('searchOption', {

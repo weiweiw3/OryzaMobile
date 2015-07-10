@@ -5,15 +5,14 @@
     </ion-nav-buttons>
     <ion-content>
         <form name="validation" ng-submit="tryValidation()">
-            <div ng-show="test" >From</div>
-            <ionic-datepicker ng-show="test" idate="fromDate" disablepreviousdates="true"
+            <ionic-datepicker  idate="fromDate" disablepreviousdates="true"
                               callback="fromDatePickerCallback">
                 <button class="button button-block button-positive"> {{ fromDate | date:'dd - MMMM - yyyy' }}</button>
             </ionic-datepicker>
-            ToDate
-            <ionic-datepicker idate="toDate" disablepreviousdates="true" callback="toDatePickerCallback">
-                <button class="button button-block button-positive"> {{ toDate | date:'dd - MMMM - yyyy' }}</button>
-            </ionic-datepicker>
+            <!--ToDate-->
+            <!--<ionic-datepicker idate="toDate" disablepreviousdates="true" callback="toDatePickerCallback">-->
+                <!--<button class="button button-block button-positive"> {{ toDate | date:'dd - MMMM - yyyy' }}</button>-->
+            <!--</ionic-datepicker>-->
             <div class="item range range-positive">
                 <i class="icon ion-ios-bolt-outline"></i>
                 <input type="range" name="volume" min="0" max="8" ng-model="catsHours">
@@ -23,9 +22,9 @@
             <label class="item item-input">
                 <input type="text" placeholder="SHORTTEXT" name="SHORTTEXT" ng-model="data.SHORTTEXT">
             </label>
-            <ion-toggle ng-model="test" ng-checked="test">
-                test
-            </ion-toggle>
+            <!--<ion-toggle ng-model="test" ng-checked="test">-->
+                <!--test-->
+            <!--</ion-toggle>-->
             <div>
                 <button class="button button-block button-positive">
                     edit
@@ -33,6 +32,15 @@
             </div>
         </form>
     </ion-content>
+    <ion-footer-bar align-title="left" class="bar-assertive">
+        <div class="buttons">
+            <button class="button">Left Button</button>
+        </div>
+        <h1 class="title">Title!</h1>
+        <div class="buttons" ng-click="doSomething()">
+            <button class="button">Right Button</button>
+        </div>
+    </ion-footer-bar>
 </ion-view>
 
 

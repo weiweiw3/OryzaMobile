@@ -21,6 +21,7 @@
             };
 
             // create a scrollable reference
+            console.log(viewObject);
             var scrollRef = new Firebase.util.Scroll(viewObject.ref, viewObject.scroll);
             ionicLoading.load('loading');
             // create a synchronized array on scope
@@ -149,7 +150,7 @@
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider
             .state('ionListView', {
-                url: '/:viewName/:index?key',
+                url: '/ionListView/:viewName/:index?key',
                 templateUrl: 'scripts/hr/time-sheet-list.html',
                 controller: 'ionListViewCtrl',
                 resolve: {

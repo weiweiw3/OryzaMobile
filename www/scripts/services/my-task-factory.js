@@ -4,7 +4,7 @@
 angular.module('myApp.services.myTask',
     ['firebase', 'firebase.utils', 'firebase.simpleLogin'])
     .factory('myTask',
-    function ($http, $q, ApiEndpoint, firebaseRef, $rootScope, syncArray, syncObject, $timeout, simpleLogin,config) {
+    function ($http, $q, ApiEndpoint, firebaseRef, $rootScope, syncArray, syncObject, $timeout, simpleLogin,config,fbutil,$q) {
         var currentUser = simpleLogin.user.uid;
         var date = Date.now();
         var messageLog = {
@@ -19,7 +19,13 @@ angular.module('myApp.services.myTask',
                 return syncObject([taskDefaultRefStr, event, 'inputParas']);
             },
             getjsonContent: function (event) {
-                return syncObject([taskDefaultRefStr, event, 'jsonContent']);
+                var d = $q.defer();
+                fbutil.ref([taskDefaultRefStr, event, 'jsonContent']).once('value',function(snapshot){
+                    d.resolve(snapshot.exportVal());
+                }, function (err) {
+                    d.reject(err);
+                });
+                return d.promise;
             },
             createTask: function (componentId, ServerUser, inputPStr, logId, nextAction, jsonContent) {
 
@@ -38,6 +44,7 @@ angular.module('myApp.services.myTask',
 
                 return addNewTask(taskRef, inputPStr, componentId, ServerUser,jsonContent)
                     .then(function (data) {
+                        console.log(data);
                         return postTask(data);
                     });
                 //promise process
@@ -88,20 +95,17 @@ angular.module('myApp.services.myTask',
 
                 function postTask(data) {
                     var d = $q.defer();
-                    var httpRequest = httpRequestHandler('POST',ApiEndpoint.url + '/createTask',data,3);
-                    console.log(ApiEndpoint.url );
-                    console.log(data);
+                    //timeout default value is 15
+                    var httpRequest = httpRequestHandler('POST',ApiEndpoint.url + '/createTask',data,15);
                     httpRequest.then(function (jsonObj) {
                         //$scope.status = 'Complete';
                         console.log(jsonObj);
                         d.resolve(jsonObj);
-
                     }, function (error) {
                         //$scope.status = 'Error';
                         console.log(error);
                         d.reject(error);
                     });
-
                     return d.promise;
                 }
 
@@ -115,7 +119,7 @@ angular.module('myApp.services.myTask',
                             taskData.userId = ServerUser;
                             if (!angular.isUndefined(jsonContent) && jsonContent != null){
                                 console.log(jsonContent);
-                                //taskData.jsonContent=jsonContent;
+                                taskData.jsonContent=jsonContent;
                             }
                             console.log(inputPStr);
                             taskData.inputParas = '';
