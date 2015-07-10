@@ -3,94 +3,77 @@
  */
 angular.module('myApp.directives.createTask', [])
 
-    .directive('createTask', function (myMessage, $rootScope, myTask, $q, $animate, ionicLoading) {
+    .directive('createTask', function ($rootScope, myTask, approveInfoService) {
 
         return {
-            restrict: "E",
+            restrict: "EA",
             scope: {
-                message: "="// Use @ for One Way Text Binding;Use = for Two Way Binding;Use & to Execute Functions in the Parent Scope
+                popup: '=',// Use @ for One Way Text Binding;Use = for Two Way Binding;Use & to Execute Functions in the Parent Scope
+                taskData: '='
             },
-            controller: function ($scope) {
-                $scope.btnText = '';
-                $scope.btnshow = false;
-            },
-            template: '<a class="button button-block button-positive"' +
-                'ng-disabled="isDisabled" ng-click="click()">{{ btnText }}</a>',
-            replace: true,
-            link: function ($scope, element) {
-                var componentId = 'E0002';
-                var inputParas = '';
-                var P01, P02, P03;
-                $scope.releaseGroup = '02_PU';
-                ionicLoading.load();
-                $scope.inputPObj = myTask.getInputP(componentId);
-                $scope.inputPObj.$loaded().then(
-                    function (data) {
-                        inputParas = data.$value;
-                        inputParas = inputParas.replace('$P01$', P01);//PO_REL_CODE
-                        //TODO replace P02 twice , in the furture use replace-all function
-                        inputParas = inputParas.replace('$P02$', P02);//PURCHASEORDER
-                        inputParas = inputParas.replace('$P02$', P02);//PURCHASEORDER
-                        inputParas = inputParas.replace('$P03$', P03);//ServerUserID
-
-                    }
-                );
-                $scope.$watch('message', function (newVal) {
+            controller: function (ionicLoading, $ionicPopup, $timeout, $scope) {
+                $scope.$watch('popup', function (newVal) {
                     if (angular.isUndefined(newVal) || newVal == null) {
                         return
                     }
-                    $scope.messageId = newVal.id;
-                    $scope.componentId = newVal.component;
-                    // P01,P02,P03 for replace inputP
-
-                    //TODO support one purchase order : Multiple release group
-                    P01 = $scope.releaseGroup.substr(3);
-                    P02 = newVal.id;
-                    P03 = newVal.serverUserid;
-                    myMessage.markStatus($scope.componentId, $scope.messageId, 'lock');
-                });
-                $scope.$on('lock.update', function (event) {
-                    $scope.lock = myMessage.getStatus($scope.componentId, $scope.messageId, 'lock');
-                    console.log($scope.componentId, $scope.messageId, $scope.lock);
-                    toggleLock($scope.lock);
-                });
-
-                function toggleLock(lock) {
-                    if (typeof $scope.lock == "boolean" && lock) {
-                        $scope.isDisabled = true;
-                        $scope.btnText = 'SEND OUT';
-                    } else {
-
-                        $scope.btnText = 'Approve as ' + $scope.releaseGroup;
-                        $scope.isDisabled = false;
-                        $scope.clickEvent = 'Approve';
-                    }
-                    ionicLoading.unload();
-                }
-
-                $scope.click = function () {
-                    $scope.btnText = 'processing...';
-                    ionicLoading.load();
-                    myTask.createTask(componentId,
-                        inputParas, $scope.message.id, 'Approve', buildParms());
-                };
-
-                function buildParms() {
-                    return {
-                        callback: function (err) {
-                            if (err == null) {
-                                ionicLoading.load();
-                                myMessage.markStatus($scope.componentId, $scope.messageId, 'lock', true);
-                            }
-                            if (err) {
-                                $scope.err = err;
-                            }
-                            else {
-                                $scope.msg = 'finished';
-                            }
-                        }
+                    $scope.ionicPopup = {
+                        title: $scope.popup.title,
+                        template: $scope.popup.template,
+                        cancelText: ' ',
+                        cancelType: 'button icon ion-close button-assertive',
+                        okText: ' ',
+                        okType: 'button icon ion-checkmark-round button-balanced'
                     };
-                }
+                });
+
+                $scope.showConfirm = function () {
+                    var confirmPopup = $ionicPopup.confirm($scope.ionicPopup);
+                    confirmPopup.then(function (res) {
+                        if (res) {
+                            ionicLoading.load('Sending out');
+                            console.log($scope.taskData);
+                            myTask.createTask($scope.taskData.event, $scope.taskData.serverUserID, $scope.taskData.inputParasRef,$scope.taskData.jsonContent)
+                                .then(function (data) {
+                                    // promise fulfilled
+                                    console.log('Success!', data);
+                                    ionicLoading.unload();
+                                    approveInfoService.addApproveInfo({
+                                        keyText: $scope.keyText,
+                                        keyID: $scope.keyID,
+                                        createTime: new Date().getTime()
+
+                                    });
+                                    //$state.go('approve-conformation');
+
+                                }, function (error) {
+                                    ionicLoading.load(error);
+                                    console.log(error);
+                                    $timeout(function () {
+                                        ionicLoading.unload();
+                                    }, 1000);
+                                    approveInfoService.addApproveInfo({
+                                        keyText: $scope.keyText,
+                                        keyID: $scope.keyID,
+                                        createTime: new Date().getTime()
+                                    });
+                                    $scope.approveInfo = approveInfoService.getApproveInfo();
+                                    console.log($scope.approveInfo);
+                                    //$state.go('approve-conformation');
+                                })
+                                .finally(function () {
+                                    //$scope.data.lock = true;
+
+                                });
+                            console.log('approve');
+                        } else {
+                            console.log('cancel');
+                        }
+                    });
+                };
+            },
+            template: '<a class="button button-block button-positive" ng-click="showConfirm()">approve</a>',
+            replace: true,
+            link: function (ionicLoading, $ionicPopup, $timeout, $scope) {
             }
         };
     });

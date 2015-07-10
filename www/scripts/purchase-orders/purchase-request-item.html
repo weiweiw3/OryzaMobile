@@ -1,41 +1,14 @@
-<ion-view view-title="PR {{ data.PREQ_NO }} {{data.PREQ_ITEM}}" hide-back-button="true">
-    <ion-nav-buttons side="right">
-
-        <button class="button button-icon button-clear ion-plus" ></button>
-        <!--<button class="button button-icon button-clear ion-plus" ng-click="openModal()"></button>-->
-    </ion-nav-buttons>
+<ion-view view-title="PR {{ data.PREQ_NO }} {{data.$id}}" hide-back-button="true">
     <ion-content>
-        <ion-list>
-            <ion-item >
-                {{ data.PREQ_NO }}
-            </ion-item>
-            <ion-item >
-                {{data.PREQ_ITEM}}
-            </ion-item>
-            <!--<ion-item >-->
-                <!--{{ data.purch_ORG_TEXT }}-->
-            <!--</ion-item>-->
-            <!--<ion-item >-->
-                <!--{{ data.doc_DATE }}-->
-                <!--<span am-time-ago="data.doc_DATE"></span>-->
-            <!--</ion-item>-->
-        </ion-list>
-
-        <div>
-            <button ng-disabled="data.lock" class="button button-block button-positive" ng-click="showConfirm()">
-                {{data.approveButtonText}}
-            </button>
-            <div>
-                <ion-list>
-                    <ion-item ng-show="value" class="item item-icon-right"
-                              ng-repeat="(key,value) in history ">
-                        {{key}}:{{value}}
-
-                    </ion-item>
-                </ion-list>
+        <div class="card">
+            <div class="item item-text-wrap">
+                <div>{{ data.MATERIAL }} </div>
+                <div>{{ data.SHORT_TEXT }} </div>
+                <div>{{ data.PREQ_DATE }}</div>
+                <span am-time-ago="data.CH_ON"></span>
             </div>
         </div>
-
-
+        <div><create-task popup="popup" task-data="taskData"></create-task>
+        </div>
     </ion-content>
 </ion-view>

@@ -5,29 +5,29 @@
 
     //
     app.controller('timeSheetCtrl',
-        function (myTask, timeSheet, ionicLoading, $ionicPopup, $timeout, $scope,$firebaseObject) {
+        function (myTask, timeSheet, ionicLoading, $ionicPopup, $timeout, $scope, $firebaseObject) {
             ionicLoading.load();
             console.log(timeSheet);
             timeSheet.obj.$bindTo($scope, "data")
-                        .then(function () {
-                            $scope.fromDate = new Date($scope.data.WORKDATE);
-                            console.log($scope.fromDate);
-                            $scope.fromDatePickerCallback = function (val) {
-                                if (typeof(val) === 'undefined') {
-                                    console.log('Date not selected');
-                                } else {
-                                    console.log('Selected date is : ', val);
-                                    $scope.fromDate = val.getTime();
-                                    //$scope.toDate = $scope.fromDate + 130000;
+                .then(function () {
+                    $scope.fromDate = new Date($scope.data.WORKDATE);
+                    console.log($scope.fromDate);
+                    $scope.fromDatePickerCallback = function (val) {
+                        if (typeof(val) === 'undefined') {
+                            console.log('Date not selected');
+                        } else {
+                            console.log('Selected date is : ', val);
+                            $scope.fromDate = val.getTime();
+                            //$scope.toDate = $scope.fromDate + 130000;
 
-                                }
-                            };
-                            ionicLoading.unload();
-                        });
+                        }
+                    };
+                    ionicLoading.unload();
+                });
 
         })
         .controller('leaveRequestListItemCtrl',
-        function (myTask, ionicLoading, $ionicPopup, $timeout, $scope, $q, fbutil, $state, approveInfoService) {
+        function (myTask, ionicLoading, $ionicPopup, $timeout, $scope, $q) {
 
             $scope.delete = function (item) {
                 $scope.COUNTER = item;
@@ -35,128 +35,19 @@
                     event: 'E0025'
                 };
                 if (approveItem.event === 'E0025') {
-
                     $scope.ServerUserID = '100001';
-                    //$scope.PO_REL_CODE = res[6].substr(3);
-                    //$scope.PURCHASEORDER = res[8];
-                    //$scope.purchaseOrderHeaderRefStr = ref.toString()
-                    //    .replace(ref.root().toString(), '');
-                    //$scope.purchaseOrderItemsRef = $scope.purchaseOrderHeaderRefStr
-                    //    .replace('PO_HEADERS', 'PO_ITEMS');
-
-                    //通过检查对应E0002,如果审批错误即返回值等于null，那么改变lock可以继续审批
-                    //fbutil.ref(['Event/' + approveItem.event, $scope.ServerUserID])
-                    //    .startAt($scope.PURCHASEORDER)
-                    //    .endAt($scope.PURCHASEORDER)
-                    //    .once('value', function (snap) {
-                    //        snap.child($scope.PURCHASEORDER).child('TASK_INFO')
-                    //            .ref().once('value', function (snap) {
-                    //                if(snap.exportVal()!=null)$scope.history = snap.exportVal();
-                    //
-                    //                console.log(snap.exportVal());
-                    //                if (snap.child('task_status').val() != null) {
-                    //                    $scope.data.lock = true;
-                    //                } else {
-                    //                    $scope.data.lock = false;
-                    //                }
-                    //            });
-                    //    });
-
-                    $q.all([
-                        myTask.getjsonContent(approveItem.event),
-                        myTask.getInputP(approveItem.event).$loaded()
-                    ]).then(function (results) {
-                        var i = 0;
-                        angular.forEach(results, function (data) {
-                            if (i === 0) {
-                                $scope.jsonContent = data;
-                                $scope.jsonContent.CATSRECORDS[0].COUNTER = $scope.COUNTER;
-                            }
-                            if (i === 1) {
-                                var inputParas = data.$value;
-                                //inputParas = inputParas.replace('$P01$', $scope.PO_REL_CODE);//PO_REL_CODE
-                                //inputParas = inputParas.replace('$P01$', $scope.PO_REL_CODE);//PO_REL_CODE
-                                ////TODO replace P02 twice , in the furture use replace-all function
-                                //inputParas = inputParas.replace('$P02$', $scope.PURCHASEORDER);//PURCHASEORDER
-                                //inputParas = inputParas.replace('$P02$', $scope.PURCHASEORDER);//PURCHASEORDER
-                                //inputParas = inputParas.replace('$P03$', $scope.ServerUserID);//ServerUserID
-                                //inputParas = inputParas + ';FB_FROM_PATH=' + $scope.purchaseOrderHeaderRefStr;
-                                console.log(inputParas);
-                                $scope.inputParas = inputParas;
-                            }
-                            i++;
-                        })
-                        $scope.keyText = 'Delete Timesheet';
-                        $scope.keyID = $scope.COUNTER;
-
-                        //if ($scope.data.lock) {
-                        //    $scope.data.approveButtonText = 'Finished';
-                        //} else {
-                        //    $scope.data.approveButtonText = 'Approve';
-                        //}
-                        $scope.ionicPopup = {
-                            title: $scope.keyText,
-                            template: $scope.keyID,
-                            cancelText: ' ',
-                            cancelType: 'button icon ion-close button-assertive',
-                            okText: ' ',
-                            okType: 'button icon ion-checkmark-round button-balanced'
-                        };
-                        //$scope.showConfirm = function () {
-                        //    console.log('x');
-                        //
-                        //};
-                        $ionicPopup.confirm($scope.ionicPopup)
-                            .then(function (res) {
-                                if (res) {
-                                    ionicLoading.load('Sending out');
-                                    console.log($scope.inputParas);
-                                    myTask.createTask(approveItem.event, $scope.ServerUserID,
-                                        $scope.inputParas, $scope.keyID, 'Approve',  $scope.COUNTER)
-                                        .then(function (data) {
-                                            // promise fulfilled
-                                            console.log('Success!', data);
-                                            ionicLoading.unload();
-                                            //approveInfoService.addApproveInfo({
-                                            //    keyText: $scope.keyText,
-                                            //    keyID: $scope.keyID,
-                                            //    createTime: new Date().getTime()
-                                            //});
-                                            //$state.go('approve-conformation');
-
-                                        }, function (error) {
-                                            ionicLoading.load(error);
-                                            console.log(error);
-                                            $timeout(function () {
-                                                ionicLoading.unload();
-                                            }, 1000);
-                                            //approveInfoService.addApproveInfo({
-                                            //    keyText: $scope.keyText,
-                                            //    keyID: $scope.keyID,
-                                            //    createTime: new Date().getTime()
-                                            //});
-                                            //$scope.approveInfo = approveInfoService.getApproveInfo();
-                                            //console.log($scope.approveInfo);
-                                            //$state.go('approve-conformation');
-                                        })
-                                        .finally(function () {
-                                            //$scope.data.lock = true;
-
-                                        });
-                                    console.log('approve');
-                                } else {
-                                    console.log('cancel');
-                                }
-                            });
-                    });
-
-
-                    //
-                    //console.log($scope.jsonContent);
+                    $scope.popup={
+                        title: 'Delete Timesheet',
+                        template: $scope.COUNTER
+                    };
+                    $scope.taskData={
+                        event:approveItem.event,
+                        serverUserID:$scope.ServerUserID,
+                        inputParasRef:'',
+                        jsonContent:$scope.COUNTER
+                    };
 
                 }
-
-
             };
         })
 
@@ -425,8 +316,8 @@
                 controller: 'timeSheetCtrl',
                 cache: false,
                 resolve: {
-                    timeSheet: function ($stateParams, fbutil, $firebaseObject,$q) {
-                        var ref=fbutil.ref([$stateParams.index]);
+                    timeSheet: function ($stateParams, fbutil, $firebaseObject, $q) {
+                        var ref = fbutil.ref([$stateParams.index]);
                         var d = $q.defer();
                         ref.once('value', function (data) {
                             var obj = {
@@ -448,7 +339,7 @@
                                     d.reject(error);
                                 } else {
                                     d.resolve({
-                                        obj:$firebaseObject(ref.child('draft'))
+                                        obj: $firebaseObject(ref.child('draft'))
                                     });
                                 }
                             });

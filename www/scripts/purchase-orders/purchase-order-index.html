@@ -1,21 +1,17 @@
 <ion-view view-title="PurchaseOrder {{ data.$id }}" hide-back-button="true">
     <ion-content>
-        <ion-list>
-            <ion-item >
-                {{ data.CO_CODE }}CO_CODE_TEXT
-            </ion-item>
-            <ion-item >
-                {{ data.PURCH_ORG }}PURCH_ORG_TEXT
-            </ion-item>
-            <ion-item >
-                {{ data.DOC_DATE }}
+        <div class="card">
+            <div class="item item-text-wrap">
+                <div>{{ data.CO_CODE }} CO_CODE_TEXT</div>
+                <div>{{ data.PURCH_ORG }} PURCH_ORG_TEXT</div>
+                <div>{{ data.DOC_DATE }}</div>
+
                 <span am-time-ago="data.DOC_DATE"></span>
-            </ion-item>
-        </ion-list>
+            </div>
+        </div>
         <div>
-            <button ng-disabled="data.lock" class="button button-block button-positive" ng-click="showConfirm()">
-                {{data.approveButtonText}}
-            </button>
+            <create-task popup="popup" task-data="taskData"></create-task>
+            <!--ng-disabled="data.lock"-->
             <!--<div>-->
                 <!--<ion-list>-->
                     <!--<ion-item ng-show="value" class="item item-icon-right"-->

@@ -24,22 +24,27 @@ angular.module('myApp.services.myTask',
                 });
                 return d.promise;
             },
-            getInputP: function (event) {
-                return syncObject([taskDefaultRefStr, event, 'inputParas']);
+            checkNodeLock: function (refArray, refWhere) {
+                //var d=$q.defer();
+                fbutil.ref(refArray).child(refWhere).child('TASK_INFO')
+                    .once('value', function (snap) {
+                        console.log(snap.val());
+                        //if (snap.exportVal() != null)$scope.history = snap.exportVal();
+                        if (snap.child('task_status').val() != null) {
+                            $scope.data.lock = true;
+                        } else {
+                            $scope.data.lock = false;
+                        }
+                    });
+                //return d.promise;
             },
-            getjsonContent: function (event) {
-                var d = $q.defer();
-                fbutil.ref([taskDefaultRefStr, event, 'jsonContent']).once('value', function (snapshot) {
-                    d.resolve(snapshot.exportVal());
-                }, function (err) {
-                    d.reject(err);
-                });
-                return d.promise;
-            },
-            taskInformationCombine: function (event, defaultData, inputParasRef,jsonContent) {
+
+            taskInformationCombine: function (event, defaultData, ServerUser, inputParasRef, jsonContent) {
                 //data.inputParas
                 //data.jsonContent
                 var taskData = defaultData;
+                console.log(inputParasRef);
+                taskData.userId = ServerUser;
                 if (typeof defaultData.jsonContent === 'object') {
                     taskData.jsonContent = defaultData.jsonContent;
                     if (event === 'E0025') {
@@ -47,10 +52,10 @@ angular.module('myApp.services.myTask',
                     }
 
                 }
-                if (typeof defaultData.inputParas === 'string') {
+                if (typeof defaultData.inputParas === 'string' && typeof inputParasRef === 'string') {
 
                     //var d = $q.defer();
-                    var array = inputParasRef.toString().split("/");
+                    var array = inputParasRef.split("/");
                     var inputParas = defaultData.inputParas;
                     if (event === 'E0005') {
                         //E0004->E0005
@@ -61,7 +66,6 @@ angular.module('myApp.services.myTask',
                         inputParas = inputParas.replace('$P03$', array[9]);//ITEM
                         inputParas = inputParas.replace('$P03$', array[9]);//ITEM
                         inputParas = inputParas.replace('$P04$', array[5]);//ServerUserID
-                        inputParas = inputParas + ';FB_FROM_PATH=' + ref.toString().replace(ref.root().toString(), '');
                     }
 
                     if (event === 'E0002') {
@@ -70,31 +74,32 @@ angular.module('myApp.services.myTask',
                         inputParas = inputParas.replace('$P01$', array[6].substr(3));//PO_REL_CODE
                         //TODO replace P02 twice , in the furture use replace-all function
                         inputParas = inputParas.replace('$P02$', array[8]);//PURCHASEORDER
-                        inputParas = inputParas.replace('$P02$', res[8]);//PURCHASEORDER
-                        inputParas = inputParas.replace('$P03$', res[5]);//ServerUserID
-                        inputParas = inputParas + ';FB_FROM_PATH=' + ref.toString().replace(ref.root().toString(), '');
+                        inputParas = inputParas.replace('$P02$', array[8]);//PURCHASEORDER
+                        inputParas = inputParas.replace('$P03$', array[5]);//ServerUserID
                     }
+                    inputParas = inputParas + ';FB_FROM_PATH=' + inputParasRef.replace('https://', '');
                     taskData.inputParas = inputParas;
-                    return taskData;
+
                 }
+                console.log(taskData);
+                return taskData;
             },
-            createTask: function (event, ServerUser, inputParasRef, logId, nextAction, jsonContent) {
+            createTask: function (event, ServerUser, inputParasRef, jsonContent) {
 
                 var taskRef = firebaseRef(['tasks']);
-                messageLog.action = nextAction;
 
-                myTask.getTaskDefaultValue(event).then(function(defaultData){
-                    console.log(inputParasRef.toString());
-                    var dd=myTask.taskInformationCombine(event, defaultData, inputParasRef,jsonContent);
-                    console.log(dd);
-                });
-
-
-                return taskNodeAdd(taskRef, inputParasRef, event, ServerUser, jsonContent)
-                    .then(function (data) {
-                        console.log(data);
-                        return postTask(data);
+                return myTask.getTaskDefaultValue(event)
+                    .then(function (defaultData) {
+                        var taskData = myTask.taskInformationCombine(event,
+                            defaultData, ServerUser, inputParasRef, jsonContent);
+                        console.log(taskData);
+                        taskNodeAdd(taskData, taskRef)
+                            .then(function (data) {
+                                console.log(data);
+                                return postTask(data);
+                            });
                     });
+
                 //                    .catch(errorFn);;
 
                 function httpRequestHandler(method, url, data, timeoutNum) {
@@ -152,32 +157,25 @@ angular.module('myApp.services.myTask',
                 }
 
 
-                function taskNodeAdd(taskRef, inputPStr, event, ServerUser, jsonContent) {
+                function taskNodeAdd(taskData, taskRef) {
                     var d = $q.defer();
-                    firebaseRef([taskDefaultRefStr, event])
-                        .once("value", function (snap) {
-                            var taskData = snap.val();
-                            taskData.userId = ServerUser;
-                            if (typeof jsonContent === 'object') {
-                                taskData.jsonContent = jsonContent;
-                            }
-                            taskData.inputParas = '';
-                            //push完新task后，把新生成的key也存下来。
-                            var onComplete = function () {
-                                inputPStr = inputPStr + ';task_FB=' + newTaskRef.key();
-                                newTaskRef.child('inputParas').set(inputPStr, function (error) {
-                                    if (error) {
-                                        d.reject(error);
-                                        console.log("Error:", error);
-                                    }
-                                    console.log('new Task' + newTaskRef.key());
-                                    newTaskRef.on("value", function (snap) {
-                                        d.resolve(angular.toJson(snap.val()));
-                                    });
+                    //push完新task后，把新生成的key也存下来。
+                    var onComplete = function () {
+                        taskData.inputParas = taskData.inputParas + ';task_FB=' + newTaskRef.key();
+                        newTaskRef.child('inputParas').set(taskData.inputParas + ';task_FB=' + newTaskRef.key(),
+                            function (error) {
+                                if (error) {
+                                    d.reject(error);
+                                    console.log("Error:", error);
+                                }
+                                console.log('new Task' + newTaskRef.key());
+                                newTaskRef.on("value", function (snap) {
+                                    d.resolve(angular.toJson(snap.val()));
                                 });
-                            };
-                            var newTaskRef = taskRef.push(taskData, onComplete);
-                        });
+                            });
+                    };
+                    var newTaskRef = taskRef.push(taskData, onComplete);
+
                     return d.promise;
                 }
 
