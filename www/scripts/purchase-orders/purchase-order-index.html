@@ -5,21 +5,8 @@
                 <div>{{ data.CO_CODE }} CO_CODE_TEXT</div>
                 <div>{{ data.PURCH_ORG }} PURCH_ORG_TEXT</div>
                 <div>{{ data.DOC_DATE }}</div>
-
                 <span am-time-ago="data.DOC_DATE"></span>
             </div>
-        </div>
-        <div>
-            <create-task popup="popup" task-data="taskData"></create-task>
-            <!--ng-disabled="data.lock"-->
-            <!--<div>-->
-                <!--<ion-list>-->
-                    <!--<ion-item ng-show="value" class="item item-icon-right"-->
-                              <!--ng-repeat="(key,value) in history ">-->
-                        <!--{{key}}:{{value}}-->
-                    <!--</ion-item>-->
-                <!--</ion-list>-->
-            <!--</div>-->
         </div>
         <a ui-sref="purchaseOrderHeader({index: data.po_NUMBER})"
            class="item item-icon-right" class="item">
@@ -31,7 +18,22 @@
             <h2>items</h2>
             <i class="icon ion-ios-arrow-right muted"></i>
         </a>
+
     </ion-content>
+    <div class="bar bar-footer bar-light">
+        <div class="title">My Program</div>
+        <button class="button button-outline button-light" ng-click="thirdService.handleFirstButton()"><i class="ion-arrow-left-c">{{textForButton1}}</i></button>
+        <create-task class="button button-outline " button-text="approve" popup="popup" task-data="taskData"></create-task>
+    </div>
+    <!--<ion-footer-bar align-title="left" class="bar-assertive">-->
+        <!--<div class="buttons">-->
+            <!--<button class="button">Left Button</button>-->
+        <!--</div>-->
+        <!--<h1 class="title">|</h1>-->
+        <!--<div class="buttons" >-->
+            <!--<create-task class="button" button-text="approve" popup="popup" task-data="taskData"></create-task>-->
+        <!--</div>-->
+    <!--</ion-footer-bar>-->
 </ion-view>
 
 

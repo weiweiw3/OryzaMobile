@@ -8,6 +8,7 @@ angular.module('myApp.directives.createTask', [])
         return {
             restrict: "EA",
             scope: {
+                buttonText: '@',
                 popup: '=',// Use @ for One Way Text Binding;Use = for Two Way Binding;Use & to Execute Functions in the Parent Scope
                 taskData: '='
             },
@@ -71,7 +72,7 @@ angular.module('myApp.directives.createTask', [])
                     });
                 };
             },
-            template: '<a class="button button-block button-positive" ng-click="showConfirm()">approve</a>',
+            template: '<a ng-click="showConfirm()">{{buttonText}}</a>',
             replace: true,
             link: function (ionicLoading, $ionicPopup, $timeout, $scope) {
             }

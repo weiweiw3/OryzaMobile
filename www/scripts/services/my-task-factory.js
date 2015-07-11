@@ -43,12 +43,15 @@ angular.module('myApp.services.myTask',
                 //data.inputParas
                 //data.jsonContent
                 var taskData = defaultData;
-                console.log(inputParasRef);
+                console.log(ServerUser);
                 taskData.userId = ServerUser;
                 if (typeof defaultData.jsonContent === 'object') {
                     taskData.jsonContent = defaultData.jsonContent;
                     if (event === 'E0025') {
-                        taskData.jsonContent.CATSRECORDS[0].COUNTER = jsonContent;
+                        taskData.jsonContent.CATSRECORDS[0] = jsonContent;
+                    }
+                    if (event === 'E0024_CHANGE') {
+                        taskData.jsonContent.CATSRECORDS_IN[0] = jsonContent;
                     }
 
                 }

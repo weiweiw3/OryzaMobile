@@ -4,42 +4,32 @@
         <!--<button class="button button-icon button-clear ion-plus" ng-click="openModal()"></button>-->
     </ion-nav-buttons>
     <ion-content>
-        <form name="validation" ng-submit="tryValidation()">
-            {{fromDate}}
-            <ionic-datepicker  idate="fromDate" disablepreviousdates="true"
-                              callback="fromDatePickerCallback">
-                <button class="button button-block button-positive"> {{ fromDate | date:'dd - MMMM - yyyy' }}</button>
-            </ionic-datepicker>
-            <!--ToDate-->
-            <!--<ionic-datepicker idate="toDate" disablepreviousdates="true" callback="toDatePickerCallback">-->
-                <!--<button class="button button-block button-positive"> {{ toDate | date:'dd - MMMM - yyyy' }}</button>-->
-            <!--</ionic-datepicker>-->
-            <div class="item range range-positive">
-                <i class="icon ion-ios-bolt-outline"></i>
-                <input type="range" name="volume" min="0" max="8" ng-model="data.CATSHOURS">
-                <i class="icon ion-ios-bolt"></i>
+        <div class="card">
+            <div class="item item-text-wrap">
+                <div>{{data.COUNTER}}</div>
+                <div>{{data.WORKDATE}}</div>
+                <div class="item range range-positive">
+                    <i>{{data.CATSHOURS}}</i>
+                    <input type="range" name="volume" min="0" max="8" ng-model="data.CATSHOURS">
+                    <i class="icon ion-ios-bolt"></i>
+                </div>
+                <div>{{ data.PREQ_DATE }} <span am-time-ago="data.CH_ON"></span></div>
+
+                <label class="item item-input">
+                    <input type="text" placeholder="SHORTTEXT" name="SHORTTEXT" ng-model="data.SHORTTEXT">
+                </label>
             </div>
-            {{data.CATSHOURS}}
-            <label class="item item-input">
-                <input type="text" placeholder="SHORTTEXT" name="SHORTTEXT" ng-model="data.SHORTTEXT">
-            </label>
-            <!--<ion-toggle ng-model="test" ng-checked="test">-->
-                <!--test-->
-            <!--</ion-toggle>-->
-            <div>
-                <button class="button button-block button-positive">
-                    edit
-                </button>
-            </div>
-        </form>
+        </div>
     </ion-content>
     <ion-footer-bar align-title="left" class="bar-assertive">
         <div class="buttons">
-            <button class="button">Left Button</button>
+            <create-task class="button" button-text="delete" popup="deletePopup" task-data="deleteTaskData"></create-task>
+
         </div>
         <h1 class="title">|</h1>
-        <div class="buttons" ng-click="doSomething()">
-            <button class="button">Right Button</button>
+
+        <div class="buttons">
+            <create-task class="button" button-text="save" popup="editPopup" task-data="editTaskData"></create-task>
         </div>
     </ion-footer-bar>
 </ion-view>

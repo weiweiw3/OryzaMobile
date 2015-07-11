@@ -21,7 +21,6 @@
 
             approveItem.obj.$bindTo($scope, "data").then(function () {
                 ionicLoading.unload();
-                $scope.data.approveButtonText = 'Approve';
 
                 var ref = approveItem.obj.$ref().toString();
                 var res = ref.split("/");
