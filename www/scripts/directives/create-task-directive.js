@@ -12,7 +12,7 @@ angular.module('myApp.directives.createTask', [])
                 popup: '=',// Use @ for One Way Text Binding;Use = for Two Way Binding;Use & to Execute Functions in the Parent Scope
                 taskData: '='
             },
-            controller: function (ionicLoading, $ionicPopup, $timeout, $scope) {
+            controller: function (ionicLoading, $ionicPopup, $timeout, $scope,$state) {
                 $scope.$watch('popup', function (newVal) {
                     if (angular.isUndefined(newVal) || newVal == null) {
                         return
@@ -39,12 +39,11 @@ angular.module('myApp.directives.createTask', [])
                                     console.log('Success!', data);
                                     ionicLoading.unload();
                                     approveInfoService.addApproveInfo({
-                                        keyText: $scope.keyText,
-                                        keyID: $scope.keyID,
+                                        keyText: $scope.popup.title,
+                                        keyID: $scope.popup.template,
                                         createTime: new Date().getTime()
-
                                     });
-                                    //$state.go('approve-conformation');
+                                    $state.go('approve-conformation');
 
                                 }, function (error) {
                                     ionicLoading.load(error);

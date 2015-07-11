@@ -3,9 +3,6 @@
         <ion-refresher on-refresh="refresh()"></ion-refresher>
         <ion-list can-swipe="true"><!--show-delete="false"--><!--show-reorder="false"-->
             <ng-switch on="viewObject.key">
-                <div ng-switch-when="Time-Sheet">
-                    <my-sub-area1 messages="messages"></my-sub-area1>
-                </div>
                 <div ng-switch-when="E0001">
                     <e0001 ion-list="ionList"></e0001>
                 </div>

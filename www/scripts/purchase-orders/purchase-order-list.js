@@ -151,7 +151,7 @@
         $stateProvider
             .state('ionListView', {
                 url: '/ionListView/:viewName/:index?key',
-                templateUrl: 'scripts/hr/time-sheet-list.html',
+                templateUrl: 'templates/ion-list-template.html',
                 controller: 'ionListViewCtrl',
                 resolve: {
                     viewObject: function (fbutil, ionicLoading, $stateParams) {

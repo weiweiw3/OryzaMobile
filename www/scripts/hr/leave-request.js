@@ -2,8 +2,6 @@
     "use strict";
 
     var app = angular.module('myApp.leaveRequest', []);
-
-    //
     app.controller('timeSheetCtrl',
         function (myTask, timeSheet, ionicLoading, $ionicPopup, $timeout, $scope) {
             ionicLoading.load();
@@ -70,7 +68,7 @@
             };
         })
 
-        .controller('leaveRequestCtrl',
+        .controller('e0023Ctrl',
         function (myTask, ionicLoading, $ionicPopup, $timeout, $scope, fbutil, $state, approveInfoService) {
 
             //$scope.fromDate = new Date();
@@ -116,9 +114,9 @@
 
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider
-            .state('timeSheet', {
-                url: '/timeSheet/:index',
-                templateUrl: 'scripts/hr/time-sheet-index.html',
+            .state('e0024_change', {
+                url: '/e0024_change/:index?key',
+                templateUrl: 'scripts/purchase-orders/e0024_change.html',
                 controller: 'timeSheetCtrl',
                 cache: false,
                 resolve: {
@@ -150,14 +148,13 @@
                             });
                         });
                         return d.promise;
-
                     }
                 }
             })
-            .state('timeSheetCreate', {
-                url: '/timeSheetCreate',
-                templateUrl: 'scripts/hr/leave-request.html',
-                controller: 'timeSheetCtrl'
+            .state('e0023', {
+                url: '/e0023',
+                templateUrl: 'scripts/purchase-orders/e0023.html',
+                controller: 'e0023Ctrl'
             });
     }]);
 })(angular);
