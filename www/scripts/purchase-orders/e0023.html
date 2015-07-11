@@ -6,33 +6,48 @@
     </ion-nav-buttons>
 
     <ion-content>
-        From Date
-        <ionic-datepicker idate="fromDate" disablepreviousdates="true" callback="fromDatePickerCallback">
-            <button class="button button-block button-positive"> {{ fromDate | date:'dd - MMMM - yyyy' }}</button>
-        </ionic-datepicker>
-        <ionic-timepicker etime="fromTimeslots.epochTime" format="fromTimeslots.format" step="fromTimeslots.step"
-                          callback="fromTimePickerCallback">
-            <button class="button button-block button-positive overflowShow">
-                <standard-time-meridian etime='fromTimeslots.epochTime'></standard-time-meridian>
-            </button>
-        </ionic-timepicker>
-        ToDate
-        <ionic-datepicker idate="toDate" disablepreviousdates="true" callback="toDatePickerCallback">
-            <button class="button button-block button-positive"> {{ toDate | date:'dd - MMMM - yyyy' }}</button>
-        </ionic-datepicker>
-        <ionic-timepicker etime="toTimeslots.epochTime" format="toTimeslots.format" step="toTimeslots.step"
-                          callback="toTimePickerCallback">
-            <button class="button button-block button-positive overflowShow">
-                <standard-time-meridian etime='toTimeslots.epochTime'></standard-time-meridian>
-            </button>
-        </ionic-timepicker>
-        <line>---------</line>
-        <div>
-            <button class="button button-block button-positive" ng-click="showConfirm()">
-                apply
-            </button>
+        Date
+        <div class="buttons">
+            <ionic-datepicker idate="fromDate" disablepreviousdates="true" callback="fromDatePickerCallback">
+                <button class="button button-positive"> {{ fromDate | date:'dd - MMMM - yyyy' }}</button>
+            </ionic-datepicker>
+
+            <ionic-datepicker idate="toDate" disablepreviousdates="true" callback="toDatePickerCallback">
+                <button class="button  button-positive"> {{ toDate | date:'dd - MMMM - yyyy' }}</button>
+            </ionic-datepicker>
         </div>
+        Time
+        <div class="buttons">
+            <ionic-timepicker etime="fromTimeslots.epochTime" format="fromTimeslots.format" step="fromTimeslots.step"
+                              callback="fromTimePickerCallback">
+                <button class="button  button-positive overflowShow">
+                    <standard-time-meridian etime='fromTimeslots.epochTime'></standard-time-meridian>
+                </button>
+            </ionic-timepicker>
+
+            <ionic-timepicker etime="toTimeslots.epochTime" format="toTimeslots.format" step="toTimeslots.step"
+                              callback="toTimePickerCallback">
+                <button class="button  button-positive overflowShow">
+                    <standard-time-meridian etime='toTimeslots.epochTime'></standard-time-meridian>
+                </button>
+            </ionic-timepicker>
+        </div>
+        <div></div>
+        <label class="item item-input">
+            <input type="text" placeholder="SHORTTEXT" name="SHORTTEXT" ng-model="data.SHORTTEXT">
+        </label>
+
     </ion-content>
+    <ion-footer-bar align-title="left" class="bar-assertive">
+        <div class="buttons">
+            <create-task class="button" button-text="back" popup="deletePopup" task-data="deleteTaskData"></create-task>
+        </div>
+        <h1 class="title">|</h1>
+
+        <div class="buttons">
+            <create-task class="button" button-text="save" popup="editPopup" task-data="editTaskData"></create-task>
+        </div>
+    </ion-footer-bar>
 </ion-view>
 
 
