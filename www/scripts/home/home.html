@@ -1,17 +1,50 @@
 <ion-view class="bar-dark">
-    <ion-nav-buttons side="right">
-        <button class="button button-icon button-clear ion-search" ui-sref="searchOption"></button>
-        &nbsp;&nbsp;&nbsp;
-        <button class="button button-icon button-clear ion-email" ui-sref="notification"></button>
-    </ion-nav-buttons>
-    <ion-nav-title>
-        <img src="../img/home_ico.png">
-    </ion-nav-title>
-    <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
-    </ion-nav-buttons>
+    <ion-nav-bar class="bar-positive nav-title-slide-ios7" align-title="left">
+
+        <ion-nav-buttons side="left">&nbsp;&nbsp;&nbsp;
+            <button class=" button-icon button-clear nav-button  ion-navicon " ng-click="openMenu()"></button>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <button class=" button-icon button-clear ion-android-search nav-right-button " ui-sref="searchOption"></button>
+            &nbsp;&nbsp;&nbsp;
+            <!--<button class="button button-icon button-clear ion-ios-information-outline" ui-sref="notification"></button>-->
+        </ion-nav-buttons>
+        <ion-nav-title >
+            <div class="view-title">ORYZA</div>
+        </ion-nav-title>
+    </ion-nav-bar>
     <ion-content>
         <ion-refresher on-refresh="refresh()"></ion-refresher>
+        <div class="row">
+            <div class="col"><div class="card">
+                <div class="item item-text-wrap">
+                    This is a basic Card which contains an item that has wrapping text.
+                </div>
+            </div></div>
+            <div class="col"><div class="card">
+                <div class="item item-divider">
+                    I'm a Header in a Card!
+                </div>
+                <div class="item item-text-wrap">
+                    This is a basic Card with some text.
+                </div>
+                <div class="item item-divider">
+                    I'm a Footer in a Card!
+                </div>
+            </div></div>
+            <div class="col"><div class="card">
+                <div class="item item-divider">
+                    I'm a Header in a Card!
+                </div>
+                <div class="item item-text-wrap">
+                    This is a basic Card with some text.
+                </div>
+                <div class="item item-divider">
+                    I'm a Footer in a Card!
+                </div>
+            </div></div>
+        </div>
+        <!--<div class="subtitle">df</div>-->
         <div class="card-gallery item item-text-wrap" ng-show="E0001[0].show ">
             <div class="item item-divider  positive">
                 <h2>Purchase Order Approve</h2>

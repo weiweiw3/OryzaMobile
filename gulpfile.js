@@ -12,25 +12,7 @@ var paths = {
   sass: ['./scss/**/*.scss']
 };
 gulp.task('default', ['sass']);
-gulp.task('add-proxy', function() {
-    return replace({
-        regex: "http://114.215.185.243:8080/data-app/rs/task",
-        replacement: "http://localhost:8100/data-app/rs/task",
-        paths: replaceFiles,
-        recursive: false,
-        silent: false
-    });
-});
 
-gulp.task('remove-proxy', function() {
-    return replace({
-        regex: "http://localhost:8100/data-app/rs/task",
-        replacement: "http://114.215.185.243:8080/data-app/rs/task",
-        paths: replaceFiles,
-        recursive: false,
-        silent: false
-    });
-});
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')

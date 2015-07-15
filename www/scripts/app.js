@@ -14,6 +14,7 @@ var dependencyModules = [
     'LocalStorageModule',
     'ionic-datepicker',
     'ionic-timepicker',
+    'ionic-material',
 //    'ui.router',
     'angular-momentjs'];
 var myAppComponents = [
@@ -38,8 +39,7 @@ var myAppComponents = [
     'myApp.purchaseOrder',
     'myApp.purchaseOrderList',
     'myApp.search',
-    'myApp.sapValidation'
-    ,
+    'myApp.sapValidation',
     'myApp.leaveRequest'
 ];
 

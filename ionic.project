@@ -1,5 +1,13 @@
 {
   "name": "OryzaMobile",
   "app_id": "a04798c7"
-
+  ,
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ]
 }

@@ -42,7 +42,7 @@
         };
     })
         .factory('ESService',
-        ['$q', 'esFactory', '$location', '$localstorage','SearchUrl', function ($q, elasticsearch, $location, $localstorage,SearchUrl) {
+        ['$q', 'esFactory', '$location', '$localstorage', 'SearchUrl', function ($q, elasticsearch, $location, $localstorage, SearchUrl) {
             var client = elasticsearch({
                 //host: "https://a1b5amni:7smeg06ujbchru2l@apricot-2272737.us-east-1.bonsai.io/"
                 host: SearchUrl.url
@@ -75,8 +75,8 @@
 
                 console.log(table);
                 client.search({
-                 //   "index": 'firebase',
-                 //"type": 'customer',
+                    //   "index": 'firebase',
+                    //"type": 'customer',
                     "index": '40288b8147cd16ce0147cd236df20000',
                     "type": table,
                     "body": {
@@ -105,28 +105,28 @@
                 return deferred.promise;
             };
 
-
             return {
                 "search": search
             };
         }]
     )
-        .controller('searchDetailCtrl', function ($scope, $stateParams, Api,localStorageService) {
+        .controller('searchDetailCtrl', function ($scope, $stateParams, Api, localStorageService) {
             //console.log($stateParams.index);
-            $scope.searchObj=$stateParams.key;
+            $scope.searchObj = $stateParams.key;
             $scope.title = $stateParams.key + ' ' + $stateParams.index;
             //var localStorageService.get($stateParams.key);
             if (typeof  localStorageService.get($stateParams.key) !== 'undefined'
                 && localStorageService.get($stateParams.key) !== null) {
-                $scope.searchHistory=localStorageService.get($stateParams.key);
+                $scope.searchHistory = localStorageService.get($stateParams.key);
 
-            }else{
-                $scope.searchHistory=[];
+            } else {
+                $scope.searchHistory = [];
 
             }
-            if($scope.searchHistory.indexOf($stateParams.index)===-1){
+            if ($scope.searchHistory.indexOf($stateParams.index) === -1) {
                 $scope.searchHistory.push($stateParams.index);
-            };
+            }
+            ;
 
             localStorageService.set($stateParams.key, $scope.searchHistory);
             var querys = [
@@ -142,14 +142,14 @@
                         text: 'stock',
                         table: 'view_material_stock',
                         where: 'MATNR=/' + $stateParams.index + '/'
-                    },{
+                    }, {
                         key: 'customer',
                         name: 'info',
                         text: 'bacis information',
                         table: 'e0015_KNA1',
                         where: 'KUNNR=/' + $stateParams.index + '/'
                     }
-                    ,{
+                    , {
                         key: 'customer',
                         name: 'info',
                         text: 'contacts',
@@ -157,20 +157,20 @@
                         where: 'KUNNR=/' + $stateParams.index + '/'
                     }
                     //TODO orderby 怎么写
-                    ,{
+                    , {
                         key: 'customer',
                         name: 'info',
                         text: 'related SO',
                         table: 'e0015_vbak',
                         where: 'KUNNR=/' + $stateParams.index + '/ '
-                    },{
+                    }, {
                         key: 'vendor',
                         name: 'info',
                         text: 'bacis information',
                         table: 'e0015_LFA1',
                         where: 'LIFNR=/' + $stateParams.index + '/'
                     }
-                    ,{
+                    , {
                         key: 'vendor',
                         name: 'info',
                         text: 'contacts',
@@ -179,7 +179,7 @@
                     }
                 ]
                 ;
-            $scope.results=[];
+            $scope.results = [];
             angular.forEach(querys, function (query) {
                 if ($stateParams.key === query.key) {
 
@@ -187,9 +187,9 @@
                         .then(function (data) {
                             console.log(data);
                             $scope.results.push({
-                                text:query.text,
-                                data:data[0]
-                            }) ;
+                                text: query.text,
+                                data: data[0]
+                            });
                         })
                         .catch(function () {
                             console.log('Assign only failure callback to promise');
@@ -206,20 +206,20 @@
 
         })
         .
-        controller('searchCtrl', function (searchObj, $http, $q, Api, $resource, $scope, ESService,localStorageService) {
+        controller('searchCtrl', function (searchObj, $http, $q, Api, $resource, $scope, ESService, localStorageService) {
             $scope.searchObj = searchObj;
             $scope.query = "";
             if (typeof  localStorageService.get($scope.searchObj.text) !== 'undefined'
                 && localStorageService.get($scope.searchObj.text) !== null) {
-                $scope.searchHistory=localStorageService.get($scope.searchObj.text);
+                $scope.searchHistory = localStorageService.get($scope.searchObj.text);
 
-            }else{
-                $scope.searchHistory=[];
+            } else {
+                $scope.searchHistory = [];
 
             }
 
-            $scope.deleteHistory=function (result){
-                var index=$scope.searchHistory.indexOf(result);
+            $scope.deleteHistory = function (result) {
+                var index = $scope.searchHistory.indexOf(result);
                 //console.log(index+' '+$scope.searchHistory.indexOf(index));
                 if (index > -1) {
                     $scope.searchHistory.splice(index, 1);
@@ -227,7 +227,7 @@
                 }
 
             };
-            console.log($scope.searchObj.text+' '+$scope.searchHistory);
+            console.log($scope.searchObj.text + ' ' + $scope.searchHistory);
             var doSearch = ionic.debounce(function (query) {
                 ESService.search($scope.searchObj.value, query, 0).then(function (results) {
                     console.log(results);
@@ -242,7 +242,9 @@
         });
 
 
-    app.config(['$stateProvider', function ($stateProvider) {
+    app
+
+        .config(['$stateProvider', function ($stateProvider) {
         $stateProvider
             .state('search', {
                 url: '/search/:text?value',

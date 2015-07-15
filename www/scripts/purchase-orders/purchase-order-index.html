@@ -1,5 +1,33 @@
-<ion-view view-title="PurchaseOrder {{ data.$id }}" hide-back-button="true">
-    <ion-content>
+<ion-view hide-nav-bar="true">
+    <!--<ion-nav-bar class=" bar-positive nav-title-slide-ios7 bar-header2" align-title="left">-->
+    <!---->
+
+    <!--</ion-nav-bar>-->
+    <ion-header-bar class="bar-positive bar-header2">
+
+        <div class="row">
+            <div class="col ">
+                <button ng-if="$root.showCustomBack" ng-click="$root.goBack()"
+                        class=" button-icon button-clear nav-button ion-android-arrow-back">
+                </button>
+            </div>
+            <div class="col col-80">
+                <div class="item-text-wrap">
+                    <div>{{ data.CO_CODE }} CO_CODE_TEXT</div>
+                    <div>{{ data.PURCH_ORG }} PURCH_ORG_TEXT</div>
+                    <div>{{ data.DOC_DATE }}</div>
+                    <span am-time-ago="data.DOC_DATE"></span>
+                </div>
+            </div>
+        </div>
+
+
+    </ion-header-bar>
+    <ion-nav-title class="longTitle">
+        <!--<div class="view-title">PurchaseOrder {{ data.$id }}</div>-->
+
+    </ion-nav-title>
+    <ion-content has-header="true" CLASS="has-header2">
         <div class="card">
             <div class="item item-text-wrap">
                 <div>{{ data.CO_CODE }} CO_CODE_TEXT</div>
@@ -22,17 +50,19 @@
     </ion-content>
     <div class="bar bar-footer bar-light">
         <div class="title">My Program</div>
-        <button class="button button-outline button-light" ng-click="thirdService.handleFirstButton()"><i class="ion-arrow-left-c">{{textForButton1}}</i></button>
-        <create-task class="button button-outline " button-text="approve" popup="popup" task-data="taskData"></create-task>
+        <button class="button button-outline button-light" ng-click="thirdService.handleFirstButton()"><i
+                class="ion-arrow-left-c">{{textForButton1}}</i></button>
+        <create-task class="button button-outline " button-text="approve" popup="popup"
+                     task-data="taskData"></create-task>
     </div>
     <!--<ion-footer-bar align-title="left" class="bar-assertive">-->
-        <!--<div class="buttons">-->
-            <!--<button class="button">Left Button</button>-->
-        <!--</div>-->
-        <!--<h1 class="title">|</h1>-->
-        <!--<div class="buttons" >-->
-            <!--<create-task class="button" button-text="approve" popup="popup" task-data="taskData"></create-task>-->
-        <!--</div>-->
+    <!--<div class="buttons">-->
+    <!--<button class="button">Left Button</button>-->
+    <!--</div>-->
+    <!--<h1 class="title">|</h1>-->
+    <!--<div class="buttons" >-->
+    <!--<create-task class="button" button-text="approve" popup="popup" task-data="taskData"></create-task>-->
+    <!--</div>-->
     <!--</ion-footer-bar>-->
 </ion-view>
 
