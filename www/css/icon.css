@@ -12,14 +12,14 @@
 .nav-button,
 .nav-button:before {
     padding-top: 0px;
-    font-size: 35px;
+    font-size: 30px;
     color: #E8EAF6;
 }
 
 .nav-right-button,
 .nav-right-button:before {
     padding-top: 7px;
-    font-size: 33px;
+    font-size: 30px;
     font-weight: 100;
     color: #E8EAF6;
 }
@@ -88,6 +88,48 @@
     font-size: 12px;
     font-weight: normal;
     color: #9E9E9E;
+}
+.ionicPopup {
+    height: 450px;
+    /*background-color: #AFEEEE;*/
+}
+.ionicPopup .popup-head{
+    height: 44px !important;
+    text-align:left;
+
+    padding-left: 20px;
+    padding-right: 20px;
+    /*background: red  !important;*/
+}
+.ionicPopup .popup-title {
+    font-size: 16px;
+    font-weight: 600;
+    /*color: #fff !important;*/
+}
+
+.ionicPopup .popup-body{
+    /*background: blue !important;*/
+    text-align:left;
+
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #616161;
+}
+/*.popup-sub-title*/
+/*.popup-buttons.row*/
+.ionicPopup .popup-buttons {
+    height: 30px !important;
+    text-align:right;
+    padding-left: 60px;
+}
+.ionicPopup .popup-buttons .button {
+    height: 30px !important;
+    text-align:center;
+    font-size: 14px;
+    padding: 0px;
+    color:#3b80f3;
 }
 
 .row {

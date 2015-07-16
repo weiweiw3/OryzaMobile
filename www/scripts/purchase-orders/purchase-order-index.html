@@ -4,7 +4,6 @@
 
     <!--</ion-nav-bar>-->
     <ion-header-bar class="bar-positive bar-header2">
-
         <div class="row">
             <div class="col ">
                 <button ng-if="$root.showCustomBack" ng-click="$root.goBack()"
@@ -19,23 +18,14 @@
                     <span am-time-ago="data.DOC_DATE"></span>
                 </div>
             </div>
-        </div>
-
-
-    </ion-header-bar>
-    <ion-nav-title class="longTitle">
-        <!--<div class="view-title">PurchaseOrder {{ data.$id }}</div>-->
-
-    </ion-nav-title>
-    <ion-content has-header="true" CLASS="has-header2">
-        <div class="card">
-            <div class="item item-text-wrap">
-                <div>{{ data.CO_CODE }} CO_CODE_TEXT</div>
-                <div>{{ data.PURCH_ORG }} PURCH_ORG_TEXT</div>
-                <div>{{ data.DOC_DATE }}</div>
-                <span am-time-ago="data.DOC_DATE"></span>
+            <div class="col ">
+                <button ng-if="$root.showCustomBack" ng-click="$root.goBack()"
+                        class=" button-icon button-clear nav-button ion-android-arrow-back">
+                </button>
             </div>
         </div>
+    </ion-header-bar>
+    <ion-content has-header="true" CLASS="has-header2">
         <a ui-sref="purchaseOrderHeader({index: data.po_NUMBER})"
            class="item item-icon-right" class="item">
             <h2>more header informaiton</h2>

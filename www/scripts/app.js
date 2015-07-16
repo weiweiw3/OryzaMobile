@@ -15,6 +15,8 @@ var dependencyModules = [
     'ionic-datepicker',
     'ionic-timepicker',
     'ionic-material',
+    'pascalprecht.translate',
+    //'ionMdInput',
 //    'ui.router',
     'angular-momentjs'];
 var myAppComponents = [

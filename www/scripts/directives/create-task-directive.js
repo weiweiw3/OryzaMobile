@@ -19,11 +19,12 @@ angular.module('myApp.directives.createTask', [])
                     }
                     $scope.ionicPopup = {
                         title: $scope.popup.title,
+                        cssClass: 'ionicPopup',
                         template: $scope.popup.template,
-                        cancelText: ' ',
-                        cancelType: 'button icon ion-close button-assertive',
-                        okText: ' ',
-                        okType: 'button icon ion-checkmark-round button-balanced'
+                        cancelText: 'CANCEL',
+                        cancelType: 'button button-clear button-positive',
+                        okText: 'APPROVE',
+                        okType: 'button button-clear button-positive'
                     };
                 });
 

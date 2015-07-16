@@ -8,6 +8,30 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
     .config(['$httpProvider', function($httpProvider) {
         $httpProvider.defaults.timeout = 5000;
     }])
+    .config(['$translateProvider', function ($translateProvider) {
+        $translateProvider.translations('en', {
+            TITLE: 'Hello',
+            FOO: 'This is a paragraph.'
+        });
+        $translateProvider.translations('de', {
+            TITLE: 'Hallo',
+            FOO: 'Dies ist ein Paragraph.'
+        });
+        $translateProvider.preferredLanguage('de');
+    }])
+    .run(function($ionicPlatform, $translate) {
+        $ionicPlatform.ready(function() {
+            if(typeof navigator.globalization !== "undefined") {
+                navigator.globalization.getPreferredLanguage(function(language) {
+                    $translate.use((language.value).split("-")[0]).then(function(data) {
+                        console.log("SUCCESS -> " + data);
+                    }, function(error) {
+                        console.log("ERROR -> " + error);
+                    });
+                }, null);
+            }
+        });
+    })
     .config(['$urlRouterProvider', function ($urlRouterProvider) {
         // routes which are not in our map are redirected to /tab/setting
         $urlRouterProvider.otherwise(
@@ -41,7 +65,11 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
                 templateUrl: 'templates/setting.html'
 
             })
+            .state('ion-slide', {
+                url: '/ion-slide',
+                templateUrl: 'scripts/purchase-orders/ion-slide.html'
 
+            })
             .state('about', {
                 url: '/about',
                 templateUrl: 'templates/about.html'
