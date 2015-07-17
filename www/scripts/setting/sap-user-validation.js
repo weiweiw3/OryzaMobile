@@ -47,36 +47,36 @@
                 }
             });
             $scope.SAPSysArray = myUser.getSAPSys();
-            myTask.getInputP('A0001').$loaded().then(function (data) {
-
-                $scope.SAPSysArray.$loaded()
-                    .then(function () {
-                        var inputParas = data.$value;
-                        inputParas = inputParas.replace('$P00$', $rootScope.serverUser);//ServerUserID
-                        $scope.SAPSysArray.forEach(function (entry) {
-                            switch (entry.$id.toUpperCase()) {
-                                case 'SAP_SYSTEM_GUID':
-                                    inputParas = inputParas.replace('$P01$', entry.$value);
-                                    break;
-                                case 'SYSTEM_ID':
-                                    inputParas = inputParas.replace('$P02$', entry.$value);
-                                    break;
-                                case 'SERVER_NAME':
-                                    inputParas = inputParas.replace('$P03$', entry.$value);
-                                    break;
-                                case 'INSTANCE_NUMBER':
-                                    inputParas = inputParas.replace('$P04$', entry.$value);
-                                    break;
-                                case 'CLIENT':
-                                    inputParas = inputParas.replace('$P05$', entry.$value);
-                                    break;
-                            }
-                        });
-                        $scope.inputParas = inputParas;
-                        ionicLoading.unload();
-                    });
-            });
+//            myTask.getInputP('A0001').$loaded().then(function (data) {
 //
+//                $scope.SAPSysArray.$loaded()
+//                    .then(function () {
+//                        var inputParas = data.$value;
+//                        inputParas = inputParas.replace('$P00$', $rootScope.serverUser);//ServerUserID
+//                        $scope.SAPSysArray.forEach(function (entry) {
+//                            switch (entry.$id.toUpperCase()) {
+//                                case 'SAP_SYSTEM_GUID':
+//                                    inputParas = inputParas.replace('$P01$', entry.$value);
+//                                    break;
+//                                case 'SYSTEM_ID':
+//                                    inputParas = inputParas.replace('$P02$', entry.$value);
+//                                    break;
+//                                case 'SERVER_NAME':
+//                                    inputParas = inputParas.replace('$P03$', entry.$value);
+//                                    break;
+//                                case 'INSTANCE_NUMBER':
+//                                    inputParas = inputParas.replace('$P04$', entry.$value);
+//                                    break;
+//                                case 'CLIENT':
+//                                    inputParas = inputParas.replace('$P05$', entry.$value);
+//                                    break;
+//                            }
+//                        });
+//                        $scope.inputParas = inputParas;
+//                        ionicLoading.unload();
+//                    });
+//            });
+////
             $scope.tryValidation = function () {
                 $scope.inputParas = $scope.inputParas.replace('$P06$', $scope.model.user);
                 $scope.inputParas = $scope.inputParas.replace('$P07$', $scope.model.password);

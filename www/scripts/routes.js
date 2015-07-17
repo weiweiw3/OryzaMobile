@@ -17,6 +17,12 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
             TITLE: 'Hallo',
             FOO: 'Dies ist ein Paragraph.'
         });
+        $translateProvider.translations('cn', {
+            TITLE: '你好',
+            FOO: 'Dies ist ein Paragraph.',
+            'Search Options': '搜索',
+            'Purchase Orders': '采购订单'
+        });
         $translateProvider.preferredLanguage('de');
     }])
     .run(function($ionicPlatform, $translate) {

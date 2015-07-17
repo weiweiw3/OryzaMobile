@@ -1,21 +1,20 @@
 <ion-view hide-back-button="true">
     <ion-nav-title>
-        <div class="view-title">{{viewObject.title}}</div>
+        <div class="view-title">{{viewObject.title | translate}}</div>
     </ion-nav-title>
     <ion-nav-buttons side="right">
-
-        <button ng-if="$root.showCustomBack" ng-click="$root.goBack()"
-                class=" button-icon button-clear nav-button ion-android-funnel">
+        <button
+                class=" button-icon button-clear nav-right-button ion-android-funnel">
         </button>
     </ion-nav-buttons>
-    <ion-content has-header="true" has-tabs="true" >
+    <ion-content has-header="true" has-tabs="true">
         <!--padding="true"-->
         <ion-refresher on-refresh="refresh()"></ion-refresher>
         <div class="subtitle">Today</div>
 
         <!--<ion-slide-box slide-tabs-scrollable="false"  show-pager="false" ion-slide-tabs>-->
-            <!--<ion-slide ion-slide-tab-label="{{ 'TITLE' | translate }}"><h1>{{ 'TITLE' | translate }}</h1></ion-slide>-->
-            <!--<ion-slide ion-slide-tab-label="{{ 'FOO' | translate }}"><h1>Tab 2</h1></ion-slide>-->
+        <!--<ion-slide ion-slide-tab-label="{{ 'TITLE' | translate }}"><h1>{{ 'TITLE' | translate }}</h1></ion-slide>-->
+        <!--<ion-slide ion-slide-tab-label="{{ 'FOO' | translate }}"><h1>Tab 2</h1></ion-slide>-->
         <!--</ion-slide-box>-->
 
         <ion-list can-swipe="true"><!--show-delete="false"--><!--show-reorder="false"-->

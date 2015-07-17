@@ -1,14 +1,16 @@
-<!-- 
-  This template gets placed in the Setting tab's <ion-nav-view> directive.
-  It was wired up in the app config (app.js) 
- -->
-<ion-view view-title="Setting">
+<ion-view >
+    <ion-nav-buttons side="left">
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <button ng-click="$root.goBack()"
+                class=" button-icon button-clear nav-left-button ion-android-arrow-back">
+        </button>
+    </ion-nav-buttons>
+    <ion-nav-title>
+        <div class="view-title">Settings</div>
+    </ion-nav-title>
     <ion-content>
         <ion-list>
 
-            <ion-item type="item-text-wrap" ui-sref="SAPUserValidation">
-                SAP User validation
-            </ion-item>
             <ion-item type="item-text-wrap" ng-controller="LogoutCtrl">
                 <button class="button button-assertive button-block" ng-click="tryLogout()">
                     logout

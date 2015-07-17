@@ -1,59 +1,169 @@
-.ion-loading-c1:before {
-    font-size: 20px;
-    color: #ff3b30;
-}
+/*
+header-bar
+*/
 
-.ion-right-nav:before {
-    padding-top: 10px;
-    font-size: 30px;
-    /*color:#ff3b30;*/
-}
-
-.nav-button,
-.nav-button:before {
+.nav-left-button,
+.nav-left-button:before {
     padding-top: 0px;
     font-size: 30px;
+    font-weight: 100;
     color: #E8EAF6;
 }
 
 .nav-right-button,
 .nav-right-button:before {
     padding-top: 7px;
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 100;
     color: #E8EAF6;
 }
 
 .bar-header {
-    padding-top: 10px;
-    height: 70px
+    padding-top: 7px;
+    height: 60px
 }
 
 .bar-header h1.title {
     top: 40px;
 }
 
+.bar-header .view-title {
+    font-size: 20px;
+    font-weight: 400;
+    padding-top: 7px;
+}
+
 .has-header {
-    top: 70px;
+    top: 60px;
+}
+
+.side-menu-bar-header {
+    padding-top: 20px;
+    padding-left: 20px;
+    height: 140px;
+}
+
+.side-menu-bar-header .longTitle {
+    /*top: 80px;*/
+    height: 100px;
+}
+
+.side-menu-has-header {
+    top: 140px
+}
+
+.side-menu-has-header .side-menu-listItem {
+    padding-top: 0px;
+    height: 40px;
+    font-size: 20px;
+    font-weight: 100;
+    background-color: #E0E0E0;
+}
+
+.side-menu-has-header .side-menu-listItem .icon {
+    padding-top: 0px;
+    font-size: 25px;
 }
 
 .bar-header2 {
     padding-top: 10px;
-    height: 300px;
+    height: 200px;
 }
 
-.bar-header2 .longTitle{
+.bar-header2 .longTitle {
     /*top: 80px;*/
     height: 100px;
 }
-.has-header2 {
-    top: 300px
+
+.bar-header2 .col-80 {
+    padding-top: 7px;
+    padding-left: 20px;
 }
 
-.view-title {
+.has-header2 {
+    top: 400px
+}
+
+/*ion-slide {*/
+    /*height: 300px;*/
+    /*background-color: #ff3b30;*/
+/*}*/
+
+.bar-footer > .button {
+    width: 100%;
+    margin-top: 0;
+    text-align: right;
     font-size: 20px;
-    font-weight: 400;
-    padding-top: 12px;
+    color: #616161;
+    padding-top: 7px;
+    padding-right: 20px;
+    background-color: #E0E0E0;
+
+}
+
+.search-view .item-input-wrapper {
+    background-color: #7986CB;
+}
+
+.search-view .item-input-wrapper {
+    background-color: #7986CB;
+}
+
+.search-view .item-input-wrapper .icon {
+    color: #eeeff8;
+    /*font-size: 20;*/
+    font-weight: 800;
+}
+
+.search-view .search-bar-button {
+    font-size: 16px;
+    color: #eeeff8;
+}
+
+.search-view input::-webkit-input-placeholder {
+    color: #eeeff8;
+}
+
+.search-view input {
+    color: #eeeff8;
+}
+
+.search-view .search-card {
+    /*background-color: #E0E0E0;*/
+    /*margin-inside: 1px;*/
+}
+
+.search-view .search-card .item-divider {
+    padding-left: 16px;
+    height: 40px;
+    padding-top: 0px;
+}
+
+.search-view .search-card .item-divider .icon {
+    padding-top: 7px;
+    height: 40px;
+    font-size: 20px;
+    font-weight: 800 !important;
+    color: #3b80f3;
+
+}
+
+.search-view .search-card .card-item {
+    padding-left: 24px;
+    height: 30px;
+    padding-top: 6px;
+}
+
+.search-view .search-card .card-item .icon {
+    font-size: 20px;
+    font-weight: bold;
+    /*color: #3b80f3;*/
+}
+
+.search-view .search-item {
+    height: 60px;
+    padding-left: 30px;
+    padding-top: 5px;
 }
 
 .subtitle {
@@ -89,27 +199,36 @@
     font-weight: normal;
     color: #9E9E9E;
 }
+
+.captionFont3 {
+    font-size: 12px;
+    font-weight: normal;
+    color: #3b80f3;
+}
+
 .ionicPopup {
     height: 450px;
     /*background-color: #AFEEEE;*/
 }
-.ionicPopup .popup-head{
+
+.ionicPopup .popup-head {
     height: 44px !important;
-    text-align:left;
+    text-align: left;
 
     padding-left: 20px;
     padding-right: 20px;
     /*background: red  !important;*/
 }
+
 .ionicPopup .popup-title {
     font-size: 16px;
     font-weight: 600;
     /*color: #fff !important;*/
 }
 
-.ionicPopup .popup-body{
+.ionicPopup .popup-body {
     /*background: blue !important;*/
-    text-align:left;
+    text-align: left;
 
     padding-left: 20px;
     padding-right: 20px;
@@ -117,39 +236,52 @@
     font-weight: 400;
     color: #616161;
 }
+
 /*.popup-sub-title*/
 /*.popup-buttons.row*/
 .ionicPopup .popup-buttons {
     height: 30px !important;
-    text-align:right;
+    text-align: right;
     padding-left: 60px;
 }
+
 .ionicPopup .popup-buttons .button {
     height: 30px !important;
-    text-align:center;
+    text-align: center;
     font-size: 14px;
     padding: 0px;
-    color:#3b80f3;
+    color: #3b80f3;
 }
 
 .row {
+
     float: left;
     height: 30px;
 }
-.row > col {
+
+.row > .col-33 {
+    padding-left: 0px;
     display: inline;
 }
 
+/*
+ion-list
+*/
+
 .listItem {
     padding-top: 0px;
+    padding-right: 0px;
+
     height: 72px;
     /*background-color: #E0E0E0;*/
 }
+
 .listItem2 {
     padding-top: 0px;
     height: 48px;
     /*background-color: #E0E0E0;*/
 }
+
 /*100: Ultra Light*/
 
 /*200: Thin*/

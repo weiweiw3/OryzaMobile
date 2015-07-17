@@ -1,15 +1,15 @@
 <ion-item ng-repeat="item in ionList.array"
-          class="item-text-wrap listItem"
+          class=" listItem"
           ui-sref="purchaseOrder({ref:ionList.ref+'/'+ item.$id})">
     <div class="row ">
-        <div class="col col-33 bodyFont2" ng-class="{positive: item.read, energized: item.favorite}">{{ item.$id}}</div>
-        <div class="col col-33 bodyFont1">{{ item.TARGET_VAL | currency: item.CURRENCY}}</div>
-        <div class="col col-33 col-offset-20 captionFont2"><span am-time-ago="item.DOC_DATE"></span></div>
+        <div class="col col-50 bodyFont2" ng-class="{positive: item.read, energized: item.favorite}">{{ item.$id}}</div>
+        <div class="col col-50 bodyFont1">{{ item.TARGET_VAL | currency: item.CURRENCY}}</div>
     </div>
     <div class="row captionFont1">
-        <div class="col">{{ item.VEND_NAME}} {{ item.PURCH_ORG_TEXT}}
+        <div class="col col-75">{{ item.VEND_NAME}} {{ item.PURCH_ORG_TEXT}}
             <i ng-show="item.favorite" class="icon ion-heart assertive">
             </i>
         </div>
+        <div class="col col-25 col-offset-10 captionFont3"><span am-time-ago="item.DOC_DATE"></span></div>
     </div>
 </ion-item>

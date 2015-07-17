@@ -1,32 +1,29 @@
-<ion-view view-title="{{title}}" hide-back-button="true">
-    <ion-content has-header="true" has-tabs="true" padding="true">
-        <ion-refresher on-refresh="refresh()"></ion-refresher>
-        <div ng-show="result.data" ng-repeat="result in results ">
-            <div class="item item-divider positive ">
-                {{result.text}}
+<ion-view hide-nav-bar="true">
+    <ion-header-bar class="bar-positive bar-header2">
+        <div class="row">
+            <div class="col ">
+                <button ng-if="$root.showCustomBack" ng-click="$root.goBack()"
+                        class=" button-icon button-clear nav-left-button ion-android-arrow-back">
+                </button>
             </div>
-            <ion-list>
-                <ion-item ng-show="value" class="item item-icon-right"
-                          ng-repeat="(key,value) in result.data ">
-                  <div >{{key}}:{{value}}</div>
-                </ion-item>
-            </ion-list>
+            <div class="col col-80">
+                <div class="row responsive-sm">
+                    <div class="col bar-text">{{title}}</div>
+                    <div class="col">{{ data.CO_CODE }} CO_CODE_TEXT</div>
+                    <div class="col">{{ data.PURCH_ORG }} PURCH_ORG_TEXT</div>
+                    <div class="col">{{ data.DOC_DATE }}</div>
+                </div>
+            </div>
+            <div class="col ">
+                <button
+                        class=" button-icon button-clear nav-left-button ion-android-star">
+                </button>
+            </div>
         </div>
-        <ion-infinite-scroll
-                on-infinite="loadMore()"
-                icon="ion-loading-c"
-                distance="1%">
-        </ion-infinite-scroll>
+    </ion-header-bar>
+    <ion-content class="has-header2"  has-header="true" padding="true">{{ 'TITLE' | translate }}
+
     </ion-content>
-    <ion-footer-bar align-title="left" class="bar-assertive">
-        <div class="buttons">
-            <button class="button">Left Button</button>
-        </div>
-        <h1 class="title">Title!</h1>
-        <div class="buttons" ng-click="doSomething()">
-            <button class="button">Right Button</button>
-        </div>
-    </ion-footer-bar>
 </ion-view>
 
 

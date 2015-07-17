@@ -1,28 +1,30 @@
-<ion-view hide-nav-bar="true">
-
-    <ion-header-bar class="bar-positive bar-header item-input-inset">
-        &nbsp;&nbsp;<label class="item-input-wrapper">
-            <i class="icon ion-ios-search placeholder-icon"></i>
-            <input class="searchInputText" type="search" placeholder="Search {{searchObj.text}}" ng-model="query" ng-change="search(query)">
-        </label>
-        <button ng-if="$root.showCustomBack" ng-click="$root.goBack()" class="button button-clear">
+<ion-view hide-nav-bar="true" class="search-view">
+    <ion-header-bar class="bar-positive bar-header item-input-inset search-bar">
+        &nbsp;&nbsp;<label class="item-input-wrapper ">
+        <i class="icon ion-android-search placeholder-icon"></i>
+        <input class="search-input-text" type="search" placeholder="Search {{searchObj.text}}" ng-model="query"
+               ng-change="search(query)">
+    </label>
+        <button ui-sref="home" class="button-clear search-bar-button">
             Cancel
         </button>
     </ion-header-bar>
     <ion-content>
-        <input class="searchInputText" type="search" placeholder="Search {{searchObj.text}}" ng-model="query" ng-change="search(query)">
-        <ion-list>
-            <div></div>
-            <ion-item class="item-remove-animate item-icon-right" ng-style="{'line-height': '10px'}">
-                <div><p>Recent searches</p></div> <i class="icon ion-ios-close ion-loading-c1" ng-click="showif"></i>
-            </ion-item>
-            <ion-item class="item item-icon-right" ng-repeat="result in searchHistory">
+        <div class="card search-card">
+            <div class="item item-divider item-icon-right ">
+                <div class="bodyFont2">Recent searches</div>
+                <i class="icon ion-android-close" ng-click="showif"></i>
+            </div>
+
+            <div class="item card-item item-icon-right" ng-repeat="result in searchHistory">
                 <div ui-sref="searchDetail({key:searchObj.text,index:result})">
                     <p>{{result}}</p>
                 </div>
-                <i class="icon ion-ios-trash-outline muted" ng-click="deleteHistory(result)"></i>
-            </ion-item>
-            <ion-item class="item-remove-animate item-icon-right" ng-repeat="result in results">
+                <i class="icon ion-android-delete muted" ng-click="deleteHistory(result)"></i>
+            </div>
+        </div>
+        <ion-list>
+            <ion-item class="item-remove-animate item-icon-right search-item" ng-repeat="result in results">
                 <div ng-show="searchObj.text==='material'"
                      ui-sref="searchDetail({key:'material',index:result.MATNR})">
                     <p>{{result.MAKTX}}</p>
@@ -32,8 +34,7 @@
                 <div ng-show="searchObj.text==='customer'"
                      ui-sref="searchDetail({key:'customer',index:result.KUNNR})">
                     <h2 class="icon-left">{{result.title}}</h2>
-
-                    <p>{{result.KUNNR}}</p>{{result.NAME1}}
+                    {{result.KUNNR}} {{result.NAME1}}
                     <div class="icon-left ion-ios-home location_info">
                         {{result.KUNNR}}
                         {{ result.TELF1 }}

@@ -3,7 +3,17 @@
 
     var app = angular.module('myApp.home', ['ionic', 'firebase.simpleLogin',
         'firebase.utils', 'firebase']);
-    app.controller('homeCtrl', function (localStorageService, homeFactory,
+    app
+
+        .controller('sideBarCtrl', function (localStorageService,
+                                          $scope, $state, $translate, ionicLoading, $ionicSideMenuDelegate) {
+$scope.a='aa';
+            $scope.changeLanguage = function (langKey) {
+                console.log(langKey);
+                $translate.use(langKey);
+            };
+        })
+        .controller('homeCtrl', function (localStorageService, homeFactory,
                                          $scope, $state, $log, ionicLoading, $ionicSideMenuDelegate, events) {
 
         $scope.openMenu = function () {
