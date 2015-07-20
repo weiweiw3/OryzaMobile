@@ -9,21 +9,14 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
         $httpProvider.defaults.timeout = 5000;
     }])
     .config(['$translateProvider', function ($translateProvider) {
-        $translateProvider.translations('en', {
-            TITLE: 'Hello',
-            FOO: 'This is a paragraph.'
+        $translateProvider.useStaticFilesLoader({
+            files: [{
+                prefix: 'scripts/language/locale-',
+                suffix: '.json'
+            }]
         });
-        $translateProvider.translations('de', {
-            TITLE: 'Hallo',
-            FOO: 'Dies ist ein Paragraph.'
-        });
-        $translateProvider.translations('cn', {
-            TITLE: '你好',
-            FOO: 'Dies ist ein Paragraph.',
-            'Search Options': '搜索',
-            'Purchase Orders': '采购订单'
-        });
-        $translateProvider.preferredLanguage('de');
+        $translateProvider.useLoaderCache(true);
+        $translateProvider.preferredLanguage('cn');
     }])
     .run(function($ionicPlatform, $translate) {
         $ionicPlatform.ready(function() {

@@ -3,10 +3,10 @@
           ui-sref="purchaseOrder({ref:ionList.ref+'/'+ item.$id})">
     <div class="row ">
         <div class="col col-50 bodyFont2" ng-class="{positive: item.read, energized: item.favorite}">{{ item.$id}}</div>
-        <div class="col col-50 bodyFont1">{{ item.TARGET_VAL | currency: item.CURRENCY}}</div>
+        <div class="col col-50 bodyFont1">{{ item.TARGET_VAL | currency: item.CURRENCY_ISO}}</div>
     </div>
     <div class="row captionFont1">
-        <div class="col col-75">{{ item.VEND_NAME}} {{ item.PURCH_ORG_TEXT}}
+        <div class="col col-75">{{ item.VEND_NAME}}
             <i ng-show="item.favorite" class="icon ion-heart assertive">
             </i>
         </div>

@@ -110,18 +110,17 @@
             };
         }]
     )
-        .controller('searchDetailCtrl', function ($scope, $stateParams, Api, localStorageService) {
+        .controller('searchDetailCtrl', function ($scope, $q, $timeout, ionicLoading, $stateParams, Api, localStorageService) {
+            ionicLoading.load();
             //console.log($stateParams.index);
             $scope.searchObj = $stateParams.key;
             $scope.title = $stateParams.key + ' ' + $stateParams.index;
-            //var localStorageService.get($stateParams.key);
+
             if (typeof  localStorageService.get($stateParams.key) !== 'undefined'
                 && localStorageService.get($stateParams.key) !== null) {
                 $scope.searchHistory = localStorageService.get($stateParams.key);
-
             } else {
                 $scope.searchHistory = [];
-
             }
             if ($scope.searchHistory.indexOf($stateParams.index) === -1) {
                 $scope.searchHistory.push($stateParams.index);
@@ -130,59 +129,61 @@
 
             localStorageService.set($stateParams.key, $scope.searchHistory);
             var querys = [
-                    {
-                        key: 'material',
-                        name: 'info',
-                        text: 'bacis information',
-                        table: 'e0015_makt',
-                        where: 'MATNR=/' + $stateParams.index + '/'
-                    }, {
-                        key: 'material',
-                        name: 'stock',
-                        text: 'stock',
-                        table: 'view_material_stock',
-                        where: 'MATNR=/' + $stateParams.index + '/'
-                    }, {
-                        key: 'customer',
-                        name: 'info',
-                        text: 'bacis information',
-                        table: 'e0015_KNA1',
-                        where: 'KUNNR=/' + $stateParams.index + '/'
-                    }
-                    , {
-                        key: 'customer',
-                        name: 'info',
-                        text: 'contacts',
-                        table: 'view_customer_contact',
-                        where: 'KUNNR=/' + $stateParams.index + '/'
-                    }
-                    //TODO orderby 怎么写
-                    , {
-                        key: 'customer',
-                        name: 'info',
-                        text: 'related SO',
-                        table: 'e0015_vbak',
-                        where: 'KUNNR=/' + $stateParams.index + '/ '
-                    }, {
-                        key: 'vendor',
-                        name: 'info',
-                        text: 'bacis information',
-                        table: 'e0015_LFA1',
-                        where: 'LIFNR=/' + $stateParams.index + '/'
-                    }
-                    , {
-                        key: 'vendor',
-                        name: 'info',
-                        text: 'contacts',
-                        table: 'view_vendor_contact',
-                        where: 'LIFNR=/' + $stateParams.index + '/'
-                    }
-                ]
-                ;
+                {
+                    key: 'material',
+                    name: 'info',
+                    text: 'bacis information',
+                    table: 'e0015_makt',
+                    where: 'MATNR=/' + $stateParams.index + '/'
+                }, {
+                    key: 'material',
+                    name: 'stock',
+                    text: 'stock',
+                    table: 'view_material_stock',
+                    where: 'MATNR=/' + $stateParams.index + '/'
+                }, {
+                    key: 'customer',
+                    name: 'info',
+                    text: 'bacis information',
+                    table: 'e0015_KNA1',
+                    where: 'KUNNR=/' + $stateParams.index + '/'
+                }
+                , {
+                    key: 'customer',
+                    name: 'info',
+                    text: 'contacts',
+                    table: 'view_customer_contact',
+                    where: 'KUNNR=/' + $stateParams.index + '/'
+                }
+                //TODO orderby 怎么写
+                , {
+                    key: 'customer',
+                    name: 'info',
+                    text: 'related SO',
+                    table: 'e0015_vbak',
+                    where: 'KUNNR=/' + $stateParams.index + '/ '
+                }, {
+                    key: 'vendor',
+                    name: 'info',
+                    text: 'bacis information',
+                    table: 'e0015_LFA1',
+                    where: 'LIFNR=/' + $stateParams.index + '/'
+                }
+                , {
+                    key: 'vendor',
+                    name: 'info',
+                    text: 'contacts',
+                    table: 'view_vendor_contact',
+                    where: 'LIFNR=/' + $stateParams.index + '/'
+                }
+            ];
             $scope.results = [];
+            console.log(querys.length);
+            var i = 0;
             angular.forEach(querys, function (query) {
-                if ($stateParams.key === query.key) {
 
+                i++;
+                if ($stateParams.key === query.key) {
                     Api.getApiData(query.table, query.where)
                         .then(function (data) {
                             console.log(data);
@@ -196,11 +197,17 @@
                             // This is a shorthand for `promise.then(null, errorCallback)`
                         });
                 }
+                if (i == 7) {
+                    $timeout(function () {
+                        ionicLoading.unload();
+                    }, 1000);
+                }
             });
 
             $scope.refresh = function () {
                 //TODO refresh event
                 console.log('$scope.refresh');
+                console.log($scope.results);
                 $scope.$broadcast('scroll.refreshComplete');
             };
 
@@ -242,9 +249,7 @@
         });
 
 
-    app
-
-        .config(['$stateProvider', function ($stateProvider) {
+    app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider
             .state('search', {
                 url: '/search/:text?value',

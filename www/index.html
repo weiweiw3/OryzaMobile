@@ -22,7 +22,6 @@
 
     <link href="lib/ionic-material/dist/ionic.material.min.css" rel="stylesheet">
 
-    <link href="lib/ion-slide-box-tabs-master/src/css/slidingTabs.css" rel="stylesheet">
     <!-- ionic.material
     <link href="lib/ionic-material/ionic.material.min.css" rel="stylesheet">
     <script src="lib/ionic-material/ionic.material.min.js"></script>
@@ -58,6 +57,7 @@
     <script src="lib/angular-resource/angular-resource.js"></script>
     <script src="lib/elasticsearch/elasticsearch.angular.min.js"></script>
     <script src="lib/angular-local-storage/dist/angular-local-storage.min.js"></script>
+    <script src="lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
     <!--<script src="lib/ion-md-input/js/ion-md-input.js"></script>-->
 
     <link href="lib/ionic-datepicker/dist/style.css" rel="stylesheet">
@@ -143,21 +143,23 @@
         <ion-header-bar class="bar side-menu-bar-header bar-dark">
 
             <div class="row responsive-sm">
-                <div class="col">                </div>
-                <div class="col">.col</div>
-                <div class="col"><div menu-close  ui-sref="SAPUserValidation"><i class="icon ion-android-mail"></i>{{authData.password.email}}</div>
+                <!--<div class="col"></div>-->
+                <!--<div class="col"></div>-->
+                <div class="col">
+                    <div menu-close ui-sref="SAPUserValidation"><i class="icon ion-android-mail"></i>&nbsp;{{authData.password.email}}
+                    </div>
                 </div>
                 <div class="col">{{ 'TITLE' | translate }}</div>
             </div>
 
         </ion-header-bar>
-        <ion-content has-header="true" class="side-menu-has-header" >
+        <ion-content has-header="true" class="side-menu-has-header">
             <ion-list>
                 <ion-item class="side-menu-listItem item-icon-left" href="#/" menu-close
                           ng-click="sideMenuController.toggleLeft()">
                     <i class="icon ion-android-home"></i> Home
                 </ion-item>
-                <ion-item class="side-menu-listItem item-icon-left" menu-close href="#/setting"><i
+                <ion-item class="side-menu-listItem item-icon-left" menu-close ui-sref="#/setting"><i
                         class="icon ion-android-settings"></i>Setting<span class="badge badge-assertive">3</span>
                 </ion-item>
                 <ion-item class="side-menu-listItem item-icon-left" menu-close ng-click="changeLanguage('en')">English

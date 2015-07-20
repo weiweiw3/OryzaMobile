@@ -4,7 +4,7 @@ header-bar
 
 .nav-left-button,
 .nav-left-button:before {
-    padding-top: 0px;
+    /*padding-top: 7px;*/
     font-size: 30px;
     font-weight: 100;
     color: #E8EAF6;
@@ -12,51 +12,51 @@ header-bar
 
 .nav-right-button,
 .nav-right-button:before {
-    padding-top: 7px;
+    /*padding-top: 7px;*/
     font-size: 26px;
     font-weight: 100;
     color: #E8EAF6;
 }
 
-.bar-header {
-    padding-top: 7px;
-    height: 60px
-}
+/*.bar-header {*/
+    /*padding-top: 7px;*/
+    /*height: 60px*/
+/*}*/
 
-.bar-header h1.title {
-    top: 40px;
-}
+/*.bar-header h1.title {*/
+    /*top: 40px;*/
+/*}*/
 
 .bar-header .view-title {
     font-size: 20px;
     font-weight: 400;
-    padding-top: 7px;
+    /*padding-top: 7px;*/
 }
 
-.has-header {
-    top: 60px;
-}
+/*.has-header {*/
+    /*top: 60px;*/
+/*}*/
 
 .side-menu-bar-header {
     padding-top: 20px;
     padding-left: 20px;
-    height: 140px;
+    height: 100px;
 }
 
 .side-menu-bar-header .longTitle {
     /*top: 80px;*/
-    height: 100px;
+    height: 70px;
 }
 
 .side-menu-has-header {
-    top: 140px
+    top: 100px
 }
 
 .side-menu-has-header .side-menu-listItem {
     padding-top: 0px;
     height: 40px;
     font-size: 20px;
-    font-weight: 100;
+    font-weight: 800;
     background-color: #E0E0E0;
 }
 
@@ -75,13 +75,35 @@ header-bar
     height: 100px;
 }
 
-.bar-header2 .col-80 {
+.bar-header2 .col-75 {
     padding-top: 7px;
     padding-left: 20px;
 }
 
+
+.bar-header2 .right-button, right-button:before {
+    padding-top: 0px;
+
+    padding-left: 0px;
+    font-size: 30px;
+    font-weight: 100;
+    color: #E8EAF6;
+}
 .has-header2 {
-    top: 400px
+    top: 200px
+}
+
+/*ion-popover-view height fit*/
+ion-popover-view.fit {
+    height: auto !important;
+}
+
+ion-popover-view.fit ion-content {
+    position: relative !important;
+}
+
+.platform-android ion-popover-view.fit {
+    margin-top: 10px !important;
 }
 
 /*ion-slide {*/
@@ -281,6 +303,10 @@ ion-list
     height: 48px;
     /*background-color: #E0E0E0;*/
 }
+.item.wrap, .item-content.wrap {
+    white-space: normal;
+}
+
 
 /*100: Ultra Light*/
 
@@ -343,3 +369,113 @@ ion-list
 /*padding-left: 5px;*/
 /*padding-right:5px;*/
 /*}*/
+
+
+/** For the task list header columns and tasks **/
+.flex-container {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    border: none;
+    -ms-box-orient: horizontal;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+}
+
+.flex-container .wrap  {
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 320px) {
+
+    .flex-container.wrap > div{
+        width: 50%;
+        max-width: 50%;
+        text-overflow: ellipsis;
+        white-space:nowrap;
+        overflow: hidden;
+
+    }
+
+}
+
+/*@media (min-width: 321px) {*/
+    /*.flex-container.wrap > div{*/
+        /*width: 33%;*/
+        /*max-width: 33%;*/
+        /*text-overflow: '';*/
+        /*white-space:nowrap;*/
+        /*overflow: hidden;*/
+
+    /*}*/
+/*}*/
+
+/*@media (min-width: 480px) {*/
+    /*.flex-container.wrap > div{*/
+        /*width: 25%;*/
+        /*max-width: 25%;*/
+        /*text-overflow: '';*/
+        /*white-space:nowrap;*/
+        /*overflow: hidden;*/
+    /*}*/
+/*}*/
+
+/*@media (min-width: 640px) {*/
+    /*.flex-container.wrap > div{*/
+        /*width: 20%;*/
+        /*max-width: 20%;*/
+        /*text-overflow: '';*/
+        /*white-space:nowrap;*/
+        /*overflow: hidden;*/
+    /*}*/
+/*}*/
+
+/*@media (min-width: 960px) {*/
+    /*.flex-container.wrap > div{*/
+        /*width: 15%;*/
+        /*max-width: 15%;*/
+        /*text-overflow: '';*/
+        /*white-space:nowrap;*/
+        /*overflow: hidden;*/
+    /*}*/
+/*}*/
+
+.flex-container .low-pad-item {
+    padding: 0;
+    margin: 0;
+}
+
+.flex-container .col-header {
+    font-weight: bold;
+}
+.flex-container .column {
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    overflow: hidden;
+    max-width: 87%;
+    float: left;
+    padding: 2px 5px;
+}
+
+.flex-container .col-header > .column {
+    padding: 5px 5px;
+}
+
+.flex-container .underlined {
+    text-decoration: underline;
+}
+
+.flex-container .column-sort {
+    min-width:13%;
+    float: right;
+    text-align: left;
+    padding-right: 2px;
+}
+.flex-container .text-col{
+    font-size: 20px;
+}

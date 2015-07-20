@@ -1,3 +1,19 @@
+<script id="my-popover.html" type="text/ng-template">
+    <ion-popover-view class="fit">
+        <ion-content>
+            <div class="list" ng-click="popover.hide()">
+                <a class="item" href="http://learn.ionicframework.com/" target="_blank">
+                    favorite
+                </a>
+                <a ui-sref="ionListView({viewName:'E0001-item',index:purchaseOrderItemsRef,key:data.$id})"
+                    class="item item-icon-right">
+                    <h2>items</h2>
+                    <i class="icon ion-ios-arrow-right muted"></i>
+                </a>
+            </div>
+        </ion-content>
+    </ion-popover-view>
+</script>
 <ion-view hide-nav-bar="true">
     <ion-header-bar class="bar-positive bar-header2">
         <div class="row">
@@ -6,40 +22,100 @@
                         class=" button-icon button-clear nav-left-button ion-android-arrow-back">
                 </button>
             </div>
-            <div class="col col-80">
+            <div class="col col-75">
                 <div class="row responsive-sm">
                     <div class="col bar-text">Purchase Order</div>
-                    <div class="col">{{ data.CO_CODE }} CO_CODE_TEXT</div>
-                    <div class="col">{{ data.PURCH_ORG }} PURCH_ORG_TEXT</div>
-                    <div class="col">{{ data.DOC_DATE }}</div>
+                    <div class="col bar-text">{{data.$id}}</div>
+                    <!--<div class="col">{{ data.CO_CODE }} CO_CODE_TEXT</div>-->
+                    <!--<div class="col">{{ data.PURCH_ORG }} PURCH_ORG_TEXT</div>-->
+                    <div class="col">
+                        {{'TARGET_VAL' | translate}}
+                        {{ data.TARGET_VAL | currency: data.CURRENCY_ISO}}
+                        ({{data.CURRENCY }})
+                    </div>
+                    <!--<div class="col">{{ data.VEND_NAME }}</div>-->
                 </div>
             </div>
             <div class="col ">
-                <button
-                        class=" button-icon button-clear nav-left-button ion-android-star">
+                <button ng-click="openPopover($event)"
+                        class=" button-icon button-clear right-button ion-android-more-vertical">
                 </button>
             </div>
         </div>
     </ion-header-bar>
     <ion-content has-header="true" CLASS="has-header2">
-        <a ui-sref="purchaseOrderHeader({index: data.po_NUMBER})"
-           class="item item-icon-right" class="item">
-            <h2>more header informaiton</h2>
-            <i class="icon ion-ios-arrow-right muted"></i>
-        </a>
-        <a ui-sref="ionListView({viewName:'E0001-item',index:purchaseOrderItemsRef,key:data.$id})"
-           class="item item-icon-right" class="item">
-            <h2>items</h2>
-            <i class="icon ion-ios-arrow-right muted"></i>
-        </a>
+
+        <ion-list>
+            <!--<div class="item col-header item-icon-right">-->
+            <!--<div class="flex-container wrap">-->
+            <!--<div ng-repeat="column in data1.columns" ng-click="sortBy(column.id)">-->
+            <!--<div class="column" ng-class="{ 'underlined' : data.sortOn === column.id }">{{column.name}}&nbsp;</div>-->
+            <!--<div class="column-sort">-->
+            <!--<i ng-class="{'ion-chevron-up' : data.sortReverse === false, 'ion-chevron-down' : data.sortReverse === true} "-->
+            <!--ng-if="data.sortOn === column.id"></i>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+
+            <div class="item low-pad-item item-icon-right"
+                 ng-repeat="(key,value) in data " ng-show="value">
+                <div class="flex-container wrap">
+                    <!--<div ng-repeat="column in data1.columns">-->
+                    <!--<div class="column">{{item[column.id]}}&nbsp;</div>-->
+                    <!--</div>-->
+                    <div class="column bodyFont1">{{key | translate}}</div>
+                    <div class="column bodyFont2">{{value}}</div>
+                </div>
+                <i class="icon ion-chevron-right icon-accessory" ng-show="key==='CO_CODE'"></i>
+            </div>
+        </ion-list>
+
+
+        <!--<div class="col">{{ data.DOC_DATE }}</div>-->
+        <!--<div class="col">{{ data.DOC_CAT }}</div>-->
+        <!--<div class="col">{{ data.DOC_TYPE }}</div>-->
+        <!--<div class="col">{{ data.DELETE_IND }}</div>-->
+        <!--<div class="col">{{ data.STATUS }}</div>-->
+        <!--<div class="col">{{ data.CREATED_ON }}</div>-->
+        <!--<div class="col">{{'CREATED_BY' | translate}} {{ data.CREATED_BY }}</div>-->
+        <!--<div class="col">{{ data.VENDOR }}</div>-->
+        <!--<div class="col col-50 bodyFont2">{{ 'VENDOR'|translate}}</div>-->
+        <!--<div class="col col-50 bodyFont1">{{ data.VEND_NAME }} ({{ data.VENDOR }})</div>-->
+
+
+        <!--<div class="col">{{ data.CO_CODE }} CO_CODE_TEXT</div>-->
+        <!--<div class="col">{{ data.DOC_DATE }}</div>-->
+        <!--</div>-->
+        <!--<div class="row">{{ data.LANGUAGE }}</div>-->
+
+        <!--<div class="col">{{ data.PMNTTRMS }}</div>-->
+        <!--<div class="col">PURCH_ORG_TEXT ({{ data.PURCH_ORG }})</div>-->
+        <!--<div class="col">{{ data.PUR_GROUP }}</div>-->
+        <!--<div class="col">{{ data.TELEPHONE }}</div>-->
+        <!--<div class="col">{{ data.TARGET_VAL | currency: data.CURRENCY_ISO}} ({{ data.CURRENCY }})</div>-->
+
+        <!--<div class="col"><a ui-sref="ionListView({viewName:'E0001-item',index:purchaseOrderItemsRef,key:data.$id})"-->
+        <!--class="item item-icon-right" class="item">-->
+        <!--<h2>items</h2>-->
+        <!--<i class="icon ion-ios-arrow-right muted"></i>-->
+        <!--</a></div>-->
+        <!--</div>-->
+
 
     </ion-content>
 
-    <div class="bar bar-footer bar-light">
-        <button class="button button-outline button-light" ng-click="thirdService.handleFirstButton()"><i
-                class="ion-arrow-left-c">{{textForButton1}}</i></button>
-        <create-task class="button button-right button-block button-clear" button-text="approve" popup="popup"
-                                                                     task-data="taskData"></create-task>
+    <div class="bar bar-footer bar-positive-400">
+
+        <!--<div class="title">Footer</div>-->
+        <div class="buttons buttons-right">
+            <!--<button class="button button-energized-900 button-fab"><i class="icon ion-code light"></i></button>-->
+            <create-task class="button button-energized-900 button-fab button-icon" button-text="approve" popup="popup"
+                         task-data="taskData"><i class="icon ion-code light"></i></create-task>
+        </div>
+        <!---->
+
+
     </div>
     <!--<ion-footer-bar align-title="left" class="bar-assertive">-->
     <!--<div class="buttons">-->
