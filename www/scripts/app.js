@@ -49,15 +49,14 @@ var myAppComponents = [
 angular.module('myApp',
     dependencyModules.concat(myAppComponents))
 
-    .run(['$rootScope', 'Auth', function($rootScope, Auth) {
+    .run( function($rootScope, Auth,$firebaseObject,fbutil) {
         // track status of authentication
         Auth.$onAuth(function(user) {
             $rootScope.loggedIn = !!user;
         });
 
 
-
-    }])
+    })
     .config(function (localStorageServiceProvider) {
         localStorageServiceProvider
             .setPrefix('myApp')

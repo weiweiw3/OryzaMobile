@@ -42,73 +42,130 @@
         };
     })
         .factory('ESService',
-        ['$q', 'esFactory', '$location', '$localstorage', 'SearchUrl', function ($q, elasticsearch, $location, $localstorage, SearchUrl) {
-            var client = elasticsearch({
-                //host: "https://a1b5amni:7smeg06ujbchru2l@apricot-2272737.us-east-1.bonsai.io/"
-                host: SearchUrl.url
-            });
-            var search = function (table, term, offset) {
-                var deferred = $q.defer(), query, sort;
+        ['$q', 'esFactory', '$location', '$localstorage', 'SearchUrl',
+            function ($q, elasticsearch, $location, $localstorage, SearchUrl) {
+                var client = elasticsearch({
+                    //host: "https://a1b5amni:7smeg06ujbchru2l@apricot-2272737.us-east-1.bonsai.io/"
+                    host: SearchUrl.url
+                });
+                var search;
+                search={
+                    lookup:function(table,inputKey,inputValue,outputKey,
+                                    foreignKey1,foreignValue1,foreignKey2,foreignValue2){
+                        var d=$q.defer(), query, sort;
+                        var key = inputKey;
+                        var obj= {},myArray = [];
+                        obj[key] = inputValue;
+                        if(typeof foreignKey1 !=='undefined'){
+                            obj[foreignKey1] = foreignValue1;
+                        }
+                        if(typeof foreignKey2 !=='undefined'){
+                            obj[foreignKey2] = foreignValue2;
+                        }
+                        var query={
+                            match:
+                                obj
+                        };
+                        console.log(query);
 
-                function makeTerm(term, matchWholeWords) {
-                    if (!matchWholeWords) {
-                        if (!term.match(/^\*/)) {
-                            term = '*' + term;
+                        client.search({
+                            //   "index": 'firebase',
+                            //"type": 'customer',
+                            "index": '40288b8147cd16ce0147cd236df20000',
+                            "type": table,
+                            "body": {
+                                "filter": {
+                                    "limit": {"value": 5}
+                                    //,
+                                    //"_cache": true
+                                },
+                                "query": query
+                                //,
+                                //"sort": sort
+                            }
+                        }).then(function (result) {
+                            var ii = 0, hits_in, hits_out = [];
+                            hits_in = (result.hits || {}).hits || [];
+                            for (; ii < hits_in.length; ii++) {
+                                var data = hits_in[ii]._source;
+
+                                hits_out.push(data);
+                            }
+                            if(hits_in.length>1){
+                                d.reject('multiple results');
+                            }else{
+                                var result=hits_out[0];
+                                d.resolve(result[outputKey]);
+                            }
+
+                        }, d.reject);
+
+                        return d.promise;
+
+                    },
+                    multiSearch: function (table, term, offset) {
+                        var deferred = $q.defer(), query, sort;
+
+                        function makeTerm(term, matchWholeWords) {
+                            if (!matchWholeWords) {
+                                if (!term.match(/^\*/)) {
+                                    term = '*' + term;
+                                }
+                                if (!term.match(/\*$/)) {
+                                    term += '*';
+                                }
+                            }
+                            return term;
                         }
-                        if (!term.match(/\*$/)) {
-                            term += '*';
+
+                        if (typeof term == 'object') {
+                            query=term;
                         }
+                        else {
+                            query = {
+                                "query_string": {query: makeTerm(term, false)}
+                            }
+                        }
+                        if (!term) {
+                            query = {
+                                "match_all": {}
+                            };
+                        } else {
+                            query = {
+                                "query_string": {query: makeTerm(term, false)}
+                            }
+                        }
+
+                        client.search({
+                            //   "index": 'firebase',
+                            //"type": 'customer',
+                            "index": '40288b8147cd16ce0147cd236df20000',
+                            "type": table,
+                            "body": {
+                                "filter": {
+                                    "limit": {"value": 5}
+                                },
+                                "query": query
+                                //,
+                                //"sort": sort
+                            }
+                        }).then(function (result) {
+                            var ii = 0, hits_in, hits_out = [];
+                            hits_in = (result.hits || {}).hits || [];
+                            for (; ii < hits_in.length; ii++) {
+                                var data = hits_in[ii]._source;
+                                hits_out.push(data);
+                            }
+                            deferred.resolve(hits_out);
+                        }, deferred.reject);
+
+                        return deferred.promise;
                     }
-                    return term;
                 }
 
-                if (!term) {
-//                    query = {
-//                        "match_all": {}
-//                    };
-                } else {
-                    query = {
 
-                        "query_string": {query: makeTerm(term, false)}
-                    }
-                }
-
-                console.log(table);
-                client.search({
-                    //   "index": 'firebase',
-                    //"type": 'customer',
-                    "index": '40288b8147cd16ce0147cd236df20000',
-                    "type": table,
-                    "body": {
-                        "filter": {
-                            "limit": {"value": 5}
-                        },
-                        "query": query
-                        //,
-                        //"sort": sort
-                    }
-                }).then(function (result) {
-                    var ii = 0, hits_in, hits_out = [];
-                    hits_in = (result.hits || {}).hits || [];
-                    for (; ii < hits_in.length; ii++) {
-                        var data = hits_in[ii]._source;
-                        var distance = {};
-                        if (hits_in[ii].sort) {
-                            distance = {"distance": parseFloat(hits_in[ii].sort[0]).toFixed(1)}
-                        }
-                        angular.extend(data, distance);
-                        hits_out.push(data);
-                    }
-                    deferred.resolve(hits_out);
-                }, deferred.reject);
-
-                return deferred.promise;
-            };
-
-            return {
-                "search": search
-            };
-        }]
+                return search;
+            }]
     )
         .controller('searchDetailCtrl', function ($scope, $q, $timeout, ionicLoading, $stateParams, Api, localStorageService) {
             ionicLoading.load();
@@ -214,6 +271,9 @@
         })
         .
         controller('searchCtrl', function (searchObj, $http, $q, Api, $resource, $scope, ESService, localStorageService) {
+
+
+
             $scope.searchObj = searchObj;
             $scope.query = "";
             if (typeof  localStorageService.get($scope.searchObj.text) !== 'undefined'
@@ -236,7 +296,13 @@
             };
             console.log($scope.searchObj.text + ' ' + $scope.searchHistory);
             var doSearch = ionic.debounce(function (query) {
-                ESService.search($scope.searchObj.value, query, 0).then(function (results) {
+                console.log($scope.searchObj.value);
+                console.log(query);
+
+                ESService.lookup('e0015_t001','BUKRS','1000','BUTXT').then(function (results) {
+                    console.log(results);
+                });
+                ESService.multiSearch($scope.searchObj.value, query, 0).then(function (results) {
                     console.log(results);
                     $scope.results = results;
 

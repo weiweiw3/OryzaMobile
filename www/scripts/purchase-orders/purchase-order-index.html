@@ -59,16 +59,24 @@
             <!--</div>-->
 
             <div class="item low-pad-item item-icon-right"
-                 ng-repeat="(key,value) in data " ng-show="value">
+                 ng-repeat="field in screenFormat " >
                 <div class="flex-container wrap">
-                    <!--<div ng-repeat="column in data1.columns">-->
-                    <!--<div class="column">{{item[column.id]}}&nbsp;</div>-->
-                    <!--</div>-->
-                    <div class="column bodyFont1">{{key | translate}}</div>
-                    <div class="column bodyFont2">{{value}}</div>
+                    <div class="column bodyFont1">{{field['NAME']}}</div>
+                    <div class="column bodyFont2">{{fieldValueArray[field.$id]}}</div>
                 </div>
-                <i class="icon ion-chevron-right icon-accessory" ng-show="key==='CO_CODE'"></i>
+                <i class="icon ion-chevron-right icon-accessory" ng-show="{{field['DM_LKP_FLAG']=='X'}}"></i>
             </div>
+            <!--<div class="item low-pad-item item-icon-right"-->
+                 <!--ng-repeat="(key,value) in data " ng-show="value">-->
+                <!--<div class="flex-container wrap">-->
+                    <!--&lt;!&ndash;<div ng-repeat="column in data1.columns">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="column">{{item[column.id]}}&nbsp;</div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--<div class="column bodyFont1">{{key | translate}}</div>-->
+                    <!--<div class="column bodyFont2">{{value}}</div>-->
+                <!--</div>-->
+                <!--<i class="icon ion-chevron-right icon-accessory" ng-show="key==='CO_CODE'"></i>-->
+            <!--</div>-->
         </ion-list>
 
 

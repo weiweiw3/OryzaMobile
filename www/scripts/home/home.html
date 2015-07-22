@@ -16,10 +16,11 @@
     </ion-nav-bar>
     <ion-content>
         <ion-refresher on-refresh="refresh()"></ion-refresher>
+        <!--<i class="material-icons orange600 md-inactive md-36">face</i>-->
         <div class="card-gallery item item-text-wrap" ng-show="E0001[0].show ">
             <div class="item item-divider  positive">
                 <h2>Purchase Order Approve</h2>
-                <span class="badge badge-assertive">3</span>
+                <span class="badge badge-assertive" ng-show="firebaseSync.E0001_new">{{firebaseSync.E0001.messageCount}}</span>
             </div>
             <div class="item item-text-wrap item-icon-right positive" ng-repeat="array in E0001[0].array  "
                  ui-sref="ionListView({viewName:'E0001',index:array.url})">

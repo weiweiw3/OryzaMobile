@@ -4,7 +4,7 @@
 angular.module('myApp.services.myTask',
     ['firebase', 'firebase.utils', 'firebase.simpleLogin'])
     .factory('myTask',
-    function ($http, $q, ApiEndpoint, firebaseRef, $rootScope, syncArray, syncObject, $timeout, simpleLogin, config, fbutil, $q) {
+    function ($http, $q, ApiEndpoint, firebaseRef, $rootScope, syncArray, syncObject, $timeout, simpleLogin, config, fbutil) {
         var currentUser = simpleLogin.user.uid;
         var date = Date.now();
         var messageLog = {
@@ -13,6 +13,7 @@ angular.module('myApp.services.myTask',
             date: date
         };
         var taskDefaultRefStr = 'CompanySetting/EventDefaltValues';
+        var SAPSystemRefStr = 'CompanySetting/sap_system/sap_system_guid_default';
         var myTask;
         myTask = {
             getTaskDefaultValue: function (event) {
@@ -23,6 +24,16 @@ angular.module('myApp.services.myTask',
                     d.reject(err);
                 });
                 return d.promise;
+            },
+            getSAPSys: function () {
+                var d = $q.defer();
+                fbutil.ref([SAPSystemRefStr]).once('value', function (snapshot) {
+                    d.resolve(snapshot.exportVal());
+                }, function (err) {
+                    d.reject(err);
+                });
+                return d.promise;
+
             },
             checkNodeLock: function (refArray, refWhere) {
                 //var d=$q.defer();
@@ -60,6 +71,37 @@ angular.module('myApp.services.myTask',
                     //var d = $q.defer();
                     var array = inputParasRef.split("/");
                     var inputParas = defaultData.inputParas;
+
+                    if (event === 'A0001') {
+                        myTask.getSAPSys().then(function (data) {
+                            angular.forEach(data,function (value, key) {
+                                switch (key.toUpperCase()) {
+                                    case 'SAP_SYSTEM_GUID':
+                                        inputParas = inputParas.replace('$P01$', value);
+                                        break;
+                                    case 'SYSTEM_ID':
+                                        inputParas = inputParas.replace('$P02$', value);
+                                        break;
+                                    case 'SERVER_NAME':
+                                        inputParas = inputParas.replace('$P03$', value);
+                                        break;
+                                    case 'INSTANCE_NUMBER':
+                                        inputParas = inputParas.replace('$P04$', value);
+                                        break;
+                                    case 'CLIENT':
+                                        inputParas = inputParas.replace('$P05$', value);
+                                        break;
+                                }
+                            });
+
+                            inputParas = inputParas.replace('$P06$', array[0]);//ITEM
+                            inputParas = inputParas.replace('$P07$', array[1]);//ITEM
+                            inputParas = inputParas.replace('$P08$', array[2]);//ServerUserID
+                            console.log(data);
+                            console.log(inputParas);
+                        });
+
+                    }
                     if (event === 'E0005') {
                         //E0004->E0005
                         inputParas = inputParas.replace('$P01$', array[6].substr(3));//PO_REL_CODE

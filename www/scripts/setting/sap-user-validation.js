@@ -1,17 +1,72 @@
 (function (angular) {
     "use strict";
 
-    var app = angular.module('myApp.sapValidation', [ 'ionic', 'firebase.simpleLogin',
+    var app = angular.module('myApp.sapValidation', ['ionic', 'firebase.simpleLogin',
         'firebase.utils', 'firebase']);
 
     app
-        .controller('SAPUserValidationCtrl',
-        function ($firebaseObject, $rootScope, SAPUser, myTask, $scope, ionicLoading, myUser) {
+        .controller('A0001Ctrl',
+        function ($firebaseObject, $rootScope, fbutil, $q, homeFactory, myTask, $scope, ionicLoading, myUser, $ionicPopup) {
+
+            ionicLoading.load();
+            $scope.showPopup = function () {
+                $scope.data = {}
+
+                // An elaborate, custom popup
+                var myPopup = $ionicPopup.show({
+                    template: '<div class="list"><div class="item item-divider">SAP_System </div> ' +
+                    '<a ng-repeat="data in SAPSysArray" class="item">{{ data.$value }}</a> </div>',
+                    title: 'Enter Wi-Fi Password',
+                    subTitle: 'Please use normal things',
+                    scope: $scope,
+                    buttons: [
+                        {text: 'Cancel'}
+                    ]
+                });
+                myPopup.then(function (res) {
+                    console.log('Tapped!', res);
+                });
+                $timeout(function () {
+                    myPopup.close(); //close the popup after 3 seconds for some reason
+                }, 3000);
+            };
+
+            var setDraft = function () {
+                var d = $q.defer();
+                homeFactory.ready('A0001').then(function (data) {
+                    var ref = fbutil.ref(['users', $rootScope.authData.uid, 'SAPUser'])
+                        .child('draft')
+                    ref.set(data[0], function (error) {
+                        if (error) {
+                            d.reject(error);
+                        } else {
+                            $firebaseObject(ref).$bindTo($scope, "model");
+                            d.resolve(data);
+                        }
+                    });
+                }).catch(function(error){
+                    console.log(error);
+                });
+                return d.promise;
+            };
+            setDraft().then(function (data) {
+
+                ionicLoading.unload();
+                $scope.taskData = {
+                    event: event,
+                    serverUserID: data[0].serverUserID, //$scope.ServerUserID
+                    inputParasRef: data[0].SAP_USER + '/' + data[0].SAP_PASSWORD + '/' + data[0].SAP_LANGUAGE,
+                    jsonContent: ''
+                };
+                console.log($scope.taskData);
+            });
+
+
             //TODO 如果密码已经存在，可以进行修改操作；如果不存在，进行密码验证。
             //create A0001 task with A0001 input parameters
 
             $scope.languages = myUser.getLanguage();
-//        ionicLoading.load();
+//          ionicLoading.load();
             $scope.$on('lock.update', function (event) {
                 $scope.lock = myUser.getStatus('lock');
             });
@@ -26,27 +81,37 @@
                 }
             };
             //   {user/password/valid/language}
-            SAPUser.$bindTo($scope, "model").then(function () {
-
-                if (typeof $scope.model.language !== 'undefined') {
-                    $scope.preflang = $scope.model.language;
-                } else {
-                    $scope.preflang = '1';
-                }
-                if (!$scope.model.valid) {
-                    $scope.buttontext = 'validate';
-                } else {
-                    $scope.buttontext = 'update';
-                }
-
-                if (typeof $scope.model.lock !== 'undefined') {
-
-                    $scope.lock = $scope.model.lock;
-                } else {
-                    $scope.lock = false;
-                }
-            });
+            //SAPUser.$bindTo($scope, "model").then(function () {
+            //
+            //    if (typeof $scope.model.language !== 'undefined') {
+            //        $scope.preflang = $scope.model.language;
+            //    } else {
+            //        $scope.preflang = '1';
+            //    }
+            //    if (!$scope.model.valid) {
+            //        $scope.buttontext = 'validate';
+            //    } else {
+            //        $scope.buttontext = 'update';
+            //    }
+            //
+            //    if (typeof $scope.model.lock !== 'undefined') {
+            //
+            //        $scope.lock = $scope.model.lock;
+            //    } else {
+            //        $scope.lock = false;
+            //    }
+            //});
             $scope.SAPSysArray = myUser.getSAPSys();
+            $scope.popup = {
+                title: '',
+                template: ''
+            };
+            $scope.taskData = {
+                event: event,
+                serverUserID: '', //$scope.ServerUserID
+                inputParasRef: '',
+                jsonContent: ''
+            };
 //            myTask.getInputP('A0001').$loaded().then(function (data) {
 //
 //                $scope.SAPSysArray.$loaded()
@@ -92,22 +157,29 @@
         });
 
     app.config(['$stateProvider', function ($stateProvider) {
-        $stateProvider.state('SAPUserValidation', {
-            url: '/SAPUserValidation',
+        $stateProvider.state('A0001', {
+            url: '/A0001',
             templateUrl: 'scripts/setting/sap-user-validation.html',
-            controller: 'SAPUserValidationCtrl',
-            resolve: {
-                SAPUser: function (ionicLoading, $firebaseObject, fbutil, $rootScope) {
-
-                    ionicLoading.load('Loading');
-                    var obj = $firebaseObject(fbutil.ref(['users', $rootScope.authData.uid, 'setting/mapping/SAPUser']));
-                    return obj
-                        .$loaded().then(function () {
-                            ionicLoading.unload();
-                            return obj;
-                        });
-                }
-            }
+            controller: 'A0001Ctrl'
+            //,
+            //resolve: {
+            //    SAPUser: function (homeFactory, $rootScope,$stateParams,ionicLoading, fbutil, $firebaseObject, $q) {
+            //        var d = $q.defer();
+            //        ionicLoading.load();
+            //        homeFactory.ready('A0001').then(function (data) {
+            //            ionicLoading.unload();
+            //            fbutil.ref(['users', $rootScope.authData.uid, 'SAPUser'])
+            //                .child('draft').set(data[0], function (error) {
+            //                if (error) {
+            //                    d.reject(error);
+            //                } else {
+            //                    d.resolve(data);
+            //                }
+            //            });
+            //        });
+            //        return d.promise;
+            //    }
+            //}
         });
     }]);
 })(angular);

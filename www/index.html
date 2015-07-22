@@ -19,7 +19,7 @@
 
 
     <link rel="stylesheet" href="css/ionic.app.min.css">
-
+    <link rel="stylesheet" href="css/material-design-icons.css">
     <link href="lib/ionic-material/dist/ionic.material.min.css" rel="stylesheet">
 
     <!-- ionic.material
@@ -126,7 +126,6 @@
 </head>
 
 <body ng-cloak ng-app="myApp">
-
 <ion-side-menus>
     <ion-pane ion-side-menu-content>
         <ion-nav-bar class="bar-positive nav-title-slide-ios7" align-title=" left">
@@ -146,10 +145,10 @@
                 <!--<div class="col"></div>-->
                 <!--<div class="col"></div>-->
                 <div class="col">
-                    <div menu-close ui-sref="SAPUserValidation"><i class="icon ion-android-mail"></i>&nbsp;{{authData.password.email}}
+                    <div ui-sref="A0001" menu-close ><i class="icon ion-android-mail"></i>&nbsp;{{authData.password.email}}
                     </div>
                 </div>
-                <div class="col">{{ 'TITLE' | translate }}</div>
+                <div class="col">{{firebaseSync.A0001.SAP_USER}}</div>
             </div>
 
         </ion-header-bar>
@@ -159,7 +158,7 @@
                           ng-click="sideMenuController.toggleLeft()">
                     <i class="icon ion-android-home"></i> Home
                 </ion-item>
-                <ion-item class="side-menu-listItem item-icon-left" menu-close ui-sref="#/setting"><i
+                <ion-item class="side-menu-listItem item-icon-left" menu-close ui-sref="setting"><i
                         class="icon ion-android-settings"></i>Setting<span class="badge badge-assertive">3</span>
                 </ion-item>
                 <ion-item class="side-menu-listItem item-icon-left" menu-close ng-click="changeLanguage('en')">English

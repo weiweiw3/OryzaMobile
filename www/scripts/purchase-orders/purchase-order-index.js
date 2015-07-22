@@ -5,7 +5,7 @@
 
 
     app.controller('purchaseRequestItemCtrl',
-        function (myTask, ionicLoading, approveItem, $ionicPopup, $timeout, $scope, $ionicPopover) {
+        function ($q, ESService, screenFormat, myTask, ionicLoading, approveItem, $ionicPopup, $timeout, $scope, $ionicPopover) {
             $scope.data1 = {};
 
             // .fromTemplate() method
@@ -53,6 +53,48 @@
                     }
                 }
             });
+            $scope.getFieldValue = function (fieldFormatArray) {
+                var arr = [];
+                var d = $q.defer();
+                var i = 0;
+                angular.forEach(fieldFormatArray, function (value, key) {
+                    if (typeof value.LKP_KEY !== 'undefined' && value.LKP_KEY !== '') {
+
+                        ESService.lookup(value.LKP_TABLE, value.LKP_KEY,
+                            $scope.data[value.NAME], value.LKP_TEXT,
+                            value.LKP_FOREIGNKEY1, $scope.data[value.LKP_FOREIGNKEY1],
+                            value.LKP_FOREIGNKEY2, $scope.data[value.LKP_FOREIGNKEY2])
+                            .then(function (result) {
+                                i++;
+                                arr[value.$id] = result;
+                                console.log(key);
+                                if (i == fieldFormatArray.length) {d.resolve(arr)}
+                            })
+                    } else {
+                        i++;
+                        arr[value.$id] = $scope.data[value.NAME];
+                        if (i == fieldFormatArray.length) {d.resolve(arr)}
+                    }
+                });
+                return d.promise;
+            };
+            screenFormat('E0001_header').then(function (data) {
+                    $scope.getFieldValue(data).then(function (data) {
+                        $scope.fieldValueArray=data;
+                    });
+                    $scope.screenFormat=data;
+
+                }
+            );
+
+            //ESService.lookup('e0015_t001','BUKRS','1000','BUTXT').then(function (results) {
+            //    console.log(results);
+            //});
+            $scope.lookup = function (table, inputKey, inputValue, outputKey,
+                                      foreignKey1, foreignValue1, foreignKey2, foreignValue2) {
+
+
+            };
 
             approveItem.obj.$bindTo($scope, "data").then(function () {
                 ionicLoading.unload();
@@ -88,24 +130,40 @@
                 };
             });
         });
-    app.service('approveInfoService', function () {
-        var approveInfo = [];
-
-        var addApproveInfo = function (newObj) {
-            //productList.push(newObj);
-            approveInfo = newObj;
+    app.service('screenFormat', function (fbutil, $rootScope, $firebaseArray, $q) {
+        var screenFormat;
+        screenFormat = function (screen) {
+            var d = $q.defer();
+            //console.log($rootScope.firebaseSync.serverUserID);
+            //var ref = fbutil.ref(['screenFormat', $rootScope.firebaseSync.serverUserID, screen]);
+            var ref = fbutil.ref(['screenFormat', '100001', screen]);
+            $firebaseArray(ref).$loaded()
+                .then(function (data) {
+                    d.resolve(data);
+                });
+            return d.promise;
         };
+        return screenFormat;
 
-        var getApproveInfo = function () {
-            return approveInfo;
-        };
+    })
+        .service('approveInfoService', function () {
+            var approveInfo = [];
 
-        return {
-            addApproveInfo: addApproveInfo,
-            getApproveInfo: getApproveInfo
-        };
+            var addApproveInfo = function (newObj) {
+                //productList.push(newObj);
+                approveInfo = newObj;
+            };
 
-    });
+            var getApproveInfo = function () {
+                return approveInfo;
+            };
+
+            return {
+                addApproveInfo: addApproveInfo,
+                getApproveInfo: getApproveInfo
+            };
+
+        });
     app.controller('approveConformationCtrl', function ($scope, approveInfoService) {
         $scope.approveInfo = approveInfoService.getApproveInfo();
         console.log($scope.approveInfo);

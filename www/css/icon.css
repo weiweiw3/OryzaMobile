@@ -404,46 +404,46 @@ ion-list
 
 }
 
-/*@media (min-width: 321px) {*/
-    /*.flex-container.wrap > div{*/
-        /*width: 33%;*/
-        /*max-width: 33%;*/
-        /*text-overflow: '';*/
-        /*white-space:nowrap;*/
-        /*overflow: hidden;*/
+@media (min-width: 321px) {
+    .flex-container.wrap > div{
+        width: 33%;
+        max-width: 33%;
+        text-overflow: ellipsis;
+        white-space:nowrap;
+        overflow: hidden;
 
-    /*}*/
-/*}*/
+    }
+}
 
-/*@media (min-width: 480px) {*/
-    /*.flex-container.wrap > div{*/
-        /*width: 25%;*/
-        /*max-width: 25%;*/
-        /*text-overflow: '';*/
-        /*white-space:nowrap;*/
-        /*overflow: hidden;*/
-    /*}*/
-/*}*/
+@media (min-width: 480px) {
+    .flex-container.wrap > div{
+        width: 25%;
+        max-width: 25%;
+        text-overflow: ellipsis;
+        white-space:nowrap;
+        overflow: hidden;
+    }
+}
 
-/*@media (min-width: 640px) {*/
-    /*.flex-container.wrap > div{*/
-        /*width: 20%;*/
-        /*max-width: 20%;*/
-        /*text-overflow: '';*/
-        /*white-space:nowrap;*/
-        /*overflow: hidden;*/
-    /*}*/
-/*}*/
+@media (min-width: 640px) {
+    .flex-container.wrap > div{
+        width: 20%;
+        max-width: 20%;
+        text-overflow: ellipsis;
+        white-space:nowrap;
+        overflow: hidden;
+    }
+}
 
-/*@media (min-width: 960px) {*/
-    /*.flex-container.wrap > div{*/
-        /*width: 15%;*/
-        /*max-width: 15%;*/
-        /*text-overflow: '';*/
-        /*white-space:nowrap;*/
-        /*overflow: hidden;*/
-    /*}*/
-/*}*/
+@media (min-width: 960px) {
+    .flex-container.wrap > div{
+        width: 15%;
+        max-width: 15%;
+        text-overflow: ellipsis;
+        white-space:nowrap;
+        overflow: hidden;
+    }
+}
 
 .flex-container .low-pad-item {
     padding: 0;
