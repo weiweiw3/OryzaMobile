@@ -3058,6 +3058,8 @@
   "CO_MENGE":"Requirement_Qty",
   "CO_CTYP":"Currency_Type",
   "CO_CSTDRV":"Description",
+  "CO_CODE":"Company_Code",
+  "E0001":"Purchase Orders",
   "CO_BPHINR":"Area",
   "CO_AUFPL":"Plan no.f.oper.",
   "CO_APLZL":"Counter",

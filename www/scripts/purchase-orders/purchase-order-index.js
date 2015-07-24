@@ -3,12 +3,12 @@
 
     var app = angular.module('myApp.purchaseOrder', []);
 
+app
 
-    app.controller('purchaseRequestItemCtrl',
+    .controller('purchaseRequestItemCtrl',
         function ($q, ESService, screenFormat, myTask, ionicLoading, approveItem, $ionicPopup, $timeout, $scope, $ionicPopover) {
-            $scope.data1 = {};
 
-            // .fromTemplate() method
+// .fromTemplate() method
             var template = '<ion-popover-view><ion-header-bar> <h1 class="title">My Popover Title</h1> </ion-header-bar> <ion-content> Hello! </ion-content></ion-popover-view>';
 
             $scope.popover = $ionicPopover.fromTemplate(template, {
@@ -43,30 +43,21 @@
             });
 
             ionicLoading.load('Loading');
-            $scope.$watch('data.lock', function (newVal) {
-                if (typeof $scope.data != "undefined") {
-                    if (newVal) {
-                        $scope.data.approveButtonText = 'Finished';
-                    } else {
-                        console.log($scope.data);
-                        $scope.data.approveButtonText = 'Approve';
-                    }
-                }
-            });
+
+
             $scope.getFieldValue = function (fieldFormatArray) {
                 var arr = [];
                 var d = $q.defer();
                 var i = 0;
                 angular.forEach(fieldFormatArray, function (value, key) {
                     if (typeof value.LKP_KEY !== 'undefined' && value.LKP_KEY !== '') {
-
                         ESService.lookup(value.LKP_TABLE, value.LKP_KEY,
                             $scope.data[value.NAME], value.LKP_TEXT,
                             value.LKP_FOREIGNKEY1, $scope.data[value.LKP_FOREIGNKEY1],
                             value.LKP_FOREIGNKEY2, $scope.data[value.LKP_FOREIGNKEY2])
                             .then(function (result) {
                                 i++;
-                                arr[value.$id] = result;
+                                arr[value.$id] = result+'('+$scope.data[value.NAME]+')';
                                 console.log(key);
                                 if (i == fieldFormatArray.length) {d.resolve(arr)}
                             })
@@ -79,22 +70,12 @@
                 return d.promise;
             };
             screenFormat('E0001_header').then(function (data) {
+                    $scope.fieldList=data;
                     $scope.getFieldValue(data).then(function (data) {
                         $scope.fieldValueArray=data;
                     });
-                    $scope.screenFormat=data;
-
                 }
             );
-
-            //ESService.lookup('e0015_t001','BUKRS','1000','BUTXT').then(function (results) {
-            //    console.log(results);
-            //});
-            $scope.lookup = function (table, inputKey, inputValue, outputKey,
-                                      foreignKey1, foreignValue1, foreignKey2, foreignValue2) {
-
-
-            };
 
             approveItem.obj.$bindTo($scope, "data").then(function () {
                 ionicLoading.unload();
@@ -134,8 +115,9 @@
         var screenFormat;
         screenFormat = function (screen) {
             var d = $q.defer();
-            //console.log($rootScope.firebaseSync.serverUserID);
+            console.log($rootScope.profiles);
             //var ref = fbutil.ref(['screenFormat', $rootScope.firebaseSync.serverUserID, screen]);
+
             var ref = fbutil.ref(['screenFormat', '100001', screen]);
             $firebaseArray(ref).$loaded()
                 .then(function (data) {
@@ -187,10 +169,11 @@
                 controller: 'approveConformationCtrl',
                 cache: false
             })
-            .state('purchaseOrder', {
-                url: '/purchaseOrder/:ref',
-                templateUrl: 'scripts/purchase-orders/purchase-order-index.html',
+            .state('e0001-header', {
+                url: '/e0001-header/:ref',
+                templateUrl: 'scripts/purchase-orders/e0001-header.html',
                 controller: 'purchaseRequestItemCtrl',
+                cache: true,
                 resolve: {
                     approveItem: function ($stateParams, fbutil, $firebaseObject) {
                         return {

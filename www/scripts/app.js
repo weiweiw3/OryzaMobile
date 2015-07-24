@@ -24,17 +24,14 @@ var myAppComponents = [
 //  'myApp.animate',
     'myApp.config',
     'myApp.filters',
-//  'appServices',
     'myApp.directives.timepicker',
     'myApp.directives',
     'myApp.directives.favoriteMessage',
     'myApp.directives.createTask',
-    'myApp.controllers.login',
     'myApp.home',
     'myApp.services.ionic',
     'myApp.services.myTask',
     'myApp.services.myUser',
-    'ionic.utils',
     'myApp.login',
     'firebase.auth',
     'myApp.security',
@@ -49,14 +46,15 @@ var myAppComponents = [
 angular.module('myApp',
     dependencyModules.concat(myAppComponents))
 
-    .run( function($rootScope, Auth,$firebaseObject,fbutil) {
-        // track status of authentication
-        Auth.$onAuth(function(user) {
-            $rootScope.loggedIn = !!user;
-        });
-
-
-    })
+    //.run( function($rootScope, Auth) {
+    //    // track status of authentication
+    //    Auth.$onAuth(function(user) {
+    //
+    //        $rootScope.loggedIn = !!user;
+    //        console.log(!!user);
+    //    });
+    //
+    //})
     .config(function (localStorageServiceProvider) {
         localStorageServiceProvider
             .setPrefix('myApp')
@@ -132,10 +130,6 @@ angular.module('myApp',
         $rootScope.$broadcast('keypress', key, $event);
     };
 }]);
-
-
-
-
 
 
 

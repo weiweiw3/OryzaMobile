@@ -1,17 +1,20 @@
 (function (angular) {
     "use strict";
 
-    var app = angular.module('myApp.purchaseOrderList', ['ionic', 'firebase.simpleLogin',
-        'firebase.utils', 'firebase']);
+    var app = angular.module('myApp.purchaseOrderList', []);
 
 
-    app.controller('ionListViewCtrl',
-        function (ionicLoading, viewObject, $firebaseArray, $state,
+    app.controller('tasksListCtrl',
+        function (ionicLoading, stateParamsObject, $firebaseArray, $state,
                   $location, $timeout, $scope) {
-            $scope.viewObject = viewObject;
 
-            //$scope.viewTitle = ionList.key;
-            // create a scrollable reference
+        })
+        .controller('ionListViewCtrl',
+        function (ionicLoading, stateParamsObject, $firebaseArray, $state,
+                  $location, $timeout, $scope) {
+            $scope.stateParamsObject = stateParamsObject;
+            $scope.lowercase_viewName = angular.lowercase(stateParamsObject.viewName);
+
             $scope.condition = function (ref) {
                 var deferred = $q.defer();
                 fbutil.ref([ref]).once('value', function (snap) {
@@ -20,20 +23,15 @@
                 return deferred.promise;
             };
 
-            // create a scrollable reference
-            console.log(viewObject);
-            var scrollRef = new Firebase.util.Scroll(viewObject.ref, viewObject.scroll);
+            var scrollRef = new Firebase.util.Scroll($scope.stateParamsObject.ref, $scope.stateParamsObject.scroll);
+
             ionicLoading.load('loading');
             // create a synchronized array on scope
-            $scope.ionList ={
-                array:$firebaseArray(scrollRef),
-                ref:scrollRef.toString().replace(scrollRef.root().toString(), '')
+            $scope.ionList = {
+                array: $firebaseArray(scrollRef),
+                ref: scrollRef.toString().replace(scrollRef.root().toString(), '')
             };
-            //$scope.ionList = $firebaseArray(scrollRef);
-            //$scope.ionListRef = scrollRef.toString().replace(scrollRef.root().toString(), '');
-            //console.log($scope.ionListRef );
-
-            // load the first three contacts
+            // load the first three records
             scrollRef.scroll.next(3);
             $scope.ionList.array.$loaded()
                 .then(function () {
@@ -49,9 +47,9 @@
             $scope.loadMore = function () {
                 // load the next contact
                 scrollRef.scroll.next(1);
-//                if(!scrollRef.scroll.hasNext()){
-//                    console.log('no more');
-//                }
+                if (!scrollRef.scroll.hasNext()) {
+                    console.log('no more');
+                }
                 $scope.$broadcast('scroll.infiniteScrollComplete');
             };
         })
@@ -88,143 +86,4 @@
                 }
             }
         ]);
-//    app.factory('purchaseOrderListFactory',
-//        function (currentUser, $firebaseObject, fbutil, $q) {
-//            return {
-//                ready: function (component, rel_grp) {
-//                    return currentUser.getUser().then(function (user) {
-//                        return fbutil.ref(['Event', component, user, rel_grp, 'PO_HEADERS']);
-//                    })
-//                }
-//            };
-//        });
-    app.directive('e0001', function () {
-        return {
-            restrict: 'E',
-            scope: {ionList: '='},
-            templateUrl: 'scripts/purchase-orders/e0001.html'
-        };
-    }).directive('e0001Item', function () {
-        return {
-            restrict: 'E',
-            scope: {ionList: '='},
-            templateUrl: 'scripts/purchase-orders/e0001-item.html'
-        };
-    }).directive('e0004', function () {
-        return {
-            restrict: 'E',
-            scope: {ionList: '='},
-            templateUrl: 'scripts/purchase-orders/e0004.html'
-        };
-    }).directive('e0004Item', function () {
-        return {
-            restrict: 'E',
-            scope: {ionList: '='},
-            templateUrl: 'scripts/purchase-orders/e0004-item.html'
-        };
-    }).directive('e0002', function () {
-        return {
-            restrict: 'E',
-            scope: {ionList: '='},
-            templateUrl: 'scripts/purchase-orders/e0002.html'
-        };
-    }).directive('e0005', function () {
-        return {
-            restrict: 'E',
-            scope: {ionList: '='},
-            templateUrl: 'scripts/purchase-orders/e0005.html'
-        };
-    }).directive('e0005Item', function () {
-        return {
-            restrict: 'E',
-            scope: {ionList: '='},
-            templateUrl: 'scripts/purchase-orders/e0005-item.html'
-        };
-    }).directive('e0022', function () {
-        return {
-            restrict: 'E',
-            scope: {ionList: '='},
-            templateUrl: 'scripts/purchase-orders/e0022.html'
-        };
-    });
-    app.config(['$stateProvider', function ($stateProvider) {
-        $stateProvider
-            .state('ionListView', {
-                url: '/ionListView/:viewName/:index?key',
-                templateUrl: 'templates/ion-list-template.html',
-                controller: 'ionListViewCtrl',
-                resolve: {
-                    viewObject: function (fbutil, ionicLoading, $stateParams) {
-                        if ($stateParams.viewName === 'E0001') {
-                            return {
-                                key: $stateParams.viewName,
-                                title: 'Purchase Orders',
-                                ref: fbutil.ref([$stateParams.index, 'PO_HEADERS']),
-                                scroll: 'po_NUMBER'
-                            };
-                        }
-                        if ($stateParams.viewName === 'E0001-item') {
-                            return {
-                                key: $stateParams.viewName,
-                                title: 'Purchase Order ' + $stateParams.key,
-                                ref: fbutil.ref([$stateParams.index]),
-                                scroll: '-po_ITEM'
-                            };
-                        }
-                        if ($stateParams.viewName === 'E0004') {
-                            return {
-                                key: $stateParams.viewName,
-                                title: 'Purchase Requests',
-                                ref: fbutil.ref([$stateParams.index, 'REQUIREMENT_ITEMS']),
-                                scroll: '$priority'
-                            };
-                        }
-                        if ($stateParams.viewName === 'E0004-item') {
-                            return {
-                                key: $stateParams.viewName,
-                                title: 'Purchase Request ' + $stateParams.key,
-                                ref: fbutil.ref([$stateParams.index]),
-                                scroll: '-preq_ITEM'
-                            };
-                        }
-                        if ($stateParams.viewName === 'E0002') {
-                            return {
-                                key: $stateParams.viewName,
-                                title: 'PO Approve History Messages',
-                                ref: fbutil.ref([$stateParams.index]),
-                                scroll: 'key()'
-                            };
-                        }
-
-                        if ($stateParams.viewName === 'E0005') {
-                            return {
-                                key: $stateParams.viewName,
-                                title: 'PR Approve History Messages',
-                                ref: fbutil.ref([$stateParams.index]),
-                                scroll: 'key()'
-                            };
-                        }
-                        if ($stateParams.viewName === 'E0005-item') {
-                            return {
-                                key: $stateParams.viewName,
-                                title: 'Purchase Request ' + $stateParams.key,
-                                ref: fbutil.ref([$stateParams.index]),
-                                scroll: 'key()'
-                            };
-                        }
-                        if ($stateParams.viewName === 'E0022') {
-                            return {
-                                key: $stateParams.viewName,
-                                title: 'Time-Sheet',
-                                ref: fbutil.ref(['Event/E0022/100001/CATSRECORDS_OUT']),
-                                scroll: '$priority'
-                            };
-                        }
-                    }
-                }
-            })
-
-
-        ;
-    }]);
 })(angular);

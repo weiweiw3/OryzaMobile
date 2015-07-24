@@ -1,7 +1,7 @@
 (function (angular) {
     "use strict";
 
-    angular.module('myApp.security', ['firebase.auth', 'myApp.config','myApp.services.ionic'])
+    angular.module('myApp.security', ['myApp.config', 'myApp.services.ionic'])
 
 
     /**
@@ -12,53 +12,17 @@
      */
 
         // do all the things ionic needs to get going
-        .run(function ($rootScope, fbutil, FIREBASE_URL, Auth, loginRedirectPath, $firebaseAuth, $firebase, $window, $location, ionicLoading, $firebaseObject) {
+        .run(function ($rootScope, fbutil, Auth, $q,
+                       loginRedirectPath, $firebaseAuth, $firebase, $window,
+                       $location, $timeout, $firebaseObject) {
 
             Auth.$onAuth(function (authData) {
                 if (authData) {
-//                    isAuthenticated = true;
                     $rootScope.authData = authData;
-
-                    var ref = fbutil.ref(['users', $rootScope.authData.uid]);
-                    ref.on('child_changed', function (childSnapshot, prevChildKey) {
-                        //console.log($rootScope[childSnapshot.key()]);
-                        //$rootScope[childSnapshot.key()].new=true;
-                        ref.child(childSnapshot.key()+'_new').set(true);
-                        console.log(prevChildKey);
-
-                        console.log(childSnapshot.key());
-                        // code to handle child data changes.
-                    });
-                    ref.on('child_added', function (childSnapshot, prevChildKey) {
-                        if (childSnapshot.key() === 'A0001') {
-                            $rootScope.A0001 = childSnapshot.val();
-                            console.log($rootScope.A0001);
-                        }
-                        console.log(prevChildKey);
-                        // code to handle new child.
-                    });
-                    ionicLoading.load();
-                    $firebaseObject(ref)
-                        .$bindTo($rootScope, 'firebaseSync').then(function (data) {
-                            console.log('firebase setting is synced');
-
-                            ionicLoading.unload();
-                        }
-                    );
-                    $rootScope.$watch('firebaseSync', function (newValue, oldValue) {
-                        if (typeof newValue !== "undefined") {
-                            //if (newValue.E0002.priority === '3') {
-                            //    $location.path(loginRedirectPath);
-                            //}
-                        }
-                    });
-
-                    console.log("Logged in email ", authData.password.email);
+                    console.log(authData);
                     console.log("Logged in as:", authData.uid);
                 } else {
-//                    isAuthenticated = false;
                     console.log("Logged out");
-                    ionicLoading.unload();
                     $location.path(loginRedirectPath);
                 }
             });
@@ -80,7 +44,70 @@
                     }
                 });
 
-        });
+        })
 
+        // rootScrop Initialization
+        .run(function ($rootScope, fbutil, Auth, $q,
+                       loginRedirectPath, $firebaseAuth, $firebase, $timeout, $firebaseObject) {
+
+
+            //$rootScope.fbConnection
+            //$rootScope.serverUser
+
+            var connectedRef = fbutil.ref(['.info/connected']);
+            connectedRef.on("value", function(snap) {
+                if (snap.val() === true) {
+                    $rootScope.fbConnection=true;
+                    console.log("fb connected");
+                } else {
+                    $rootScope.fbConnection=false;
+                    console.log("not connected");
+                }
+            });
+
+            Auth.$onAuth(function (authData) {
+                if (authData) {
+
+                    var ref = fbutil.ref(['profiles', authData.uid]);
+
+                    ref.on('child_changed', function (childSnapshot, prevChildKey) {
+                        $rootScope.$broadcast('rootScopeUpdate',true);
+                        $rootScope[childSnapshot.key() + '_new'] = true;
+                    });
+                    ref.on('child_added', function (childSnapshot, prevChildKey) {
+                    });
+
+                    $firebaseObject(ref)
+                        .$bindTo($rootScope, 'profiles').then(function (data) {
+                            //$rootScope.initialize=true;
+                            $rootScope.$broadcast('rootScopeInit',true);
+                            console.log($rootScope.profiles.serverUserID);
+
+                            var ref = fbutil.ref(['tasks', $rootScope.profiles.serverUserID]);
+
+                            ref.on('child_changed', function (childSnapshot, prevChildKey) {
+                                console.log(childSnapshot.key());
+                                console.log(childSnapshot.val());
+                            });
+
+
+                        }
+                    );
+                    $rootScope.$watch('profiles', function (newValue, oldValue) {
+                        if (typeof newValue !== "undefined") {
+                            //if (newValue.E0002.priority === '3') {
+                            //    $location.path(loginRedirectPath);
+                            //}
+                        }
+                    });
+                }
+            });
+        })
+        .service("hiEventService",function($rootScope) {
+            this.broadcast = function() {$rootScope.$broadcast("hi")}
+            this.listen = function(callback) {$rootScope.$on("hi",callback)}
+        })
+    ;
 
 })(angular);
+

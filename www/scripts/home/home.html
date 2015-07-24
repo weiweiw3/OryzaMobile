@@ -16,49 +16,37 @@
     </ion-nav-bar>
     <ion-content>
         <ion-refresher on-refresh="refresh()"></ion-refresher>
-        <!--<i class="material-icons orange600 md-inactive md-36">face</i>-->
-        <div class="card-gallery item item-text-wrap" ng-show="E0001[0].show ">
-            <div class="item item-divider  positive">
-                <h2>Purchase Order Approve</h2>
-                <span class="badge badge-assertive" ng-show="firebaseSync.E0001_new">{{firebaseSync.E0001.messageCount}}</span>
+        <div class="subtitle" ng-hide="fbConnection">no connection</div>
+
+        <div class="list">
+            <div class="item item-divider ">
+                {{ 'Inbox' | translate }}
             </div>
-            <div class="item item-text-wrap item-icon-right positive" ng-repeat="array in E0001[0].array  "
-                 ui-sref="ionListView({viewName:'E0001',index:array.url})">
-                {{array.url}}
-                <i class="icon ion-ios-arrow-right muted"></i>
+            <div ng-repeat="(eventKey,eventObj) in profiles.Inbox | orderObjectBy: 'sortBy':false">
+                <div class="item ">
+                    <div class="buttons button-small">
+                        <a class="button" ng-repeat="(key,value) in eventObj.options"
+                           ui-sref="ionListView({viewName:eventObj.name,index:value})">
+                            <div ng-show="objectSize(eventObj.options)>1">{{key}}</div>
+                            <div ng-show="objectSize(eventObj.options)===1">{{ eventObj.name | translate }}</div>
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="card-gallery item item-text-wrap" ng-show="E0004[0].show ">
-            <div class="item item-divider positive ">
-                Purchase
-                Request
-                Approve
+            <div class="item item-divider ">
+                {{ 'outBox' | translate }}
             </div>
-            <div class="item item-text-wrap item-icon-right positive" ng-repeat="array in E0004[0].array  "
-                 ui-sref="ionListView({viewName:'E0004',index:array.url})">
-                <!--ui-sref="purchaseRequests({index:array.url})">-->
-                {{array.url}}
-                <i class="icon ion-ios-arrow-right muted"></i>
+            <div class="buttons button-small" ui-sref="ionListView({viewName:'tasks',index:'tasks/100001'})">
+                <a class="button" ui-sref="e0023"> {{ 'outBox' | translate }}</a>
             </div>
-        </div>
-        <div class="card-gallery item item-text-wrap">
-            <div class="item item-divider positive ">
-                Time-Sheet
+            <div class="item item-divider ">
+                {{ 'action' | translate }}
             </div>
-            <div class="item item-text-wrap item-icon-right positive"
-                 ui-sref="e0023">
-                Time-Sheet create
-                <i class="icon ion-ios-arrow-right muted"></i>
-            </div>
-            <div class="item item-text-wrap item-icon-right positive"
-                 ui-sref="ion-slide">{{ 'TITLE' | translate }}
-                Time-Sheet create
-                <i class="icon ion-ios-arrow-right muted"></i>
-            </div>
-            <div class="item item-text-wrap item-icon-right positive"
-                 ui-sref="ionListView({viewName:'E0022'})">
-                TimeSheetList
-                <i class="icon ion-ios-arrow-right muted"></i>
+            <div class="buttons button-small">
+                <a class="button" ui-sref="e0023">Time-Sheet create</a>
+                <a class="button">vcvcv</a>
+                <a class="button">vcvcv</a>
+                <a class="button">vcvcv</a>
             </div>
         </div>
     </ion-content>

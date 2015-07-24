@@ -16,7 +16,7 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
             }]
         });
         $translateProvider.useLoaderCache(true);
-        $translateProvider.preferredLanguage('cn');
+        $translateProvider.preferredLanguage('en');
     }])
     .run(function($ionicPlatform, $translate) {
         $ionicPlatform.ready(function() {
@@ -62,17 +62,44 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
             .state('setting', {
                 url: '/setting',
                 templateUrl: 'templates/setting.html'
-
             })
-            .state('ion-slide', {
-                url: '/ion-slide',
-                templateUrl: 'scripts/purchase-orders/ion-slide.html'
+            .state('ionListView', {
+                url: '/ionListView/:viewName/:index?key',
+                templateUrl: 'scripts/purchase-orders/ion-list-template.html',
+                controller: 'ionListViewCtrl',
+                resolve: {
+                    stateParamsObject: function (fbutil, ionicLoading, $stateParams) {
+                        var obj = {
+                            viewName: $stateParams.viewName,
+                            key: $stateParams.key,
+                            ref: fbutil.ref([$stateParams.index]),
+                            scroll: 'key()'
+                        };
+                        console.log($stateParams.viewName);
+                        switch ($stateParams.viewName) {
+                            case 'E0001':
+                                return angular.extend(obj, {
+                                    ref: fbutil.ref([$stateParams.index, 'PO_HEADERS'])
+                                });
+                                break;
+                            case 'E0004':
+                                return angular.extend(obj, {
+                                    ref: fbutil.ref([$stateParams.index, 'REQUIREMENT_ITEMS'])
+                                });
+                                break;
+                            case 'E0022':
+                                console.log('x');
+                                return angular.extend(obj, {
+                                    ref: fbutil.ref(['Event/E0022/100001/CATSRECORDS_OUT'])
+                                });
+                                break;
+                            default:              //'E0001-item' || 'E0002' || 'E0004-item' || 'E0005' || 'E0005-item'
+                                return obj;
+                                break;
 
-            })
-            .state('about', {
-                url: '/about',
-                templateUrl: 'templates/about.html'
-
+                        }
+                    }
+                }
             })
         ;
 

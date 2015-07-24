@@ -100,14 +100,12 @@
     <script src="scripts/components/security/security.js"></script>
     <script src="scripts/components/security/simpleLogin.js"></script>
     <script src="scripts/components/security/changeEmail.js"></script>
-    <script src="scripts/components/localstorage/localstorage.js"></script>
     <script src="scripts/setting/sap-user-validation.js"></script>
     <script src="scripts/login/login.js"></script>
     <script src="scripts/purchase-orders/purchase-order-index.js"></script>
     <script src="scripts/purchase-orders/purchase-order-list.js"></script>
     <script src="scripts/search/search.js"></script>
     <script src="scripts/home/home.js"></script>
-    <script src="scripts/setting/login-ctrl.js"></script>
     <script src="scripts/hr/leave-request.js"></script>
 
     <!-- endcontrollers -->
@@ -138,63 +136,7 @@
         </ion-nav-bar>
         <ion-nav-view></ion-nav-view>
     </ion-pane>
-    <ion-side-menu side="left" ng-controller="sideBarCtrl">
-        <ion-header-bar class="bar side-menu-bar-header bar-dark">
-
-            <div class="row responsive-sm">
-                <!--<div class="col"></div>-->
-                <!--<div class="col"></div>-->
-                <div class="col">
-                    <div ui-sref="A0001" menu-close ><i class="icon ion-android-mail"></i>&nbsp;{{authData.password.email}}
-                    </div>
-                </div>
-                <div class="col">{{firebaseSync.A0001.SAP_USER}}</div>
-            </div>
-
-        </ion-header-bar>
-        <ion-content has-header="true" class="side-menu-has-header">
-            <ion-list>
-                <ion-item class="side-menu-listItem item-icon-left" href="#/" menu-close
-                          ng-click="sideMenuController.toggleLeft()">
-                    <i class="icon ion-android-home"></i> Home
-                </ion-item>
-                <ion-item class="side-menu-listItem item-icon-left" menu-close ui-sref="setting"><i
-                        class="icon ion-android-settings"></i>Setting<span class="badge badge-assertive">3</span>
-                </ion-item>
-                <ion-item class="side-menu-listItem item-icon-left" menu-close ng-click="changeLanguage('en')">English
-                </ion-item>
-                <ion-item class="side-menu-listItem item-icon-left" menu-close ng-click="changeLanguage('cn')">中文
-                </ion-item>
-            </ion-list>
-        </ion-content>
-    </ion-side-menu>
-
-    <!--<ion-side-menu side="right">-->
-    <!--<ion-header-bar class="bar bar-header bar-dark" title="Search"></ion-header-bar>-->
-    <!--<ion-content has-header="true">-->
-
-    <!--</ion-content>-->
-    <!--</ion-side-menu>-->
+    <ng-include src="'scripts/home/side-menu.html'"></ng-include>
 </ion-side-menus>
-<!--<ion-nav-view></ion-nav-view>-->
-
-<!--<div>-->
-<!--<ion-nav-bar class="bar-assertive-900"-->
-<!--align-title="left">-->
-<!--<ion-nav-buttons side="left">-->
-<!--<button ng-if="$root.showCustomBack" ng-click="$root.goBack()"-->
-<!--class="button button-icon button-clear ion-arrow-left-c">-->
-<!--</button>-->
-<!--</ion-nav-buttons>-->
-<!--&lt;!&ndash;<ion-nav-buttons side="right">&ndash;&gt;-->
-<!--&lt;!&ndash;<button class="button button-icon button-clear&ndash;&gt;-->
-<!--&lt;!&ndash;ion-android-more-vertical">&ndash;&gt;-->
-<!--&lt;!&ndash;</button>&ndash;&gt;-->
-<!--&lt;!&ndash;</ion-nav-buttons>&ndash;&gt;-->
-<!--</ion-nav-bar>-->
-<!--<ion-nav-view></ion-nav-view>-->
-<!--</div>-->
-<!--<ion-nav-view></ion-nav-view>-->
-
 </body>
 </html>

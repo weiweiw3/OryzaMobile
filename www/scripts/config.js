@@ -1,7 +1,6 @@
 angular.module('myApp.config', [])
     .constant('version', '1.0')
     .constant('ApiEndpoint', {
-    //  url: 'http://localhost:8100/data-app/rs/task'
         url: 'https://114.215.185.243/data-app/rs/task'
     })
     .constant('taskUrl', {

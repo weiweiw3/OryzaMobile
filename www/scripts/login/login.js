@@ -15,7 +15,7 @@ angular.module('myApp.login', ['firebase.utils', 'firebase.auth', 'ngRoute'])
             });
     })
 
-    .controller('LoginCtrl', function ($localstorage, $scope, Auth, $location, fbutil, ionicLoading, $log, $state) {
+    .controller('LoginCtrl', function ($scope, Auth, $location, fbutil, ionicLoading, $log, $state) {
         $scope.data = {
             isLoading: false
         };
@@ -29,18 +29,19 @@ angular.module('myApp.login', ['firebase.utils', 'firebase.auth', 'ngRoute'])
 //        }
         $scope.$log = $log;
         $scope.tryLogin = function () {
-            console.log($scope.data.email,$scope.data.password);
+            console.log($scope.data.email, $scope.data.password);
             ionicLoading.load('Login...');
             $scope.err = null;
             Auth.$authWithPassword(
-                { email: $scope.data.email,
-                  password: $scope.data.password
+                {
+                    email: $scope.data.email,
+                    password: $scope.data.password
                 },
                 {rememberMe: true}
             )
                 .then(function (/* user */) {
 //                    $localstorage.setObject('loginemail', $scope.logindata.email);
-                    $state.go('home',{
+                    $state.go('home', {
                         reload: true
                     });
                     ionicLoading.unload();
@@ -58,7 +59,7 @@ angular.module('myApp.login', ['firebase.utils', 'firebase.auth', 'ngRoute'])
                 Auth.$createUser({email: email, password: pass})
                     .then(function () {
                         // authenticate so we have permission to write to Firebase
-                        return Auth.$authWithPassword({ email: email, password: pass });
+                        return Auth.$authWithPassword({email: email, password: pass});
                     })
                     .then(function (user) {
                         // create a user profile in our data store
@@ -103,4 +104,35 @@ angular.module('myApp.login', ['firebase.utils', 'firebase.auth', 'ngRoute'])
             var f = str.charAt(0).toUpperCase();
             return f + str.substr(1);
         }
-    });
+    })
+    .controller('LogoutCtrl',
+    function (localStorageService, $scope, simpleLogin, $location, ionicLoading, $log, $ionicActionSheet) {
+        $scope.$watch('action', function (data) {
+            if (data !== true) {
+                return
+            }
+            ionicLoading.load('logout......');
+            localStorageService.remove('E0001', 'E0002', 'E0004', 'E0005');
+            simpleLogin.logout();
+
+        });
+
+        $scope.tryLogout = function () {
+            var destructiveText = 'Logout', cancelText = 'Cancel';
+            $scope.action = false;
+            $ionicActionSheet.show({
+                destructiveText: destructiveText + ' <i class="icon ion-log-out">',
+                cancelText: cancelText,
+                cancel: function () {
+                    $scope.action = false;
+                },
+
+                destructiveButtonClicked: function () {
+                    $scope.action = true;
+                }
+            });
+
+        };
+
+    })
+;

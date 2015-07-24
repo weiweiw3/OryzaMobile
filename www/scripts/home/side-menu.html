@@ -1,0 +1,29 @@
+<ion-side-menu side="left" ng-controller="sideBarCtrl">
+    <ion-header-bar class="bar side-menu-bar-header bar-dark">
+        <div class="row responsive-sm">
+            <!--<div class="col"></div>-->
+            <!--<div class="col"></div>-->
+            <div class="col">
+                <div ui-sref="A0001" menu-close ><i class="icon ion-android-mail"></i>&nbsp;{{authData.password.email}}
+                </div>
+            </div>
+            <div class="col">{{profiles.A0001.SAP_USER}}</div>
+        </div>
+
+    </ion-header-bar>
+    <ion-content has-header="true" class="side-menu-has-header">
+        <ion-list>
+            <ion-item class="side-menu-listItem item-icon-left" href="#/" menu-close
+                      ng-click="sideMenuController.toggleLeft()">
+                <i class="icon ion-android-home"></i> Home
+            </ion-item>
+            <ion-item class="side-menu-listItem item-icon-left" menu-close ui-sref="setting"><i
+                    class="icon ion-android-settings"></i>Setting<span class="badge badge-assertive">3</span>
+            </ion-item>
+            <ion-item class="side-menu-listItem item-icon-left" menu-close ng-click="changeLanguage('en')">English
+            </ion-item>
+            <ion-item class="side-menu-listItem item-icon-left" menu-close ng-click="changeLanguage('cn')">中文
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-side-menu>
