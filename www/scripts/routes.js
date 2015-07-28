@@ -5,26 +5,44 @@
 "use strict";
 
 angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
-    .config(['$httpProvider', function($httpProvider) {
+    .config(['$urlMatcherFactoryProvider', function ($urlMatcherFactory) {
+        $urlMatcherFactory.type('CoolParam',
+            {
+                name: 'CoolParam',
+                decode: function (val) {
+                    return typeof(val) === "string" ? JSON.parse(val) : val;
+                },
+                encode: function (val) {
+                    return JSON.stringify(val);
+                },
+                equals: function (a, b) {
+                    return this.is(a) && this.is(b) && a.status === b.status && a.type == b.type
+                },
+                is: function (val) {
+                    return angular.isObject(val) && "status" in val && "type" in val
+                },
+            })
+    }])
+    .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.defaults.timeout = 5000;
     }])
     .config(['$translateProvider', function ($translateProvider) {
         $translateProvider.useStaticFilesLoader({
             files: [{
-                prefix: 'scripts/language/locale-',
+                prefix: 'resources/language/locale-',
                 suffix: '.json'
             }]
         });
         $translateProvider.useLoaderCache(true);
         $translateProvider.preferredLanguage('en');
     }])
-    .run(function($ionicPlatform, $translate) {
-        $ionicPlatform.ready(function() {
-            if(typeof navigator.globalization !== "undefined") {
-                navigator.globalization.getPreferredLanguage(function(language) {
-                    $translate.use((language.value).split("-")[0]).then(function(data) {
+    .run(function ($ionicPlatform, $translate) {
+        $ionicPlatform.ready(function () {
+            if (typeof navigator.globalization !== "undefined") {
+                navigator.globalization.getPreferredLanguage(function (language) {
+                    $translate.use((language.value).split("-")[0]).then(function (data) {
                         console.log("SUCCESS -> " + data);
-                    }, function(error) {
+                    }, function (error) {
                         console.log("ERROR -> " + error);
                     });
                 }, null);
@@ -101,6 +119,28 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
                     }
                 }
             })
+            .state('ionListESView', {
+                url: '/ionListESView/:table/:key?value',
+                templateUrl: 'scripts/purchase-orders/es-list-template.html',
+                controller: 'ionListESViewCtrl',
+                resolve: {
+                    stateParamsObject: function (ESService, ionicLoading, $q, $stateParams) {
+                        var d = $q.defer();
+                        console.log($stateParams.table+' '+$stateParams.key+' '+$stateParams.value);
+                        ESService.lookup($stateParams.table, $stateParams.key, $stateParams.value)
+                            .then(function (results) {
+                                d.resolve(results);
+                            }).catch(function(err){
+                                console.log(err);
+                                d.reject(err);
+                            });
+
+                        return d.promise;
+
+                    }
+                }
+            })
+
         ;
 
 

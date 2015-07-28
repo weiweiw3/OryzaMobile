@@ -31,7 +31,6 @@ var myAppComponents = [
     'myApp.home',
     'myApp.services.ionic',
     'myApp.services.myTask',
-    'myApp.services.myUser',
     'myApp.login',
     'firebase.auth',
     'myApp.security',

@@ -1,15 +1,15 @@
 <ion-view hide-back-button="true">
     <ion-nav-title>
-        <div class="view-title">{{'Search Options' | translate}}</div>
+        <div class="view-title">{{data.title | translate}}</div>
     </ion-nav-title>
 
     <ion-content>
         <div class="list">
             <ion-item class="item item-icon-right"
-                      ng-repeat="item in sideList "
-                      ui-sref="search({text:item.text,value:item.value})"
+                      ng-repeat="(key,value) in data"
+                      ui-sref="search({text:key,value:value})"
                     >
-                {{ item.text}}<i class="icon ion-ios-arrow-right muted"></i>
+                {{ key}}<i class="icon ion-ios-arrow-right muted"></i>
             </ion-item>
         </div>
     </ion-content>

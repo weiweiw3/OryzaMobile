@@ -4,10 +4,11 @@
     var app = angular.module('myApp.purchaseOrderList', []);
 
 
-    app.controller('tasksListCtrl',
-        function (ionicLoading, stateParamsObject, $firebaseArray, $state,
+    app        .controller('ionListESViewCtrl',
+        function (ionicLoading, stateParamsObject, $state,
                   $location, $timeout, $scope) {
-
+            console.log(stateParamsObject);
+            $scope.data=stateParamsObject;
         })
         .controller('ionListViewCtrl',
         function (ionicLoading, stateParamsObject, $firebaseArray, $state,

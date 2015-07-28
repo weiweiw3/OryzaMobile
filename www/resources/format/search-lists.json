@@ -1,0 +1,47 @@
+{
+  "e0015_kna1": {
+    "searchLink": [
+      "e0015_kna1"
+    ],
+    "popupLinks": [
+      "e0015_knvk",
+      "e0015_vbak"
+    ],
+    "primaryKey": "KUNNR",
+    "selectFields": [
+      "KUNNR",
+      "ORT01",
+      "NAME1",
+      "NAME2",
+      "LAND1"
+    ],
+    "whereFields": [
+      "NAME1",
+      "NAME2",
+      "ORT01"
+    ]
+  },
+  "e0015_makt":{
+    "searchLink": [
+      "e0015_mara"
+    ],
+    "popupLinks": [
+      "e0015_mard"
+    ],
+    "primaryKey": "MATNR",
+    "selectFields": [
+      "MAKTX",
+      "MATNR"
+    ],
+    "whereFields": [
+      "MAKTX",
+      "MATNR"
+    ]
+  },
+  "e0015_mara":{
+
+    "popupLinks": [
+      "e0015_mard"
+    ]
+  }
+}

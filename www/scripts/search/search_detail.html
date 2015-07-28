@@ -9,29 +9,33 @@
             <div class="col col-80">
                 <div class="row responsive-sm">
                     <div class="col bar-text">{{title}}</div>
-                    <div class="col">{{ data.CO_CODE }} CO_CODE_TEXT</div>
-                    <div class="col">{{ data.PURCH_ORG }} PURCH_ORG_TEXT</div>
-                    <div class="col"></div>
                 </div>
             </div>
+            <div class="col " >
+                <div ng-repeat="link in popupLinks">
+                    <button ui-sref="ionListESView({table:link,key:keyName,value:keyValue})"
+                            class=" button-icon button-clear nav-left-button ion-android-arrow-forward">
+                    </button>
 
+                </div>
+            </div>
         </div>
     </ion-header-bar>
     <ion-content class="has-header2" has-header="true" padding="true">
         <ion-refresher on-refresh="refresh()"></ion-refresher>
-        <div ng-repeat="result in results ">
+
             <div class="list">
                 <div class="item item-divider">
                     {{result.text}}
                 </div>
             </div>
-            <div ng-show="value" ng-repeat="(key,value) in result.data ">
+            <div ng-show="value" ng-repeat="(key,value) in results ">
                 <div class="flex-container wrap">
                     <div class="column bodyFont1">{{key | translate}}</div>
                     <div class="column bodyFont2">{{value}}</div>
                 </div>
             </div>
-        </div>
+
     </ion-content>
     <div class="bar bar-footer bar-positive-400">
 

@@ -4,33 +4,29 @@
     var app = angular.module('myApp.search', ['ngResource', 'ionic', 'firebase.simpleLogin',
         'firebase.utils', 'firebase', 'elasticsearch']);
 
-    app.controller('searchOptionCtrl', function ($scope,jsonFactory) {
-        $scope.sideList = [
-            {text: "customer", value: "view_customer_contact"},
-            {text: "vendor", value: "view_vendor_contact"},
-            {text: "material", value: "e0015_makt"}
-        ];
-        jsonFactory.fromServer().then(function(d){
-            $scope.fromServer=d;
-            console.log($scope.fromServer);
+    app.controller('searchOptionCtrl', function ($scope, jsonFactory) {
+        jsonFactory.hospitals('search-options').then(function (data) {
+            $scope.data = data;
         });
     });
     //NOTE: We are including the constant `ApiEndpoint` to be used here.
-    app.factory('jsonFactory', function($http,Api) {
-        var jsonFactory= {
-            fromServer: function() {
+    app.factory('jsonFactory', function ($http, Api) {
+        var jsonFactory = {
+            fromServer: function () {
                 var promise = Api.getApiData('view_user_screen', 'SCREEN_ID=/E0001_HEADER/')
-                        .then(function (response) {
+                    .then(function (response) {
 
-                        $http.post('scripts/resources/e0001_header.json', response).then(function(data) {
-                         console.log('Data saved');
-                         });
-                    return response;
-                }).catch(function(err){console.log(err);});
+                        $http.post('scripts/resources/e0001_header.json', response).then(function (data) {
+                            console.log('Data saved');
+                        });
+                        return response;
+                    }).catch(function (err) {
+                        console.log(err);
+                    });
                 return promise;
             },
-            hospitals: function() {
-                var url = 'jsons/hospitals.js';
+            hospitals: function (fileName) {
+                var url = 'resources/format/' + fileName + '.json';
                 var promise = $http.get(url).then(function (response) {
                     return response.data;
                 });
@@ -39,38 +35,36 @@
         };
         return jsonFactory;
     })
-
-
-        .factory('Api', function ($http, $q, taskUrl) {
-        var getApiData = function (table, where) {
-            var q = $q.defer();
-            var str = taskUrl.url + '/searchData?company_guid=40288b8147cd16ce0147cd236df20000&' +
-                'table_name=' + table +
-                '&str_where=' + where;
-            console.log(str);
-            $http.get(str)
-                .success(function (jsonObj) {
-                    if (typeof jsonObj == 'object' && jsonObj instanceof Array) {
-                        for (var i = 0; i < jsonObj.length; i++) {
-                            var o = jsonObj[i];
+        .factory('Api', function ($http, $q, taskUrl, COMPANY) {
+            var getApiData = function (table, where) {
+                var q = $q.defer();
+                var str = taskUrl.url +
+                    '/searchData?company_guid=' + COMPANY +
+                    '&table_name=' + table +
+                    '&str_where=' + where;
+                $http.get(str)
+                    .success(function (jsonObj) {
+                        if (typeof jsonObj == 'object' && jsonObj instanceof Array) {
+                            for (var i = 0; i < jsonObj.length; i++) {
+                                var o = jsonObj[i];
+                            }
                         }
-                    }
-                    //console.log(jsonObj);
-                    q.resolve(jsonObj);
-                })
-                .error(function (data, status, headers, config) {
-                    console.log(data, status, headers, config);
-                    q.reject(data);
-                });
-            return q.promise;
-        };
-        return {
-            getApiData: getApiData
-        };
-    })
+                        //console.log(jsonObj);
+                        q.resolve(jsonObj);
+                    })
+                    .error(function (data, status, headers, config) {
+                        console.log(data, status, headers, config);
+                        q.reject(data);
+                    });
+                return q.promise;
+            };
+            return {
+                getApiData: getApiData
+            };
+        })
         .factory('ESService',
         ['$q', 'esFactory', '$location', 'SearchUrl',
-            function ($q, elasticsearch, $location, SearchUrl) {
+            function ($q, elasticsearch, $location, SearchUrl, COMPANY) {
                 var client = elasticsearch({
                     //host: "https://a1b5amni:7smeg06ujbchru2l@apricot-2272737.us-east-1.bonsai.io/"
                     host: SearchUrl.url
@@ -93,9 +87,8 @@
                             match: obj
                         };
                         console.log(query);
-
                         client.search({
-                            "index": '40288b8147cd16ce0147cd236df20000',
+                            "index": COMPANY,
                             "type": table,
                             "body": {
                                 "filter": {
@@ -114,19 +107,25 @@
 
                                 hits_out.push(data);
                             }
-                            if (hits_in.length > 1) {
-                                d.reject('multiple results');
-                            } else {
-                                var result = hits_out[0];
-                                d.resolve(result[outputKey]);
+                            switch (hits_in.length){
+                                case 0:d.reject('no data');break;
+                                case 1:
+                                    var result = hits_out[0];
+                                    if (typeof  outputKey == "undefined") {
+                                        d.resolve(result);
+                                    }
+                                    else {
+                                        d.resolve(result[outputKey]);
+                                    }
+                                    break;
+                                default :d.resolve(hits_out);break;
                             }
-
                         }, d.reject);
 
                         return d.promise;
 
                     },
-                    multiSearch: function (table, term, offset) {
+                    multiSearch: function (table, term, offset, fields) {
                         var deferred = $q.defer(), query, sort;
 
                         function makeTerm(term, matchWholeWords) {
@@ -141,35 +140,41 @@
                             return term;
                         }
 
-                        if (typeof term == 'object') {
-                            query = term;
-                        }
-                        else {
-                            query = {
-                                "query_string": {query: makeTerm(term, false)}
-                            }
-                        }
                         if (!term) {
                             query = {
                                 "match_all": {}
                             };
                         } else {
                             query = {
-                                "query_string": {query: makeTerm(term, false)}
+
+                                "query_string": {
+                                    "fields": fields,
+                                    "query": makeTerm(term, false)
+                                }
+
                             }
                         }
-
+                        console.log(fields);
                         client.search({
-                            //   "index": 'firebase',
-                            //"type": 'customer',
-                            "index": '40288b8147cd16ce0147cd236df20000',
+                            "index": COMPANY,
                             "type": table,
+                            //"type": "e0015_kna1",
                             "body": {
                                 "filter": {
-                                    "limit": {"value": 5}
+                                    "limit": {"value": 20}
+                                    //,
+                                    //"term":{"NAME1":"Albert"}
                                 },
+
                                 "query": query
                                 //,
+                                //"query": {
+                                //    "multi_match": {
+                                //        "query": term,
+                                //        "fields": ["ADRNR", "ERNAM"],
+                                //        "operator": "or"
+                                //    }
+                                //}
                                 //"sort": sort
                             }
                         }).then(function (result) {
@@ -190,132 +195,81 @@
                 return search;
             }]
     )
-        .controller('searchDetailCtrl', function ($scope, $q, $timeout, ionicLoading, $stateParams, Api, localStorageService) {
-            ionicLoading.load();
-            //console.log($stateParams.index);
-            $scope.searchObj = $stateParams.key;
-            $scope.title = $stateParams.key + ' ' + $stateParams.index;
+        .controller('searchDetailCtrl', function (jsonFactory,$scope, $q, $timeout, ionicLoading,
+                                                  ESService, searchObj, localStorageService) {
+            console.log(searchObj);
+            ESService.lookup(searchObj.table, searchObj.key, searchObj.value).then(function (results) {
+                console.log(results);
+                $scope.results = results;
+                //ionicLoading.unload();
+            });
+            jsonFactory.hospitals('search-lists').then(function (data) {
+                console.log(data);
+                console.log(searchObj.table);
+                $scope.popupLinks = data[searchObj.table].popupLinks;
+            });
 
-            if (typeof  localStorageService.get($stateParams.key) !== 'undefined'
-                && localStorageService.get($stateParams.key) !== null) {
-                $scope.searchHistory = localStorageService.get($stateParams.key);
+            //ionicLoading.load();
+            $scope.keyName = searchObj.key;
+            $scope.keyValue = searchObj.value;
+            $scope.title = searchObj.table + ' ' + searchObj.value;
+
+            if (typeof  localStorageService.get(searchObj.table) !== 'undefined'
+                && localStorageService.get(searchObj.table) !== null) {
+                $scope.searchHistory = localStorageService.get(searchObj.table);
             } else {
                 $scope.searchHistory = [];
             }
-            if ($scope.searchHistory.indexOf($stateParams.index) === -1) {
-                $scope.searchHistory.push($stateParams.index);
+            if ($scope.searchHistory.indexOf(searchObj.value) === -1) {
+                $scope.searchHistory.push(searchObj.value);
             }
             ;
 
-            localStorageService.set($stateParams.key, $scope.searchHistory);
-            var querys = [
-                {
-                    key: 'material',
-                    name: 'info',
-                    text: 'bacis information',
-                    table: 'e0015_makt',
-                    where: 'MATNR=/' + $stateParams.index + '/'
-                }, {
-                    key: 'material',
-                    name: 'stock',
-                    text: 'stock',
-                    table: 'view_material_stock',
-                    where: 'MATNR=/' + $stateParams.index + '/'
-                }, {
-                    key: 'customer',
-                    name: 'info',
-                    text: 'bacis information',
-                    table: 'e0015_KNA1',
-                    where: 'KUNNR=/' + $stateParams.index + '/'
-                }
-                , {
-                    key: 'customer',
-                    name: 'info',
-                    text: 'contacts',
-                    table: 'view_customer_contact',
-                    where: 'KUNNR=/' + $stateParams.index + '/'
-                }
-                //TODO orderby 怎么写
-                , {
-                    key: 'customer',
-                    name: 'info',
-                    text: 'related SO',
-                    table: 'e0015_vbak',
-                    where: 'KUNNR=/' + $stateParams.index + '/ '
-                }, {
-                    key: 'vendor',
-                    name: 'info',
-                    text: 'bacis information',
-                    table: 'e0015_LFA1',
-                    where: 'LIFNR=/' + $stateParams.index + '/'
-                }
-                , {
-                    key: 'vendor',
-                    name: 'info',
-                    text: 'contacts',
-                    table: 'view_vendor_contact',
-                    where: 'LIFNR=/' + $stateParams.index + '/'
-                }
-            ];
-            $scope.results = [];
-            console.log(querys.length);
-            var i = 0;
-            angular.forEach(querys, function (query) {
-
-                i++;
-                if ($stateParams.key === query.key) {
-                    Api.getApiData(query.table, query.where)
-                        .then(function (data) {
-                            console.log(data);
-                            $scope.results.push({
-                                text: query.text,
-                                data: data[0]
-                            });
-                        })
-                        .catch(function () {
-                            console.log('Assign only failure callback to promise');
-                            // This is a shorthand for `promise.then(null, errorCallback)`
-                        });
-                }
-                if (i == 7) {
-                    $timeout(function () {
-                        ionicLoading.unload();
-                    }, 1000);
-                }
-            });
+            localStorageService.set(searchObj.table, $scope.searchHistory);
 
             $scope.refresh = function () {
                 //TODO refresh event
                 console.log('$scope.refresh');
-                console.log($scope.results);
                 $scope.$broadcast('scroll.refreshComplete');
             };
 
         })
         .
-        controller('searchCtrl', function (searchObj, $http, $q, Api, $resource, $scope, ESService, localStorageService) {
+        controller('searchCtrl', function (searchObj, $http, $q, Api, $resource,
+                                           $scope, ESService, localStorageService, jsonFactory) {
 
+            $scope.table = searchObj.value;
+
+            jsonFactory.hospitals('search-lists').then(function (data) {
+
+                //console.log($scope.table);
+                $scope.searchLink = data[searchObj.value].searchLink;
+                $scope.whereFields = data[searchObj.value].whereFields;
+                $scope.selectFields = data[searchObj.value].selectFields;
+                $scope.primaryKey = data[searchObj.value].primaryKey;
+                if (typeof  localStorageService.get($scope.searchLink ) !== 'undefined'
+                    && localStorageService.get($scope.searchLink ) !== null) {
+                    $scope.searchHistory = localStorageService.get($scope.searchLink );
+                    //console.log($scope.searchHistory);
+                    //console.log(localStorageService.get($scope.table));
+                } else {
+                    $scope.searchHistory = [];
+
+                }
+
+            });
+            //console.log(searchObj);
             $scope.searchObj = searchObj;
-            $scope.query = "";
-            if (typeof  localStorageService.get($scope.searchObj.text) !== 'undefined'
-                && localStorageService.get($scope.searchObj.text) !== null) {
-                $scope.searchHistory = localStorageService.get($scope.searchObj.text);
-
-            } else {
-                $scope.searchHistory = [];
-
-            }
 
             $scope.deleteHistory = function (result) {
                 var index = $scope.searchHistory.indexOf(result);
                 //console.log(index+' '+$scope.searchHistory.indexOf(index));
                 if (index > -1) {
                     $scope.searchHistory.splice(index, 1);
-                    localStorageService.set($scope.searchObj.text, $scope.searchHistory);
+                    localStorageService.set($scope.table, $scope.searchHistory);
                 }
 
             };
-            console.log($scope.searchObj.text + ' ' + $scope.searchHistory);
             var doSearch = ionic.debounce(function (query) {
                 console.log($scope.searchObj.value);
                 console.log(query);
@@ -323,7 +277,8 @@
                 ESService.lookup('e0015_t001', 'BUKRS', '1000', 'BUTXT').then(function (results) {
                     console.log(results);
                 });
-                ESService.multiSearch($scope.searchObj.value, query, 0).then(function (results) {
+
+                ESService.multiSearch($scope.searchObj.value, query, 0, $scope.whereFields).then(function (results) {
                     console.log(results);
                     $scope.results = results;
 
@@ -339,28 +294,29 @@
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider
             .state('search', {
-                url: '/search/:text?value',
+                url: '/search?text:value',
                 templateUrl: 'scripts/search/search.html',
                 controller: 'searchCtrl',
                 cache: false,
                 resolve: {
                     searchObj: function ($stateParams) {
                         return {
-                            value: $stateParams.value,
-                            text: $stateParams.text
+                            text: $stateParams.text,
+                            value: $stateParams.value
                         };
                     }
                 }
             })
             .state('searchDetail', {
-                url: '/searchDetail/:key?index',
+                url: '/searchDetail/:table/:key?value',
                 templateUrl: 'scripts/search/search_detail.html',
                 controller: 'searchDetailCtrl',
                 resolve: {
                     searchObj: function ($stateParams) {
                         return {
+                            table: $stateParams.table,
                             key: $stateParams.key,
-                            index: $stateParams.index
+                            value: $stateParams.value
                         };
                     }
                 }

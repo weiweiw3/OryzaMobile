@@ -6,7 +6,7 @@
 
     app
         .controller('A0001Ctrl',
-        function ($firebaseObject, $rootScope, fbutil, $q, homeFactory, myTask, $scope, ionicLoading, myUser, $ionicPopup) {
+        function ($firebaseObject, $rootScope, fbutil, $q, homeFactory, myTask, $scope, ionicLoading, $ionicPopup) {
 
             ionicLoading.load();
             $scope.showPopup = function () {
@@ -65,11 +65,11 @@
             //TODO 如果密码已经存在，可以进行修改操作；如果不存在，进行密码验证。
             //create A0001 task with A0001 input parameters
 
-            $scope.languages = myUser.getLanguage();
-//          ionicLoading.load();
-            $scope.$on('lock.update', function (event) {
-                $scope.lock = myUser.getStatus('lock');
-            });
+//            $scope.languages = myUser.getLanguage();
+////          ionicLoading.load();
+//            $scope.$on('lock.update', function (event) {
+//                $scope.lock = myUser.getStatus('lock');
+//            });$scope
 
             $scope.changedValue = function (language) {
                 $scope.model.language = language;
@@ -101,7 +101,7 @@
             //        $scope.lock = false;
             //    }
             //});
-            $scope.SAPSysArray = myUser.getSAPSys();
+            //$scope.SAPSysArray = myUser.getSAPSys();
             $scope.popup = {
                 title: '',
                 template: ''
