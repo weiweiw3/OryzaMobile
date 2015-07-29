@@ -80,6 +80,7 @@ angular.module('myApp.services.myTask',
             createTaskData: function (event, defaultData, ServerUser, inputParasRef, jsonContent) {
                 //data.inputParas
                 //data.jsonContent
+                var d = $q.defer();
                 var taskData = defaultData;
 
                 taskData.userId = ServerUser;
@@ -96,7 +97,6 @@ angular.module('myApp.services.myTask',
 
                 if (typeof defaultData.inputParas === 'string' && typeof inputParasRef === 'string') {
 
-                    //var d = $q.defer();
                     var array = inputParasRef.split("/");
                     var inputParas = defaultData.inputParas;
 
@@ -122,37 +122,44 @@ angular.module('myApp.services.myTask',
                                 }
                             });
 
-                            inputParas = inputParas.replace('$P06$', array[0]);//ITEM
-                            inputParas = inputParas.replace('$P07$', array[1]);//ITEM
-                            inputParas = inputParas.replace('$P08$', array[2]);//ServerUserID
+                            inputParas = inputParas.replace('$P06$', array[0]);//SAP_USER
+                            inputParas = inputParas.replace('$P07$', array[1]);//SAP_PASSWORD
+                            inputParas = inputParas.replace('$P08$', array[2]);//SAP_LANGUAGE
+
+                            taskData.inputParas = inputParas;
+                            inputParas = inputParas + ';FB_FROM_PATH=' + inputParasRef.replace(FIREBASE_URL, '');
+
+                            d.resolve(taskData);
                         });
 
-                    }
-                    if (event === 'E0005') {
-                        //E0004->E0005
-                        inputParas = inputParas.replace('$P01$', array[6].substr(3));//PO_REL_CODE
-                        // TODO replace P02 twice , in the furture use replace-all function
-                        inputParas = inputParas.replace('$P02$', array[8]);//PURCHASEREQUEST
-                        inputParas = inputParas.replace('$P02$', array[8]);//PURCHASEREQUEST
-                        inputParas = inputParas.replace('$P03$', array[9]);//ITEM
-                        inputParas = inputParas.replace('$P03$', array[9]);//ITEM
-                        inputParas = inputParas.replace('$P04$', array[5]);//ServerUserID
-                    }
+                    } else {
+                        if (event === 'E0005') {
+                            //E0004->E0005
+                            inputParas = inputParas.replace('$P01$', array[6].substr(3));//PO_REL_CODE
+                            // TODO replace P02 twice , in the furture use replace-all function
+                            inputParas = inputParas.replace('$P02$', array[8]);//PURCHASEREQUEST
+                            inputParas = inputParas.replace('$P02$', array[8]);//PURCHASEREQUEST
+                            inputParas = inputParas.replace('$P03$', array[9]);//ITEM
+                            inputParas = inputParas.replace('$P03$', array[9]);//ITEM
+                            inputParas = inputParas.replace('$P04$', array[5]);//ServerUserID
+                        }
 
-                    if (event === 'E0002') {
-                        //E0001->E0002
-                        inputParas = inputParas.replace('$P01$', array[6].substr(3));//PO_REL_CODE
-                        inputParas = inputParas.replace('$P01$', array[6].substr(3));//PO_REL_CODE
-                        //TODO replace P02 twice , in the furture use replace-all function
-                        inputParas = inputParas.replace('$P02$', array[8]);//PURCHASEORDER
-                        inputParas = inputParas.replace('$P02$', array[8]);//PURCHASEORDER
-                        inputParas = inputParas.replace('$P03$', array[5]);//ServerUserID
-                    }
+                        if (event === 'E0002') {
+                            //E0001->E0002
+                            inputParas = inputParas.replace('$P01$', array[6].substr(3));//PO_REL_CODE
+                            inputParas = inputParas.replace('$P01$', array[6].substr(3));//PO_REL_CODE
+                            //TODO replace P02 twice , in the furture use replace-all function
+                            inputParas = inputParas.replace('$P02$', array[8]);//PURCHASEORDER
+                            inputParas = inputParas.replace('$P02$', array[8]);//PURCHASEORDER
+                            inputParas = inputParas.replace('$P03$', array[5]);//ServerUserID
+                        }
 
-                    inputParas = inputParas + ';FB_FROM_PATH=' + inputParasRef.replace(FIREBASE_URL, '');
-                    taskData.inputParas = inputParas;
+                        inputParas = inputParas + ';FB_FROM_PATH=' + inputParasRef.replace(FIREBASE_URL, '');
+                        d.resolve(taskData);
+                    }
                 }
-                return taskData;
+                return d.promise;
+
             },
             addTaskKey: function (taskData, taskRef, event) {
                 var d = $q.defer();
@@ -166,7 +173,10 @@ angular.module('myApp.services.myTask',
                             sendData: taskData
                         },
                         function (error) {
-                            if (error) {d.reject(error);console.log("Error:", error);}
+                            if (error) {
+                                d.reject(error);
+                                console.log("Error:", error);
+                            }
                             console.log('new Task' + newTaskRef.key());
                             //newTaskRef.on("value", function (snap) {d.resolve(angular.toJson(snap.val()));});
                             d.resolve(taskData);
@@ -197,13 +207,18 @@ angular.module('myApp.services.myTask',
 
                 return myTask.getTaskDefaultValue(event)
                     .then(function (defaultData) {
-                        var taskData = myTask.createTaskData(event,
-                            defaultData, ServerUser, inputParasRef, jsonContent);
-                        myTask.addTaskKey(taskData, taskRef, event)
-                            .then(function (data) {
-                                console.log(data);
-                                return myTask.postTask(data);
-                            });
+                        myTask.createTaskData(event,
+                            defaultData, ServerUser, inputParasRef, jsonContent).then(
+                            function (taskData) {
+                                myTask.addTaskKey(taskData, taskRef, event)
+                                    .then(function (data) {
+                                        console.log(data);
+                                        return myTask.postTask(data);
+                                    });
+                            }
+                        );
+
+
                     });
             }
         };

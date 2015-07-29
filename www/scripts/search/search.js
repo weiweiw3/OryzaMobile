@@ -73,65 +73,40 @@
                 search = {
                     lookup: function (table, inputKey, inputValue, outputKey,
                                       foreignKey1, foreignValue1, foreignKey2, foreignValue2) {
-                        var d = $q.defer(), query, sort;
-
-                        var obj = {}, myArray = [];
+                        var d = $q.defer(), sort;
                         var query;
-                        if (typeof foreignKey1 !== 'undefined') {
-                            obj[foreignKey1] = foreignValue1;
-                        }
-                        if (typeof foreignKey2 !== 'undefined') {
-                            obj[foreignKey2] = foreignValue2;
-                        }
+                        var multiQuery = [];
                         if (typeof inputKey === 'string') {
-                            var key = [];
-                            key.push(inputKey);
-                            var obj = {}, matchObj = {};
-                            obj[inputKey] =
-                                "\"" + inputValue + "\""
-                            ;
-                            matchObj[inputKey] =
-                            {
-                                "query": inputValue,
-                                "minimum_should_match": "100%"
-                            }
-
-                            ;
-                            //console.log(angular.extend(obj,{"operator": "and"}));
-                            //query = {
-                            //        "match_phrase": obj
-                            //}
-                            query = {
-                                "bool": {
-                                    "should": [
-                                        {
-                                            "match": matchObj
-                                        },
-                                        {
-                                            "match_phrase": obj
-                                        }
-                                    ],
-                                    "minimum_number_should_match": 2
-
-                                }
-                            };
-                            //query ={"match_phrase": obj};
+                            var obj = {};
+                            obj[inputKey] = inputValue;
+                            multiQuery.push({match_phrase: obj});
                         } else {
                             var i = 0;
-                            var multiQuery = [];
                             angular.forEach(inputKey, function (eachKey) {
                                 var obj = {};
                                 obj[eachKey] = inputValue[i];
-                                multiQuery.push({match: obj});
+                                multiQuery.push({match_phrase: obj});
                                 i++;
                             });
-
-                            query = {
-                                "bool": {
-                                    "must": multiQuery
-                                }
-                            }
                         }
+                        if (typeof foreignKey1 !== 'undefined' && foreignKey1 !== null) {
+                            var obj = {};
+                            //console.log(foreignKey1+' '+foreignValue1);
+                            obj[foreignKey1] = foreignValue1;
+                            multiQuery.push({match_phrase: obj});
+                        }
+                        if (typeof foreignKey2 !== 'undefined' && foreignKey2 !== null) {
+                            var obj = {};
+                            //console.log(foreignKey2+' '+foreignValue2);
+                            obj[foreignKey2] = foreignValue2;
+                            multiQuery.push({match_phrase: obj});
+
+                        }
+                        query = {
+                            "bool": {
+                                "must": multiQuery
+                            }
+                        };
                         console.log(query);
 
                         client.search({
@@ -206,7 +181,7 @@
 
                     },
                     multiSearch: function (table, term, offset, fields) {
-                        var deferred = $q.defer(), query, sort;
+                        var d = $q.defer(), query, sort;
 
                         function makeTerm(term, matchWholeWords) {
                             if (!matchWholeWords) {
@@ -230,33 +205,18 @@
                                 "query_string": {
                                     "fields": fields,
                                     "query": makeTerm(term, true)
-
                                 }
-
                             }
                         }
                         console.log(query);
                         client.search({
                             "index": COMPANY,
                             "type": table,
-                            //"type": "e0015_kna1",
                             "body": {
                                 "filter": {
                                     "limit": {"value": 20}
-                                    //,
-                                    //"term":{"NAME1":"Albert"}
                                 },
-
                                 "query": query
-                                //,
-                                //"query": {
-                                //    "multi_match": {
-                                //        "query": term,
-                                //        "fields": ["ADRNR", "ERNAM"],
-                                //        "operator": "or"
-                                //    }
-                                //}
-                                //"sort": sort
                             }
                         }).then(function (result) {
                             var ii = 0, hits_in, hits_out = [];
@@ -265,13 +225,20 @@
                                 var data = hits_in[ii]._source;
                                 hits_out.push(data);
                             }
-                            deferred.resolve(hits_out);
-                        }, deferred.reject);
+                            switch (hits_in.length) {
+                                case 0:
+                                    d.reject('no data');
+                                    break;
+                                default:
+                                    d.resolve(hits_out);
+                                    break;
+                            }
 
-                        return deferred.promise;
+                        }, d.reject);
+
+                        return d.promise;
                     }
-                }
-
+                };
 
                 return search;
             }]
@@ -280,19 +247,73 @@
                                                   ESService, searchObj, localStorageService) {
             console.log(searchObj);
             $scope.viewKey = searchObj.value;
-            ESService.lookup(searchObj.table, searchObj.key, searchObj.value).then(function (results) {
-                console.log(results);
-                $scope.results = results;
-                //ionicLoading.unload();
-            });
-            jsonFactory.hospitals('search-lists').then(function (data) {
-                if (typeof data[searchObj.table].popupLinks !== "undefined") {
-                    $scope.popupLinks = data[searchObj.table].popupLinks;
-                } else {
-                    $scope.popupLinks = [];
-                }
-                $scope.searchLink = data[searchObj.table].searchLink;
-            });
+            ionicLoading.load();
+            ESService.lookup(searchObj.table, searchObj.key, searchObj.value)
+                .then(function (results) {
+                    $scope.results = results;
+                    jsonFactory.hospitals('search-lists').then(function (data) {
+                        if (typeof data[searchObj.table].popupLinks !== "undefined") {
+                            $scope.popupLinks = data[searchObj.table].popupLinks;
+                        } else {
+                            $scope.popupLinks = [];
+                        }
+                        $scope.searchLink = data[searchObj.table].searchLink;
+                        jsonFactory.hospitals($scope.searchLink).then(function (data) {
+
+                            $scope.fieldList = data;
+                            console.log(data);
+                            $scope.getFieldValue(data).then(function (data) {
+                                ionicLoading.unload();
+                                $scope.fieldValueArray = data;
+                                console.log($scope.fieldValueArray);
+                            });
+
+                        });
+                    });
+
+                });
+
+            $scope.getFieldValue = function (fieldFormatArray) {
+                var arr = [];
+                var d = $q.defer();
+                var i = 0;
+                angular.forEach(fieldFormatArray, function (value) {
+                    //如果要lookup
+
+                    if (typeof value['LKP_KEYFIELD'] !== 'undefined' && value['LKP_KEYFIELD'] !== '' && value['LKP_KEYFIELD'] !== null) {
+                        console.log($scope.results[value['LKP_FOREIGNKEY1']]);
+                        ESService.lookup(value['LKP_TEXTTABLE'], value['LKP_KEYFIELD'],
+                            $scope.results[value['FIELDNAME']], value['LKP_TEXTFIELD'],
+                            value['LKP_FOREIGNKEY1'], $scope.results[value['LKP_FOREIGNKEY1']],
+                            value['LKP_FOREIGNKEY2'], $scope.results[value['LKP_FOREIGNKEY2']])
+                            .then(function (result) {
+                                i++;
+                                arr[value['FIELDNAME']] = result + '(' + $scope.results[value['FIELDNAME']] + ')';
+                                //console.log(key);
+                                if (i == fieldFormatArray.length) {
+                                    d.resolve(arr);
+                                    console.log(arr);
+                                }
+                            }).catch(function (err) {
+                                i++;
+                                if (i == fieldFormatArray.length) {
+                                    d.resolve(arr);
+                                    console.log(arr);
+                                }
+                                console.log(err);
+                            })
+                    } else {
+                        i++;
+                        arr[value['FIELDNAME']] = $scope.results[value['FIELDNAME']];
+                        if (i == fieldFormatArray.length) {
+                            d.resolve(arr);
+                            console.log(arr);
+                        }
+                    }
+                });
+                return d.promise;
+            };
+
 
             //ionicLoading.load();
             $scope.keyName = searchObj.key;
@@ -356,18 +377,16 @@
 
             };
             var doSearch = ionic.debounce(function (query) {
-                console.log($scope.searchObj.value);
-                console.log(query);
-
-                //ESService.lookup('e0015_t001', 'BUKRS', '1000', 'BUTXT').then(function (results) {
-                //    console.log(results);
-                //});
-
-                ESService.multiSearch($scope.searchObj.value, query, 0, $scope.whereFields).then(function (results) {
-                    console.log(results);
-                    $scope.results = results;
-
-                });
+                ESService.multiSearch($scope.searchObj.value, query, 0, $scope.whereFields)
+                    .then(function (results) {
+                        $scope.results = results;
+                        $scope.err = null;
+                    })
+                    .catch(function (err) {
+                        $scope.results = null;
+                        $scope.err = err;
+                        console.log(err);
+                    });
             }, 500);
 
             $scope.search = function (query) {

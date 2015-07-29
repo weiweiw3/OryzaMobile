@@ -64,6 +64,28 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
                 url: '/setting',
                 templateUrl: 'templates/setting.html'
             })
+            .state('addSAPUser', {
+                url: '/addSAPUser',
+                controller: "addSAPUserCtrl",
+                templateUrl: 'scripts/setting/add-sap-user.html'
+            })
+
+            .state('taskDetail', {
+                url: '/taskDetail/:task',
+                templateUrl: 'scripts/purchase-orders/task-detail.html',
+                controller: "taskDetailCtrl",
+                resolve: {
+                    returnMessage: function ($q, $firebaseObject, $rootScope, fbutil, $stateParams) {
+                        var d = $q.defer();
+                        console.log('x');
+                        $firebaseObject(fbutil.ref(['tasks', $rootScope.serverUser, $stateParams.task,'RETURN']))
+                            .$loaded().then(function (data) {
+                                d.resolve(data);
+                            });
+                        return d.promise;
+                    }
+                }
+            })
             .state('ionListView', {
                 url: '/ionListView/:viewName/:index?key',
                 templateUrl: 'scripts/purchase-orders/ion-list-template.html',

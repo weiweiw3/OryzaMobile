@@ -4,7 +4,15 @@
     var app = angular.module('myApp.purchaseOrderList', []);
 
 
-    app.controller('ionListESViewCtrl',
+
+
+    app.controller('taskDetailCtrl',
+        function (returnMessage,ionicLoading, $state,
+                  $location, $timeout, $scope,jsonFactory) {
+            $scope.data=returnMessage;
+        })
+
+        .controller('ionListESViewCtrl',
         function (ionicLoading, stateParamsObject,$state,
                   $location, $timeout, $scope,jsonFactory) {
             console.log(stateParamsObject);

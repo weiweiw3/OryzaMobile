@@ -52,16 +52,17 @@
                 var arr = [];
                 var d = $q.defer();
                 var i = 0;
-                angular.forEach(fieldFormatArray, function (value, key) {
-                    if (typeof value.LKP_KEY !== 'undefined' && value.LKP_KEY !== '') {
-                        ESService.lookup(value.LKP_TABLE, value.LKP_KEY,
-                            $scope.data[value.NAME], value.LKP_TEXT,
-                            value.LKP_FOREIGNKEY1, $scope.data[value.LKP_FOREIGNKEY1],
-                            value.LKP_FOREIGNKEY2, $scope.data[value.LKP_FOREIGNKEY2])
+                angular.forEach(fieldFormatArray, function (value) {
+                    //如果要lookup
+                    if (typeof value['LKP_KEY'] !== 'undefined' && value['LKP_KEY'] !== '') {
+                        ESService.lookup(value['LKP_TABLE'], value['LKP_KEY'],
+                            $scope.data[value['NAME']], value['LKP_TEXT'],
+                            value['LKP_FOREIGNKEY1'], $scope.data[value['LKP_FOREIGNKEY1']],
+                            value['LKP_FOREIGNKEY2'], $scope.data[value['LKP_FOREIGNKEY2']])
                             .then(function (result) {
                                 i++;
-                                arr[value.$id] = result + '(' + $scope.data[value.NAME] + ')';
-                                console.log(key);
+                                arr[value.$id] = result + '(' + $scope.data[value['NAME']] + ')';
+                                //console.log(key);
                                 if (i == fieldFormatArray.length) {
                                     d.resolve(arr)
                                 }

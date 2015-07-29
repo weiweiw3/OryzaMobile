@@ -1,11 +1,11 @@
 {
-  "e0015_kna1": {
+  "E0015_KNA1": {
     "searchLink": [
-      "e0015_kna1"
+      "E0015_KNA1"
     ],
     "popupLinks": [
-      "e0015_knvk",
-      "e0015_vbak"
+      "E0015_KNVK",
+      "E0015_VBAK"
     ],
     "primaryKey": "KUNNR",
     "selectFields": [
@@ -22,31 +22,33 @@
       "KUNNR"
     ]
   },
-  "e0015_knvk": {
+  "E0015_KNVK": {
     "searchLink": [
-      "e0015_knvk"
+      "E0015_KNVK"
     ],
     "primaryKey": "PARNR"
   },
-  "e0015_vbak": {
+  "E0015_VBAK": {
     "searchLink": [
-      "e0015_vbak"
+      "E0015_VBAK"
     ],
     "popupLinks": [
-      "e0015_vbap"
+      "E0015_VBAP"
     ],
     "primaryKey": "VBELN"
   },
-  "e0015_vbap": {
+  "E0015_VBAP": {
     "searchLink": [
-      "e0015_vbap"
+      "E0015_VBAP"
     ],
-    "primaryKey": ["VBELN","POSNR"]
+    "primaryKey": [
+      "VBELN",
+      "POSNR"
+    ]
   },
-
-  "e0015_makt":{
+  "E0015_MAKT": {
     "searchLink": [
-      "e0015_mara"
+      "E0015_MARA"
     ],
     "popupLinks": [
       "e0015_mard"
@@ -61,7 +63,7 @@
       "MATNR"
     ]
   },
-  "e0015_mara":{
+  "e0015_mara": {
     "searchLink": [
       "e0015_mara"
     ],
@@ -70,12 +72,13 @@
     ],
     "primaryKey": "MATNR"
   },
-  "e0015_mard":{
+  "e0015_mard": {
     "searchLink": [
       "e0015_mard"
     ],
-
-    "primaryKey": ["MATNR","WERKS"]
+    "primaryKey": [
+      "MATNR",
+      "WERKS"
+    ]
   }
-
 }
