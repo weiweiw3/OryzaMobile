@@ -74,19 +74,66 @@
                     lookup: function (table, inputKey, inputValue, outputKey,
                                       foreignKey1, foreignValue1, foreignKey2, foreignValue2) {
                         var d = $q.defer(), query, sort;
-                        var key = inputKey;
+
                         var obj = {}, myArray = [];
-                        obj[key] = inputValue;
+                        var query;
                         if (typeof foreignKey1 !== 'undefined') {
                             obj[foreignKey1] = foreignValue1;
                         }
                         if (typeof foreignKey2 !== 'undefined') {
                             obj[foreignKey2] = foreignValue2;
                         }
-                        var query = {
-                            match: obj
-                        };
+                        if (typeof inputKey === 'string') {
+                            var key = [];
+                            key.push(inputKey);
+                            var obj = {}, matchObj = {};
+                            obj[inputKey] =
+                                "\"" + inputValue + "\""
+                            ;
+                            matchObj[inputKey] =
+                            {
+                                "query": inputValue,
+                                "minimum_should_match": "100%"
+                            }
+
+                            ;
+                            //console.log(angular.extend(obj,{"operator": "and"}));
+                            //query = {
+                            //        "match_phrase": obj
+                            //}
+                            query = {
+                                "bool": {
+                                    "should": [
+                                        {
+                                            "match": matchObj
+                                        },
+                                        {
+                                            "match_phrase": obj
+                                        }
+                                    ],
+                                    "minimum_number_should_match": 2
+
+                                }
+                            };
+                            //query ={"match_phrase": obj};
+                        } else {
+                            var i = 0;
+                            var multiQuery = [];
+                            angular.forEach(inputKey, function (eachKey) {
+                                var obj = {};
+                                obj[eachKey] = inputValue[i];
+                                multiQuery.push({match: obj});
+                                i++;
+                            });
+
+                            query = {
+                                "bool": {
+                                    "must": multiQuery
+                                }
+                            }
+                        }
                         console.log(query);
+
                         client.search({
                             "index": COMPANY,
                             "type": table,
@@ -107,8 +154,10 @@
 
                                 hits_out.push(data);
                             }
-                            switch (hits_in.length){
-                                case 0:d.reject('no data');break;
+                            switch (hits_in.length) {
+                                case 0:
+                                    d.reject('no data');
+                                    break;
                                 case 1:
                                     var result = hits_out[0];
                                     if (typeof  outputKey == "undefined") {
@@ -118,7 +167,38 @@
                                         d.resolve(result[outputKey]);
                                     }
                                     break;
-                                default :d.resolve(hits_out);break;
+                                default :
+                                    //由于搜索无法保证lookup时可以equail，只能contain，所以只好控制结果。100-805搜出"T-100-805"和"100-805"
+                                    var arr = [], obj = {};
+                                    var i = 0;
+                                    angular.forEach(hits_out, function (result) {
+                                        var flag = true;
+                                        if (angular.isArray(inputValue)) {
+                                            var j = 0;
+                                            angular.forEach(inputKey, function (eachKey) {
+                                                if (result[eachKey] !== inputValue[j]) {
+                                                    flag = false;
+                                                }
+                                                j++;
+                                            });
+                                        } else {
+                                            if (result[inputKey] !== inputValue) {
+                                                flag = false;
+                                            }
+                                        }
+                                        if (flag === true) {
+                                            obj = result;
+                                            console.log(result);
+                                            i++;
+                                            arr.push(result);
+                                        }
+                                    });
+                                    if (i === 1) {
+                                        d.resolve(obj);
+                                    } else {
+                                        d.resolve(arr);
+                                    }
+                                    break;
                             }
                         }, d.reject);
 
@@ -146,15 +226,16 @@
                             };
                         } else {
                             query = {
-
+                                //simple_query_string
                                 "query_string": {
                                     "fields": fields,
-                                    "query": makeTerm(term, false)
+                                    "query": makeTerm(term, true)
+
                                 }
 
                             }
                         }
-                        console.log(fields);
+                        console.log(query);
                         client.search({
                             "index": COMPANY,
                             "type": table,
@@ -195,18 +276,22 @@
                 return search;
             }]
     )
-        .controller('searchDetailCtrl', function (jsonFactory,$scope, $q, $timeout, ionicLoading,
+        .controller('searchDetailCtrl', function (jsonFactory, $scope, $q, $timeout, ionicLoading,
                                                   ESService, searchObj, localStorageService) {
             console.log(searchObj);
+            $scope.viewKey = searchObj.value;
             ESService.lookup(searchObj.table, searchObj.key, searchObj.value).then(function (results) {
                 console.log(results);
                 $scope.results = results;
                 //ionicLoading.unload();
             });
             jsonFactory.hospitals('search-lists').then(function (data) {
-                console.log(data);
-                console.log(searchObj.table);
-                $scope.popupLinks = data[searchObj.table].popupLinks;
+                if (typeof data[searchObj.table].popupLinks !== "undefined") {
+                    $scope.popupLinks = data[searchObj.table].popupLinks;
+                } else {
+                    $scope.popupLinks = [];
+                }
+                $scope.searchLink = data[searchObj.table].searchLink;
             });
 
             //ionicLoading.load();
@@ -247,9 +332,9 @@
                 $scope.whereFields = data[searchObj.value].whereFields;
                 $scope.selectFields = data[searchObj.value].selectFields;
                 $scope.primaryKey = data[searchObj.value].primaryKey;
-                if (typeof  localStorageService.get($scope.searchLink ) !== 'undefined'
-                    && localStorageService.get($scope.searchLink ) !== null) {
-                    $scope.searchHistory = localStorageService.get($scope.searchLink );
+                if (typeof  localStorageService.get($scope.searchLink) !== 'undefined'
+                    && localStorageService.get($scope.searchLink) !== null) {
+                    $scope.searchHistory = localStorageService.get($scope.searchLink);
                     //console.log($scope.searchHistory);
                     //console.log(localStorageService.get($scope.table));
                 } else {
@@ -274,9 +359,9 @@
                 console.log($scope.searchObj.value);
                 console.log(query);
 
-                ESService.lookup('e0015_t001', 'BUKRS', '1000', 'BUTXT').then(function (results) {
-                    console.log(results);
-                });
+                //ESService.lookup('e0015_t001', 'BUKRS', '1000', 'BUTXT').then(function (results) {
+                //    console.log(results);
+                //});
 
                 ESService.multiSearch($scope.searchObj.value, query, 0, $scope.whereFields).then(function (results) {
                     console.log(results);
@@ -308,7 +393,7 @@
                 }
             })
             .state('searchDetail', {
-                url: '/searchDetail/:table/:key?value',
+                url: '/searchDetail/:table?key?value',
                 templateUrl: 'scripts/search/search_detail.html',
                 controller: 'searchDetailCtrl',
                 resolve: {

@@ -5,24 +5,7 @@
 "use strict";
 
 angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
-    .config(['$urlMatcherFactoryProvider', function ($urlMatcherFactory) {
-        $urlMatcherFactory.type('CoolParam',
-            {
-                name: 'CoolParam',
-                decode: function (val) {
-                    return typeof(val) === "string" ? JSON.parse(val) : val;
-                },
-                encode: function (val) {
-                    return JSON.stringify(val);
-                },
-                equals: function (a, b) {
-                    return this.is(a) && this.is(b) && a.status === b.status && a.type == b.type
-                },
-                is: function (val) {
-                    return angular.isObject(val) && "status" in val && "type" in val
-                },
-            })
-    }])
+
     .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.defaults.timeout = 5000;
     }])
@@ -124,13 +107,29 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
                 templateUrl: 'scripts/purchase-orders/es-list-template.html',
                 controller: 'ionListESViewCtrl',
                 resolve: {
-                    stateParamsObject: function (ESService, ionicLoading, $q, $stateParams) {
+                    stateParamsObject: function ($state, ESService, ionicLoading, $q, $stateParams) {
                         var d = $q.defer();
-                        console.log($stateParams.table+' '+$stateParams.key+' '+$stateParams.value);
+                        console.log($stateParams.table + ' ' + $stateParams.key + ' ' + $stateParams.value);
                         ESService.lookup($stateParams.table, $stateParams.key, $stateParams.value)
                             .then(function (results) {
-                                d.resolve(results);
-                            }).catch(function(err){
+                                console.log(results);
+                                //列表才显示，只有一条跳转其他
+                                if (!angular.isArray(results)) {
+                                    console.log('1 row');
+
+                                    $state.go('searchDetail',
+                                        {
+                                            table: $stateParams.table,
+                                            key: $stateParams.key, value: $stateParams.value
+                                        });
+                                    d.reject('1 row');
+                                } else {
+                                    d.resolve({
+                                        array: results,
+                                        table: $stateParams.table
+                                    });
+                                }
+                            }).catch(function (err) {
                                 console.log(err);
                                 d.reject(err);
                             });

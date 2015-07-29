@@ -8,7 +8,10 @@
             </div>
             <div class="col col-80">
                 <div class="row responsive-sm">
-                    <div class="col bar-text">{{title}}</div>
+                    <div class="col bar-text">{{searchLink.toString()|translate}}</div>
+                </div>
+                <div class="row responsive-sm">
+                    <div class="col bar-text">{{viewKey}}</div>
                 </div>
             </div>
             <div class="col " >
@@ -16,19 +19,12 @@
                     <button ui-sref="ionListESView({table:link,key:keyName,value:keyValue})"
                             class=" button-icon button-clear nav-left-button ion-android-arrow-forward">
                     </button>
-
                 </div>
             </div>
         </div>
     </ion-header-bar>
     <ion-content class="has-header2" has-header="true" padding="true">
         <ion-refresher on-refresh="refresh()"></ion-refresher>
-
-            <div class="list">
-                <div class="item item-divider">
-                    {{result.text}}
-                </div>
-            </div>
             <div ng-show="value" ng-repeat="(key,value) in results ">
                 <div class="flex-container wrap">
                     <div class="column bodyFont1">{{key | translate}}</div>

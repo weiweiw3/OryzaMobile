@@ -28,7 +28,7 @@
                 <div
                      ui-sref="searchDetail({table:searchLink,key:primaryKey,value:result[primaryKey]})">
                     <div ng-repeat="field in selectFields">
-                        {{field}}: {{result[field]}}
+                        {{field | translate}}: {{result[field]}}
                     </div>
                     <!--<h2 class="icon-left">{{result.title}}</h2>-->
                     <!--{{result.KUNNR}} {{result.NAME1}}-->

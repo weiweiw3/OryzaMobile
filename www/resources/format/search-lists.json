@@ -18,9 +18,32 @@
     "whereFields": [
       "NAME1",
       "NAME2",
-      "ORT01"
+      "ORT01",
+      "KUNNR"
     ]
   },
+  "e0015_knvk": {
+    "searchLink": [
+      "e0015_knvk"
+    ],
+    "primaryKey": "PARNR"
+  },
+  "e0015_vbak": {
+    "searchLink": [
+      "e0015_vbak"
+    ],
+    "popupLinks": [
+      "e0015_vbap"
+    ],
+    "primaryKey": "VBELN"
+  },
+  "e0015_vbap": {
+    "searchLink": [
+      "e0015_vbap"
+    ],
+    "primaryKey": ["VBELN","POSNR"]
+  },
+
   "e0015_makt":{
     "searchLink": [
       "e0015_mara"
@@ -39,9 +62,20 @@
     ]
   },
   "e0015_mara":{
-
+    "searchLink": [
+      "e0015_mara"
+    ],
     "popupLinks": [
       "e0015_mard"
-    ]
+    ],
+    "primaryKey": "MATNR"
+  },
+  "e0015_mard":{
+    "searchLink": [
+      "e0015_mard"
+    ],
+
+    "primaryKey": ["MATNR","WERKS"]
   }
+
 }
