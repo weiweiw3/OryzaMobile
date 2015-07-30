@@ -5,8 +5,6 @@
                     class=" button-icon button-clear right-button ion-information-circled">
             </button>
         </ion-nav-buttons>
-        <create-task class="button button-energized-900 button-icon" button-text="approve" popup="popup"
-                     task-data="taskData"><i class="icon ion-code light"></i></create-task>
         <form name="validation" ng-submit="tryValidation()">
             <div class="list list-inset">
                 <label class="item item-input">
@@ -19,7 +17,8 @@
                     <input type="text" placeholder="Language" ng-model="language">
                 </label>
             </div>
-            <button class="button button-block button-positive" type="submit">submit</button>
+            <create-task class="button button-block button-positive" button-text="submit" popup="popup"
+                         task-data="taskData" type="submit"></create-task>
         </form>
     </ion-content>
 </ion-view>

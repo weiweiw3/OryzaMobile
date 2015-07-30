@@ -12,13 +12,9 @@
     //NOTE: We are including the constant `ApiEndpoint` to be used here.
     app.factory('jsonFactory', function ($http, Api) {
         var jsonFactory = {
-            fromServer: function () {
-                var promise = Api.getApiData('view_user_screen', 'SCREEN_ID=/E0001_HEADER/')
+            fromServer: function (table, where) {
+                var promise = Api.getApiData(table, where)
                     .then(function (response) {
-
-                        $http.post('scripts/resources/e0001_header.json', response).then(function (data) {
-                            console.log('Data saved');
-                        });
                         return response;
                     }).catch(function (err) {
                         console.log(err);
@@ -49,7 +45,6 @@
                                 var o = jsonObj[i];
                             }
                         }
-                        //console.log(jsonObj);
                         q.resolve(jsonObj);
                     })
                     .error(function (data, status, headers, config) {
@@ -71,7 +66,7 @@
                 });
                 var search;
                 search = {
-                    lookup: function (table, inputKey, inputValue, outputKey,
+                    lookup: function (table, inputKey, inputValue, outputKey, languageKey, language,
                                       foreignKey1, foreignValue1, foreignKey2, foreignValue2) {
                         var d = $q.defer(), sort;
                         var query;
@@ -88,6 +83,11 @@
                                 multiQuery.push({match_phrase: obj});
                                 i++;
                             });
+                        }
+                        if (typeof languageKey !== 'undefined' && languageKey !== null) {
+                            var obj = {};
+                            obj[languageKey] = language;
+                            multiQuery.push({match_phrase: obj});
                         }
                         if (typeof foreignKey1 !== 'undefined' && foreignKey1 !== null) {
                             var obj = {};
@@ -107,7 +107,7 @@
                                 "must": multiQuery
                             }
                         };
-                        console.log(query);
+                        //console.log(query);
 
                         client.search({
                             "index": COMPANY,
@@ -244,51 +244,66 @@
             }]
     )
         .controller('searchDetailCtrl', function (jsonFactory, $scope, $q, $timeout, ionicLoading,
-                                                  ESService, searchObj, localStorageService) {
+                                                  ESService, searchObj, localStorageService, $rootScope, searchHistory) {
             console.log(searchObj);
             $scope.viewKey = searchObj.value;
+            $scope.keyName = searchObj.key;
+            $scope.keyValue = searchObj.value;
+            $scope.title = searchObj.table + ' ' + searchObj.value;
+
             ionicLoading.load();
-            ESService.lookup(searchObj.table, searchObj.key, searchObj.value)
-                .then(function (results) {
-                    $scope.results = results;
-                    jsonFactory.hospitals('search-lists').then(function (data) {
-                        if (typeof data[searchObj.table].popupLinks !== "undefined") {
-                            $scope.popupLinks = data[searchObj.table].popupLinks;
+            var loadData = function (table, key, value) {
+                var d = $q.defer();
+                if (table = 'E0001_PO_HEADERS') {
+                    var i = 0;
+                    var query = '';
+                    angular.forEach(key, function (eachKey) {
+                        if (i === (key.length - 1)) {
+                            query = query + eachKey + '=/' + value[i] + '/';
                         } else {
-                            $scope.popupLinks = [];
+                            query = query + eachKey + '=/' + value[i] + '/ and ';
                         }
-                        $scope.searchLink = data[searchObj.table].searchLink;
-                        jsonFactory.hospitals($scope.searchLink).then(function (data) {
-
-                            $scope.fieldList = data;
-                            console.log(data);
-                            $scope.getFieldValue(data).then(function (data) {
-                                ionicLoading.unload();
-                                $scope.fieldValueArray = data;
-                                console.log($scope.fieldValueArray);
-                            });
-
-                        });
+                        i++;
                     });
+                    console.log(table + ' ' + query);
+                    jsonFactory.fromServer(table, query)
+                        .then(function (searchResult) {
+                            console.log(searchResult);
+                            d.resolve(searchResult[0]);
+                        }).catch(function(err){
+                            d.reject(err);
+                        })
+                } else {
+                    ESService.lookup(table, key, value)
+                        .then(function (searchResult) {
+                            d.resolve(searchResult);
+                        });
+                }
+                return d.promise;
+            };
 
-                });
 
-            $scope.getFieldValue = function (fieldFormatArray) {
+            var getFieldValue = function (fieldFormatArray, searchResult) {
                 var arr = [];
                 var d = $q.defer();
                 var i = 0;
                 angular.forEach(fieldFormatArray, function (value) {
                     //如果要lookup
+                    if (typeof value['LKP_KEYFIELD'] !== 'undefined' && value['LKP_KEYFIELD'] !== ''
+                        && value['LKP_KEYFIELD'] !== null) {
 
-                    if (typeof value['LKP_KEYFIELD'] !== 'undefined' && value['LKP_KEYFIELD'] !== '' && value['LKP_KEYFIELD'] !== null) {
-                        console.log($scope.results[value['LKP_FOREIGNKEY1']]);
-                        ESService.lookup(value['LKP_TEXTTABLE'], value['LKP_KEYFIELD'],
-                            $scope.results[value['FIELDNAME']], value['LKP_TEXTFIELD'],
-                            value['LKP_FOREIGNKEY1'], $scope.results[value['LKP_FOREIGNKEY1']],
-                            value['LKP_FOREIGNKEY2'], $scope.results[value['LKP_FOREIGNKEY2']])
+                        //lookup: function (table, inputKey, inputValue, outputKey,languageKey,language,
+                        //                  foreignKey1, foreignValue1, foreignKey2, foreignValue2)
+
+                        ESService.lookup('E0015_' + value['LKP_TEXTTABLE'],
+                            value['LKP_KEYFIELD'], searchResult[value['FIELDNAME']],
+                            value['LKP_TEXTFIELD'],
+                            value['LKP_LANGFIELD'], searchResult[value['LKP_LANGFIELD']],
+                            value['LKP_FOREIGNKEY1'], searchResult[value['LKP_FOREIGNKEY1']],
+                            value['LKP_FOREIGNKEY2'], searchResult[value['LKP_FOREIGNKEY2']])
                             .then(function (result) {
                                 i++;
-                                arr[value['FIELDNAME']] = result + '(' + $scope.results[value['FIELDNAME']] + ')';
+                                arr[value['FIELDNAME']] = result + '(' + searchResult[value['FIELDNAME']] + ')';
                                 //console.log(key);
                                 if (i == fieldFormatArray.length) {
                                     d.resolve(arr);
@@ -304,7 +319,7 @@
                             })
                     } else {
                         i++;
-                        arr[value['FIELDNAME']] = $scope.results[value['FIELDNAME']];
+                        arr[value['FIELDNAME']] = searchResult[value['FIELDNAME']];
                         if (i == fieldFormatArray.length) {
                             d.resolve(arr);
                             console.log(arr);
@@ -314,25 +329,42 @@
                 return d.promise;
             };
 
+            jsonFactory.hospitals('search-lists')
+                .then(function (data) {
+                    if (typeof data[searchObj.table].popupLinks !== "undefined") {
+                        $scope.popupLinks = data[searchObj.table].popupLinks;
+                    } else {
+                        $scope.popupLinks = [];
+                    }
+                    $scope.formatLink = data[searchObj.table].formatLink;
+                    $scope.searchLink = data[searchObj.table].searchLink;
+                    searchHistory.updateHistory($scope.searchLink, searchObj.value);
+                    jsonFactory.fromServer('view_user_screen', 'TABNAME=/' + $scope.formatLink + '/')
+                        .then(function (fieldFormatArray) {
+                            $scope.fieldFormatArray = fieldFormatArray;
+console.log(fieldFormatArray);
+                            loadData($scope.searchLink, searchObj.key, searchObj.value).then(function (searchResult) {
+                                getFieldValue(fieldFormatArray, searchResult)
+                                    .then(function (data) {
+                                        ionicLoading.unload();
+                                        $scope.fieldValueArray = data;
+                                        //$scope.popup = {
+                                        //    title: $scope.keyText,
+                                        //    template: $scope.title
+                                        //};
+                                        //$scope.taskData = {
+                                        //    event: approveItem.event,
+                                        //    serverUserID: $rootScope.serverUser,
+                                        //    inputParasRef: ref,
+                                        //    jsonContent: ''
+                                        //};
 
-            //ionicLoading.load();
-            $scope.keyName = searchObj.key;
-            $scope.keyValue = searchObj.value;
-            $scope.title = searchObj.table + ' ' + searchObj.value;
 
-            if (typeof  localStorageService.get(searchObj.table) !== 'undefined'
-                && localStorageService.get(searchObj.table) !== null) {
-                $scope.searchHistory = localStorageService.get(searchObj.table);
-            } else {
-                $scope.searchHistory = [];
-            }
-            if ($scope.searchHistory.indexOf(searchObj.value) === -1) {
-                $scope.searchHistory.push(searchObj.value);
-            }
-            ;
-
-            localStorageService.set(searchObj.table, $scope.searchHistory);
-
+                                        //console.log($scope.fieldValueArray);
+                                    });
+                            });
+                        });
+                });
             $scope.refresh = function () {
                 //TODO refresh event
                 console.log('$scope.refresh');
@@ -340,15 +372,34 @@
             };
 
         })
+        .factory('searchHistory', function (localStorageService) {
+            var searchHistory;
+            searchHistory = {
+                getHistory: function (arrayName) {
+                    if (typeof  localStorageService.get(arrayName) !== 'undefined'
+                        && localStorageService.get(arrayName) !== null) {
+                        return localStorageService.get(arrayName);
+                    } else {
+                        return [];
+                    }
+                },
+                updateHistory: function (arrayName, key) {
+                    var arr = this.getHistory(arrayName);
+                    if (arr.indexOf(key) === -1) {
+                        arr.push(key);
+                    }
+                    localStorageService.set(arrayName, arr);
+
+                    return arr;
+                }
+            };
+            return searchHistory;
+        })
         .
         controller('searchCtrl', function (searchObj, $http, $q, Api, $resource,
                                            $scope, ESService, localStorageService, jsonFactory) {
-
             $scope.table = searchObj.value;
-
             jsonFactory.hospitals('search-lists').then(function (data) {
-
-                //console.log($scope.table);
                 $scope.searchLink = data[searchObj.value].searchLink;
                 $scope.whereFields = data[searchObj.value].whereFields;
                 $scope.selectFields = data[searchObj.value].selectFields;
@@ -356,17 +407,12 @@
                 if (typeof  localStorageService.get($scope.searchLink) !== 'undefined'
                     && localStorageService.get($scope.searchLink) !== null) {
                     $scope.searchHistory = localStorageService.get($scope.searchLink);
-                    //console.log($scope.searchHistory);
-                    //console.log(localStorageService.get($scope.table));
                 } else {
                     $scope.searchHistory = [];
-
                 }
-
             });
             //console.log(searchObj);
             $scope.searchObj = searchObj;
-
             $scope.deleteHistory = function (result) {
                 var index = $scope.searchHistory.indexOf(result);
                 //console.log(index+' '+$scope.searchHistory.indexOf(index));
@@ -374,7 +420,6 @@
                     $scope.searchHistory.splice(index, 1);
                     localStorageService.set($scope.table, $scope.searchHistory);
                 }
-
             };
             var doSearch = ionic.debounce(function (query) {
                 ESService.multiSearch($scope.searchObj.value, query, 0, $scope.whereFields)
@@ -393,7 +438,6 @@
                 doSearch(query);
             }
         });
-
 
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider

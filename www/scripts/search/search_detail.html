@@ -27,7 +27,7 @@
         <ion-refresher on-refresh="refresh()"></ion-refresher>
 
         <div class="low-pad-item item-icon-right"
-             ng-repeat="field in fieldList | orderBy:'SORT_BY'"
+             ng-repeat="field in fieldFormatArray | orderBy:'SORT_BY'"
                 ng-show="fieldValueArray[field['FIELDNAME']]">
             <div class="flex-container wrap">
                 <div class="column bodyFont1">{{field['FIELDNAME'] | translate}}</div>

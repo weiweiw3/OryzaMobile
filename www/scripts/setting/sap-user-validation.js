@@ -6,12 +6,15 @@
 
     app.controller('addSAPUserCtrl',
         function ($firebaseObject, $rootScope, fbutil, $q, homeFactory, myTask, $scope, ionicLoading, $ionicPopup) {
-var event='A0001';
+            var event='A0001';
             $scope.popup = {
                 title: '',
                 template: ''
             };
             console.log($rootScope.serverUser);
+            $scope.$watch('user',function(oldvalue,newvalue){
+                console.log(oldvalue+' '+newvalue);
+            });
             $scope.user='LIMIL';
             $scope.password='mingming';
             $scope.language='E';

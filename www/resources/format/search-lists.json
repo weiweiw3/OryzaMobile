@@ -1,7 +1,35 @@
 {
+  "E0001_PO_HEADERS": {
+    "searchLink": [
+      "E0001_PO_HEADERS"
+    ],
+    "formatLink": [
+      "BAPIEKKOL"
+    ],
+    "popupLinks": [
+      "E0001_PO_ITEMS"
+    ],
+    "primaryKey": "KUNNR",
+    "selectFields": [
+      "KUNNR",
+      "ORT01",
+      "NAME1",
+      "NAME2",
+      "LAND1"
+    ],
+    "whereFields": [
+      "NAME1",
+      "NAME2",
+      "ORT01",
+      "KUNNR"
+    ]
+  },
   "E0015_KNA1": {
     "searchLink": [
       "E0015_KNA1"
+    ],
+    "formatLink": [
+      "KNA1"
     ],
     "popupLinks": [
       "E0015_KNVK",
@@ -25,6 +53,9 @@
   "E0015_KNVK": {
     "searchLink": [
       "E0015_KNVK"
+    ],
+    "formatLink": [
+      "KNVK"
     ],
     "primaryKey": "PARNR"
   },

@@ -63,7 +63,7 @@ angular.module('myApp.services.myTask',
         return httpUtil;
     })
     .factory('myTask',
-    function ($http, $q, taskUrl, firebaseRef, $rootScope,
+    function ($http, $q, taskUrl, firebaseRef, $rootScope, ionicLoading,
               $timeout, fbutil, fAsync, httpUtil, FIREBASE_URL) {
 
         var taskDefaultRefStr = 'CompanySetting/EventDefaltValues';
@@ -179,13 +179,17 @@ angular.module('myApp.services.myTask',
                             }
                             console.log('new Task' + newTaskRef.key());
                             //newTaskRef.on("value", function (snap) {d.resolve(angular.toJson(snap.val()));});
-                            d.resolve(taskData);
+                            d.resolve({
+                                ref: newTaskRef,
+                                taskData: taskData
+                            });
                         });
                 };
-                var newTaskRef = taskRef.push({
+                var newTaskRef = taskRef
+                    .push({
+                        sendData: 'x'
+                    }, onComplete);
 
-                    sendData: 'x'
-                }, onComplete);
                 return d.promise;
             },
             postTask: function (data) {
@@ -201,11 +205,37 @@ angular.module('myApp.services.myTask',
                 });
                 return d.promise;
             },
+            monitorTask: function (ref) {
+                var d = $q.defer();
+                ionicLoading.load('wait for results');
+                $timeout(function () {
+                    ionicLoading.unload();
+                    d.reject('timeout');
+                    console.log('timeout')
+                }, 15000);
+                ref.on('child_added', function (childSnapshot, prevChildKey) {
+                    if (childSnapshot.key() === 'RETURN') {
+                        ionicLoading.unload();
+                        ref.once('value', function (snapshot) {
+                            if (snapshot.child('TASK_INFO/task_status').val() == 3
+                                && snapshot.child('RETURN/TYPE').val() !== ('E' || 'A')) {
+                                console.log('successful');
+                                d.resolve('successful');
+                            }
+                            if (snapshot.child('TASK_INFO/task_status').val() == 9) {
+                                console.log('error');
+                                d.reject('error');
+                            }
+                        })
+                    }
+                });
+                return d.promise;
+            },
             createTask: function (event, ServerUser, inputParasRef, jsonContent) {
 
-                var taskRef = firebaseRef(['tasks', ServerUser]);
-
-                return myTask.getTaskDefaultValue(event)
+                var taskRef = fbutil.ref(['tasks', ServerUser]);
+                var d = $q.defer();
+                myTask.getTaskDefaultValue(event)
                     .then(function (defaultData) {
                         myTask.createTaskData(event,
                             defaultData, ServerUser, inputParasRef, jsonContent).then(
@@ -213,13 +243,30 @@ angular.module('myApp.services.myTask',
                                 myTask.addTaskKey(taskData, taskRef, event)
                                     .then(function (data) {
                                         console.log(data);
-                                        return myTask.postTask(data);
-                                    });
+                                        var ref = data.ref;
+                                        myTask.postTask(data.taskData)
+                                            .then(function (data) {
+                                                //if(event==='A0001'){
+                                                    myTask.monitorTask(ref).then(function (data) {
+                                                        d.resolve(data);
+                                                    }).catch(function(err){
+                                                        d.reject(err);
+                                                    });
+                                                //}
+                                                //else{
+                                                //    d.resolve('send out');
+                                                //}
+
+                                            }).catch(function(err){
+                                                d.reject(err);
+                                            });
+                                    }).catch(function(err){
+                                            d.reject(err);
+                                        });
                             }
                         );
-
-
                     });
+                return d.promise;
             }
         };
         return myTask;

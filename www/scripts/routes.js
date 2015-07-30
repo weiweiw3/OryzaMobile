@@ -69,7 +69,11 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
                 controller: "addSAPUserCtrl",
                 templateUrl: 'scripts/setting/add-sap-user.html'
             })
-
+            .state('task-success', {
+                url: '/task-success',
+                //controller: "taskSuccessCtrl",
+                templateUrl: 'scripts/purchase-orders/task-success.html'
+            })
             .state('taskDetail', {
                 url: '/taskDetail/:task',
                 templateUrl: 'scripts/purchase-orders/task-detail.html',
