@@ -1,4 +1,20 @@
 {
+  "E0004_REQUIREMENT_ITEMS": {
+    "searchLink": "E0004_REQUIREMENT_ITEMS",
+    "formatLink": [
+      "BAPIEBAN"
+    ],
+    "primaryKey": [
+      "JCO_USER",
+      "PO_NUMBER"
+    ],
+    "eventID": "E0002",
+    "taskInputParas": [
+      "JCO_USER",
+      "PO_NUMBER",
+      "REL_STRAT"
+    ]
+  },
   "E0001_PO_HEADERS": {
     "searchLink": "E0001_PO_HEADERS",
     "formatLink": [
@@ -11,9 +27,12 @@
       "JCO_USER",
       "PO_NUMBER"
     ],
+    "buttonFab":"createTask",
+    "eventID": "E0002",
     "taskInputParas": [
       "JCO_USER",
-      "PO_NUMBER"
+      "PO_NUMBER",
+      "REL_STRAT"
     ]
   },
   "E0001_PO_ITEMS": {
@@ -57,6 +76,7 @@
       "NAME2",
       "LAND1"
     ],
+    "buttonFab":"favorite",
     "whereFields": [
       "NAME1",
       "NAME2",

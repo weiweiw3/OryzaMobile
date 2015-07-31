@@ -5,9 +5,10 @@
         'firebase.utils', 'firebase']);
     app
 
-        .controller('sideBarCtrl', function (localStorageService,
+        .controller('sideBarCtrl', function (localStorageService,$rootScope,
                                              $scope, $state, $translate, $q, homeFactory, ionicLoading) {
             $scope.changeLanguage = function (langKey) {
+                $rootScope.profiles.language=langKey;
                 console.log(langKey);
                 $translate.use(langKey);
             };

@@ -17,7 +17,7 @@
             </div>
 
             <div class="item card-item item-icon-right" ng-repeat="result in searchHistory">
-                <div ui-sref="searchDetail({table:searchLink,key:primaryKey,value:result})">
+                <div ui-sref="singlePageTemplate({table:searchLink,key:primaryKey,value:result})">
                     <p>{{result}}</p>
                 </div>
                 <i class="icon ion-android-delete muted" ng-click="deleteHistory(result)"></i>
@@ -32,7 +32,7 @@
             <ion-item class="item-remove-animate item-icon-right search-item" ng-repeat="result in results">
                 <line>--------------------</line>
                 <div class="item-text-wrap"
-                     ui-sref="searchDetail({table:searchLink,key:primaryKey,value:result[primaryKey]})">
+                     ui-sref="singlePageTemplate({table:searchLink,key:primaryKey,value:result[primaryKey]})">
                     <span ng-show="result[field]" ng-repeat="field in selectFields">
                         {{field | translate}}: {{result[field]}}
                     </span>
@@ -51,7 +51,7 @@
                 <!--<i class="icon ion-ios-arrow-right muted"></i>-->
                 <!--</div>-->
                 <div ng-show="searchObj.text==='customer'"
-                     ui-sref="searchDetail({table:table,key:primaryKey,value:result[primaryKey]})">
+                     ui-sref="singlePageTemplate({table:table,key:primaryKey,value:result[primaryKey]})">
                     <div ng-repeat="field in selectFields">
                         {{field}}: {{result[field]}}
                     </div>
@@ -63,7 +63,7 @@
                     <!--</div>-->
                 </div>
                 <div ng-show="searchObj.text==='vendor'"
-                     ui-sref="searchDetail({key:'vendor',index:result.LIFNR})">
+                     ui-sref="singlePageTemplate({key:'vendor',index:result.LIFNR})">
                     <h2 class="icon-left">{{result.title}}</h2>
 
                     <p>{{result.LIFNR}}</p>{{result.NAME1}}

@@ -20,25 +20,24 @@ var dependencyModules = [
 //    'ui.router',
     'angular-momentjs'];
 var myAppComponents = [
+    'myApp.tasks',
     'myApp.routes',
-//  'myApp.animate',
     'myApp.config',
     'myApp.filters',
     'myApp.directives.timepicker',
     'myApp.directives',
     'myApp.directives.favoriteMessage',
-    'myApp.directives.createTask',
     'myApp.home',
     'myApp.services.ionic',
-    'myApp.services.myTask',
     'myApp.login',
     'firebase.auth',
     'myApp.security',
     'myApp.purchaseOrder',
-    'myApp.purchaseOrderList',
     'myApp.search',
     'myApp.sapValidation',
-    'myApp.leaveRequest'
+    'myApp.leaveRequest',
+    'myApp.listTemplate',
+    'myApp.singlePageTemplate'
 ];
 
 // Declare app level module which depends on filters, and services

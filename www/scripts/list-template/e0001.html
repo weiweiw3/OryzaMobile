@@ -1,6 +1,6 @@
 <ion-item ng-repeat="item in ionList.array"
           class=" listItem"
-    ui-sref="searchDetail({table:'E0001_PO_HEADERS',key:['JCO_USER','PO_NUMBER'],value:[serverUser,item.$id]})">
+    ui-sref="singlePageTemplate({table:'E0001_PO_HEADERS',key:['JCO_USER','PO_NUMBER'],value:[serverUser,item.$id]})">
 
     <!--ui-sref="e0001-header({ref:ionList.ref+'/'+ item.$id})">-->
 

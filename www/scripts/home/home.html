@@ -26,7 +26,7 @@
                 <div class="item ">
                     <div class="buttons button-small">
                         <a class="button" ng-repeat="(key,value) in eventObj.options"
-                           ui-sref="ionListView({viewName:eventObj.name,index:value})">
+                           ui-sref="ionListFBView({viewName:eventObj.name,index:value})">
                             <div ng-show="objectSize(eventObj.options)>1">{{key}}</div>
                             <div ng-show="objectSize(eventObj.options)===1">{{ eventObj.name | translate }}</div>
                         </a>
@@ -38,7 +38,7 @@
             </div>
             <div>
                 <div class="buttons button-small">
-                    <a class="button" ui-sref="ionListView({viewName:'tasks',index:'tasks/'+serverUser})"> {{ 'outBox' |
+                    <a class="button" ui-sref="ionListFBView({viewName:'tasks',index:'tasks/'+serverUser})"> {{ 'outBox' |
                         translate }}</a>
                 </div>
             </div>

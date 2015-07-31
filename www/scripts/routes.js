@@ -9,7 +9,7 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
     .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.defaults.timeout = 5000;
     }])
-    .config(['$translateProvider', function ($translateProvider) {
+    .config(['$translateProvider', function ($translateProvider,$rootScope) {
         $translateProvider.useStaticFilesLoader({
             files: [{
                 prefix: 'resources/language/locale-',
@@ -17,7 +17,7 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
             }]
         });
         $translateProvider.useLoaderCache(true);
-        $translateProvider.preferredLanguage('en');
+        $translateProvider.preferredLanguage('E');
     }])
     .run(function ($ionicPlatform, $translate) {
         $ionicPlatform.ready(function () {
@@ -69,104 +69,8 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
                 controller: "addSAPUserCtrl",
                 templateUrl: 'scripts/setting/add-sap-user.html'
             })
-            .state('task-success', {
-                url: '/task-success',
-                //controller: "taskSuccessCtrl",
-                templateUrl: 'scripts/purchase-orders/task-success.html'
-            })
-            .state('taskDetail', {
-                url: '/taskDetail/:task',
-                templateUrl: 'scripts/purchase-orders/task-detail.html',
-                controller: "taskDetailCtrl",
-                resolve: {
-                    returnMessage: function ($q, $firebaseObject, $rootScope, fbutil, $stateParams) {
-                        var d = $q.defer();
-                        console.log('x');
-                        $firebaseObject(fbutil.ref(['tasks', $rootScope.serverUser, $stateParams.task, 'RETURN']))
-                            .$loaded().then(function (data) {
-                                d.resolve(data);
-                            });
-                        return d.promise;
-                    }
-                }
-            })
-            .state('ionListView', {
-                url: '/ionListView/:viewName/:index?key',
-                templateUrl: 'scripts/purchase-orders/ion-list-template.html',
-                controller: 'ionListViewCtrl',
-                resolve: {
-                    stateParamsObject: function (fbutil, ionicLoading, $stateParams) {
-                        var obj = {
-                            viewName: $stateParams.viewName,
-                            key: $stateParams.key,
-                            ref: fbutil.ref([$stateParams.index]),
-                            scroll: 'key()'
-                        };
-                        console.log($stateParams.viewName);
-                        switch ($stateParams.viewName) {
-                            case 'E0001':
-                                return angular.extend(obj, {
-                                    ref: fbutil.ref([$stateParams.index, 'PO_HEADERS'])
-                                });
-                                break;
-                            case 'E0004':
-                                return angular.extend(obj, {
-                                    ref: fbutil.ref([$stateParams.index, 'REQUIREMENT_ITEMS'])
-                                });
-                                break;
-                            case 'E0022':
-                                console.log('x');
-                                return angular.extend(obj, {
-                                    ref: fbutil.ref(['Event/E0022/100001/CATSRECORDS_OUT'])
-                                });
-                                break;
-                            default:              //'E0001-item' || 'E0002' || 'E0004-item' || 'E0005' || 'E0005-item'
-                                return obj;
-                                break;
 
-                        }
-                    }
-                }
-            })
-            .state('ionListESView', {
-                url: '/ionListESView/:table/?key?value',
-                templateUrl: 'scripts/purchase-orders/es-list-template.html',
-                controller: 'ionListESViewCtrl',
-                resolve: {
-                    stateParamsObject: function (jsonFactory,$state, ESService, ionicLoading, $q, $stateParams) {
-                        var d = $q.defer();
-                        console.log($stateParams.key);
 
-                        console.log( $stateParams.value);
-                        jsonFactory.loadData($stateParams.table, $stateParams.key, $stateParams.value)
-                            .then(function (results) {
-                                    console.log(results);
-                                    //列表才显示，只有一条跳转其他
-                                    if (!angular.isArray(results)) {
-                                        console.log('1 row');
-
-                                        $state.go('searchDetail',
-                                            {
-                                                table: $stateParams.table,
-                                                key: $stateParams.key, value: $stateParams.value
-                                            });
-                                        d.reject('1 row');
-                                    } else {
-                                        d.resolve({
-                                            array: results,
-                                            table: $stateParams.table
-                                        });
-                                    }
-                                }).catch(function (err) {
-                                    console.log(err);
-                                    d.reject(err);
-                                });
-
-                        return d.promise;
-
-                    }
-                }
-            })
 
         ;
 

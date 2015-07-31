@@ -156,18 +156,12 @@
         });
     app.controller('approveConformationCtrl', function ($scope, approveInfoService) {
         $scope.approveInfo = approveInfoService.getApproveInfo();
-        console.log($scope.approveInfo);
         $scope.approveInfo.returnTime = new Date($scope.approveInfo.createTime + 1000 * 60 * 10)
         console.log($scope.approveInfo.returnTime);
     })
         .config(['$stateProvider', function ($stateProvider) {
             $stateProvider
-                .state('approve-conformation', {
-                    url: '/approve-conformation',
-                    templateUrl: 'scripts/purchase-orders/approve-conformation.html',
-                    controller: 'approveConformationCtrl',
-                    cache: false
-                })
+
                 .state('e0001-header', {
                     url: '/e0001-header/:ref',
                     templateUrl: 'scripts/purchase-orders/e0001-header.html',

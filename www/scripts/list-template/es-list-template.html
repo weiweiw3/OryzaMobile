@@ -13,7 +13,7 @@
         <div class="subtitle">Today</div>
         <ion-list can-swipe="true">
             <ion-item ng-show="!primaryKeys" ng-repeat="data in results "
-                       ui-sref="searchDetail({table:searchLink,key:primaryKey,value:data[primaryKey]})"
+                       ui-sref="singlePageTemplate({table:searchLink,key:primaryKey,value:data[primaryKey]})"
                        class="listItem">{{data[primaryKey]}}{{primaryKey}}
                 <div ng-show="value" ng-repeat="(key,value) in data ">
                     <div class="flex-container wrap">

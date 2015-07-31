@@ -47,7 +47,7 @@
         })
 
         // rootScrop Initialization
-        .run(function ($rootScope, $location,fbutil, Auth, $q,
+        .run(function ($translate,$rootScope, $location,fbutil, Auth, $q,
                        loginRedirectPath, $firebaseAuth, $firebase, $timeout, $firebaseObject) {
 
 
@@ -70,13 +70,12 @@
 
                     var ref = fbutil.ref(['profiles', authData.uid]);
 
-                    ref.on('child_changed', function (childSnapshot, prevChildKey) {
-                        $rootScope.$broadcast('rootScopeUpdate',true);
-                        $rootScope[childSnapshot.key() + '_new'] = true;
-                    });
-                    ref.on('child_added', function (childSnapshot, prevChildKey) {
-                    });
-
+                    //ref.on('child_changed', function (childSnapshot, prevChildKey) {
+                    //    $rootScope.$broadcast('rootScopeUpdate',true);
+                    //    $rootScope[childSnapshot.key() + '_new'] = true;
+                    //});
+                    //ref.on('child_added', function (childSnapshot, prevChildKey) {
+                    //});
                     $firebaseObject(ref)
                         .$bindTo($rootScope, 'profiles').then(function () {
                             //if(typeof $rootScope.profiles['SAPUser'] ==="undefined"){
@@ -85,24 +84,25 @@
                             //    $location.path('/addSAPUser');
                             //}
                             $rootScope.serverUser=$rootScope.profiles.serverUser;
+
                             $rootScope.$broadcast('rootScopeInit',true);
 
-                            var ref = fbutil.ref(['tasks', $rootScope.profiles.serverUser]);
+                            //var ref = fbutil.ref(['tasks', $rootScope.profiles.serverUser]);
 
-                            ref.on('child_changed', function (childSnapshot, prevChildKey) {
-                                console.log(childSnapshot.key());
-                                console.log(childSnapshot.val());
-                            });
-
-
+                            //ref.on('child_changed', function (childSnapshot, prevChildKey) {
+                            //    console.log(childSnapshot.key());
+                            //    console.log(childSnapshot.val());
+                            //});
                         }
                     );
-                    $rootScope.$watch('profiles', function (newValue, oldValue) {
-                        if (typeof newValue !== "undefined") {
+                    $rootScope.$watch('profiles.language', function (newValue, oldValue) {
+
+                        $translate.use(newValue);
+                        //if (typeof newValue !== "undefined") {
                             //if (newValue.E0002.priority === '3') {
                             //    $location.path(loginRedirectPath);
                             //}
-                        }
+                        //}
                     });
                 }
             });
