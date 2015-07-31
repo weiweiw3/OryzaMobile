@@ -82,7 +82,7 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
                     returnMessage: function ($q, $firebaseObject, $rootScope, fbutil, $stateParams) {
                         var d = $q.defer();
                         console.log('x');
-                        $firebaseObject(fbutil.ref(['tasks', $rootScope.serverUser, $stateParams.task,'RETURN']))
+                        $firebaseObject(fbutil.ref(['tasks', $rootScope.serverUser, $stateParams.task, 'RETURN']))
                             .$loaded().then(function (data) {
                                 d.resolve(data);
                             });
@@ -129,36 +129,38 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
                 }
             })
             .state('ionListESView', {
-                url: '/ionListESView/:table/:key?value',
+                url: '/ionListESView/:table/?key?value',
                 templateUrl: 'scripts/purchase-orders/es-list-template.html',
                 controller: 'ionListESViewCtrl',
                 resolve: {
-                    stateParamsObject: function ($state, ESService, ionicLoading, $q, $stateParams) {
+                    stateParamsObject: function (jsonFactory,$state, ESService, ionicLoading, $q, $stateParams) {
                         var d = $q.defer();
-                        console.log($stateParams.table + ' ' + $stateParams.key + ' ' + $stateParams.value);
-                        ESService.lookup($stateParams.table, $stateParams.key, $stateParams.value)
-                            .then(function (results) {
-                                console.log(results);
-                                //列表才显示，只有一条跳转其他
-                                if (!angular.isArray(results)) {
-                                    console.log('1 row');
+                        console.log($stateParams.key);
 
-                                    $state.go('searchDetail',
-                                        {
-                                            table: $stateParams.table,
-                                            key: $stateParams.key, value: $stateParams.value
+                        console.log( $stateParams.value);
+                        jsonFactory.loadData($stateParams.table, $stateParams.key, $stateParams.value)
+                            .then(function (results) {
+                                    console.log(results);
+                                    //列表才显示，只有一条跳转其他
+                                    if (!angular.isArray(results)) {
+                                        console.log('1 row');
+
+                                        $state.go('searchDetail',
+                                            {
+                                                table: $stateParams.table,
+                                                key: $stateParams.key, value: $stateParams.value
+                                            });
+                                        d.reject('1 row');
+                                    } else {
+                                        d.resolve({
+                                            array: results,
+                                            table: $stateParams.table
                                         });
-                                    d.reject('1 row');
-                                } else {
-                                    d.resolve({
-                                        array: results,
-                                        table: $stateParams.table
-                                    });
-                                }
-                            }).catch(function (err) {
-                                console.log(err);
-                                d.reject(err);
-                            });
+                                    }
+                                }).catch(function (err) {
+                                    console.log(err);
+                                    d.reject(err);
+                                });
 
                         return d.promise;
 

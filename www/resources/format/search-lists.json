@@ -1,15 +1,31 @@
 {
   "E0001_PO_HEADERS": {
-    "searchLink": [
-      "E0001_PO_HEADERS"
-    ],
+    "searchLink": "E0001_PO_HEADERS",
     "formatLink": [
       "BAPIEKKOL"
     ],
     "popupLinks": [
       "E0001_PO_ITEMS"
     ],
-    "primaryKey": "KUNNR",
+    "primaryKey": [
+      "JCO_USER",
+      "PO_NUMBER"
+    ],
+    "taskInputParas": [
+      "JCO_USER",
+      "PO_NUMBER"
+    ]
+  },
+  "E0001_PO_ITEMS": {
+    "searchLink": "E0001_PO_ITEMS",
+    "formatLink": [
+      "BAPIEKPOC"
+    ],
+    "primaryKey": [
+      "JCO_USER",
+      "PO_ITEM",
+      "PO_NUMBER"
+    ],
     "selectFields": [
       "KUNNR",
       "ORT01",
@@ -25,9 +41,7 @@
     ]
   },
   "E0015_KNA1": {
-    "searchLink": [
-      "E0015_KNA1"
-    ],
+    "searchLink": "E0015_KNA1",
     "formatLink": [
       "KNA1"
     ],
@@ -51,18 +65,14 @@
     ]
   },
   "E0015_KNVK": {
-    "searchLink": [
-      "E0015_KNVK"
-    ],
+    "searchLink": "E0015_KNVK",
     "formatLink": [
       "KNVK"
     ],
     "primaryKey": "PARNR"
   },
   "E0015_VBAK": {
-    "searchLink": [
-      "E0015_VBAK"
-    ],
+    "searchLink": "E0015_VBAK",
     "popupLinks": [
       "E0015_VBAP"
     ],
