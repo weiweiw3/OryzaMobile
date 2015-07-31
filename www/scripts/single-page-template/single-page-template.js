@@ -162,7 +162,7 @@
         $stateProvider
             .state('singlePageTemplate', {
                 url: '/singlePageTemplate/:table?key?value',
-                templateUrl: 'scripts/purchase-orders/single-page-template.html',
+                templateUrl: 'scripts/single-page-template/single-page-template.html',
                 controller: 'singlePageTemplateCtrl',
                 resolve: {
                     searchObj: function ($stateParams) {

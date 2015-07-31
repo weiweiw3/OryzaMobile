@@ -4,7 +4,6 @@ angular.module('myApp.config', [])
         url: 'https://114.215.185.243/data-app/rs/task'
     })
     .constant('taskUrl', {
-        //  url: 'http://localhost:8100/data-app/rs/task'
         url: 'https://114.215.185.243/data-app/rs/task'
     })
     .constant('SearchUrl', {
@@ -54,7 +53,6 @@ angular.module('myApp.config', [])
         userProfile_: 'profile/',
         REPLACE_DOT: '||' // replace '.' in email
     })
-
 
     .constant('authProviders', [
 //        { id: 'twitter',  name: 'Twitter',  icon: 'icon-twitter'  },

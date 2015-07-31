@@ -1,6 +1,9 @@
 <ion-item class="item item-icon-right item-text-wrap"
           ng-repeat="item in ionList.array "
-          ui-sref="purchaseRequestItem({ref:ionList.ref+'/'+ item.$id})">
+    ui-sref="singlePageTemplate({table:'E0004_REQUIREMENT_ITEMS',
+    key:['JCO_USER','PERQ_ITEM','PREQ_NO'],value:[item.Dld.JCO_USER,item.Dld.PERQ_ITEM,item.Dld.PREQ_NO]})">
+    <!--ui-sref="purchaseRequestItem({ref:ionList.ref+'/'+ item.$id})">-->
+{{item.DOC_TYPE}}
     <h2>{{ item.$id}} {{ item.PREQ_ITEM}} {{ item.MATERIAL}}</h2>
     <p>{{ item.NET_PRICE}} {{ item.DISP_QUAN}}</p>
     <i ng-show="item.lock" class="icon ion-locked positive"></i>

@@ -46,67 +46,7 @@
 
         })
 
-        // rootScrop Initialization
-        .run(function ($translate,$rootScope, $location,fbutil, Auth, $q,
-                       loginRedirectPath, $firebaseAuth, $firebase, $timeout, $firebaseObject) {
 
-
-            //$rootScope.fbConnection
-            //$rootScope.serverUser
-
-            var connectedRef = fbutil.ref(['.info/connected']);
-            connectedRef.on("value", function(snap) {
-                if (snap.val() === true) {
-                    $rootScope.fbConnection=true;
-                    console.log("fb connected");
-                } else {
-                    $rootScope.fbConnection=false;
-                    console.log("not connected");
-                }
-            });
-
-            Auth.$onAuth(function (authData) {
-                if (authData) {
-
-                    var ref = fbutil.ref(['profiles', authData.uid]);
-
-                    //ref.on('child_changed', function (childSnapshot, prevChildKey) {
-                    //    $rootScope.$broadcast('rootScopeUpdate',true);
-                    //    $rootScope[childSnapshot.key() + '_new'] = true;
-                    //});
-                    //ref.on('child_added', function (childSnapshot, prevChildKey) {
-                    //});
-                    $firebaseObject(ref)
-                        .$bindTo($rootScope, 'profiles').then(function () {
-                            //if(typeof $rootScope.profiles['SAPUser'] ==="undefined"){
-                            //
-                            //}else{
-                            //    $location.path('/addSAPUser');
-                            //}
-                            $rootScope.serverUser=$rootScope.profiles.serverUser;
-
-                            $rootScope.$broadcast('rootScopeInit',true);
-
-                            //var ref = fbutil.ref(['tasks', $rootScope.profiles.serverUser]);
-
-                            //ref.on('child_changed', function (childSnapshot, prevChildKey) {
-                            //    console.log(childSnapshot.key());
-                            //    console.log(childSnapshot.val());
-                            //});
-                        }
-                    );
-                    $rootScope.$watch('profiles.language', function (newValue, oldValue) {
-
-                        $translate.use(newValue);
-                        //if (typeof newValue !== "undefined") {
-                            //if (newValue.E0002.priority === '3') {
-                            //    $location.path(loginRedirectPath);
-                            //}
-                        //}
-                    });
-                }
-            });
-        })
         .service("hiEventService",function($rootScope) {
             this.broadcast = function() {$rootScope.$broadcast("hi")}
             this.listen = function(callback) {$rootScope.$on("hi",callback)}

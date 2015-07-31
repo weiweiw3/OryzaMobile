@@ -1,6 +1,6 @@
-//var isAuthenticated = false;
 var dependencyModules = [
     'firebase.utils',
+    'firebase.auth',
     'firebase.simpleLogin',
     'firebase',
     'ionic',
@@ -16,8 +16,6 @@ var dependencyModules = [
     'ionic-timepicker',
     'ionic-material',
     'pascalprecht.translate',
-    //'ionMdInput',
-//    'ui.router',
     'angular-momentjs'];
 var myAppComponents = [
     'myApp.tasks',
@@ -30,7 +28,6 @@ var myAppComponents = [
     'myApp.home',
     'myApp.services.ionic',
     'myApp.login',
-    'firebase.auth',
     'myApp.security',
     'myApp.purchaseOrder',
     'myApp.search',
@@ -44,20 +41,12 @@ var myAppComponents = [
 angular.module('myApp',
     dependencyModules.concat(myAppComponents))
 
-    //.run( function($rootScope, Auth) {
-    //    // track status of authentication
-    //    Auth.$onAuth(function(user) {
-    //
-    //        $rootScope.loggedIn = !!user;
-    //        console.log(!!user);
-    //    });
-    //
-    //})
     .config(function (localStorageServiceProvider) {
         localStorageServiceProvider
             .setPrefix('myApp')
             .setNotify(true, true);
     })
+
     .config(function ($ionicConfigProvider) {
         $ionicConfigProvider.views.maxCache(5);
         //$ionicConfigProvider.platform.android.views.maxCache(5);
@@ -65,6 +54,7 @@ angular.module('myApp',
         // note that you can also chain configs
         $ionicConfigProvider.backButton.text('Go Back').icon('ion-chevron-left');
     })
+
     .config(['$ionicAppProvider', function ($ionicAppProvider) {
         // Identify app
         $ionicAppProvider.identify({
@@ -75,9 +65,48 @@ angular.module('myApp',
             // The write key your app will use for analytics
             api_write_key: '5f6e17f6815844344b1d843ab9c4c1513ce379a8fa0ab2f329311f2646411c786e6ad5fd08b138cc3135b90c676b1f414090a1f494d2e67b7ef5c721cd58af597a826f07c3aa17b7f77a207bf852250b80cba251720bcc13b9a08581e0ac7ee12b8326c7457db36a30e61e075dea915001e0ce559d8635c41c16777967e935f39996b6cc067e467eeaeba0744d1bc5e9'
             // The GCM project ID (project number) from your Google Developer Console (un-comment if used)
-
         });
     }])
+    // rootScrop Initialization
+    .run(function ($translate,$rootScope, $location,fbutil, Auth, $q,
+                   loginRedirectPath, $firebaseAuth, $firebase, $timeout, $firebaseObject) {
+
+        //$rootScope.fbConnection
+        //$rootScope.serverUser
+        var connectedRef = fbutil.ref(['.info/connected']);
+        connectedRef.on("value", function(snap) {
+            if (snap.val() === true) {
+                $rootScope.fbConnection=true;
+                console.log("fb connected");
+            } else {
+                $rootScope.fbConnection=false;
+                console.log("not connected");
+            }
+        });
+
+        //Auth.$onAuth(function (authData) {
+        //    //$rootScope.loggedIn = !!authData;
+        //    if (authData) {
+        //
+        //        var ref = fbutil.ref(['profiles', authData.uid]);
+        //
+        //        $firebaseObject(ref)
+        //            .$bindTo($rootScope, 'profiles').then(function () {
+        //
+        //                if(typeof $rootScope.profiles['SAPUser'] ==="undefined"){$location.path('/addSAPUser');}
+        //
+        //                $rootScope.serverUser=$rootScope.profiles.serverUser;
+        //
+        //                $rootScope.$broadcast('rootScopeInit',true);
+        //
+        //            }
+        //        );
+        //        $rootScope.$watch('profiles.language', function (newValue, oldValue) {
+        //            $translate.use(newValue);
+        //        });
+        //    }
+        //});
+    })
     .run(function($rootScope, $state,$stateParams) {
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -95,10 +124,9 @@ angular.module('myApp',
         });
     })
 
-
 // do all the things ionic needs to get going
     .run(function ($ionicPlatform, $rootScope, FIREBASE_URL,$ionicPopup,
-                   $firebaseAuth, $firebase, $window, $location, $ionicLoading) {
+                   $firebaseAuth, $firebase, $window) {
 
         $ionicPlatform.ready(function (simpleLogin) {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -109,25 +137,22 @@ angular.module('myApp',
             if (window.StatusBar) {
                 StatusBar.styleDefault();
             }
-
             $rootScope.notify = function (text) {
                 $rootScope.show(text);
                 $window.setTimeout(function () {
                     $rootScope.hide();
                 }, 1999);
             };
-
         });
-
     })
 
 /** ROOT SCOPE AND UTILS *************************/
-.run(['$rootScope', '$location', '$log', function ($rootScope, $location, $log) {
+.run(function ($rootScope, $location, $log) {
     $rootScope.$log = $log;
     $rootScope.keypress = function (key, $event) {
         $rootScope.$broadcast('keypress', key, $event);
     };
-}]);
+});
 
 
 

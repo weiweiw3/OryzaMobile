@@ -3,21 +3,21 @@
 /* Filters */
 
 angular.module('myApp.filters', [])
-    .filter('orderObjectBy', function() {
-        return function(items, field, reverse) {
+    .filter('orderObjectBy', function () {
+        return function (items, field, reverse) {
             var filtered = [];
-            angular.forEach(items, function(item) {
+            angular.forEach(items, function (item) {
                 filtered.push(item);
             });
             filtered.sort(function (a, b) {
                 return (a[field] > b[field] ? 1 : -1);
             });
-            if(reverse) filtered.reverse();
+            if (reverse) filtered.reverse();
             return filtered;
         };
     })
 
-.filter('interpolate', ['version', function (version) {
+    .filter('interpolate', ['version', function (version) {
         return function (text) {
             return String(text).replace(/\%VERSION\%/mg, version);
         }

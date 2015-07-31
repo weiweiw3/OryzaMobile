@@ -161,7 +161,8 @@
                 templateUrl: 'scripts/list-template/es-list-template.html',
                 controller: 'ionListESViewCtrl',
                 resolve: {
-                    stateParamsObject: function (jsonFactory, $state, ESService, ionicLoading, $q, $stateParams) {
+                    stateParamsObject: function (jsonFactory, $state, ESService,
+                                                 ionicLoading, $q, $stateParams) {
                         var d = $q.defer();
                         console.log($stateParams.key);
 

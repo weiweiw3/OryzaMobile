@@ -1,4 +1,22 @@
 {
+  "task_message": {
+    "searchLink": "task_message",
+    "formatLink": [
+      "BAPIEBAN"
+    ],
+    "primaryKey": [
+      "user_id",
+      "event_type",
+      "id"
+    ],
+    "eventID": "E0002",
+    "taskInputParas": [
+      "id",
+      "user_id",
+      "PREQ_NO"
+    ]
+  },
+
   "E0004_REQUIREMENT_ITEMS": {
     "searchLink": "E0004_REQUIREMENT_ITEMS",
     "formatLink": [
@@ -11,8 +29,8 @@
     "eventID": "E0002",
     "taskInputParas": [
       "JCO_USER",
-      "PO_NUMBER",
-      "REL_STRAT"
+      "PERQ_ITEM",
+      "PREQ_NO"
     ]
   },
   "E0001_PO_HEADERS": {

@@ -19,6 +19,7 @@
         <div class="subtitle" ng-hide="fbConnection">no connection</div>
 
         <div class="list">
+            {{serverUser}}
             <div class="item item-divider ">
                 {{ 'Inbox' | translate }}
             </div>
@@ -38,8 +39,11 @@
             </div>
             <div>
                 <div class="buttons button-small">
-                    <a class="button" ui-sref="ionListFBView({viewName:'tasks',index:'tasks/'+serverUser})"> {{ 'outBox' |
-                        translate }}</a>
+                    <a class="button" ui-sref="ionListESView({table:'task_message',key:['USER_ID','EVENT_TYPE'],value:[serverUser,'E0002']})">
+                        {{ 'outBox' | translate }}</a>
+                    <!--<a class="button" ui-sref="ionListFBView({viewName:'tasks',index:'tasks/'+serverUser})"> {{ 'outBox'-->
+                        <!--|-->
+                        <!--translate }}</a>-->
                 </div>
             </div>
             <div class="item item-divider ">

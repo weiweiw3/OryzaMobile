@@ -81,38 +81,7 @@ angular.module('firebase.simpleLogin', ['firebase', 'firebase.utils', 'changeEma
 
         return loc;
     }])
-    //.factory('currentUser',function($rootScope,firebaseRef,$firebaseObject){
-    //    if($rootScope.initialized ==true){
-    //        return $rootScope.profile.serverUserID
-    //    }else{
-    //
-    //    }
-    //    return {
-    //
-    //        //user:$firebaseObject(ref).$value,
-    //        getUser: function(){
-    //            var fbUser = $rootScope.authData.uid;
-    //            var ref=firebaseRef(['users',fbUser,'setting/mapping/ServerUser']);
-    //            return $firebaseObject(ref).$loaded().then(function (data) {
-    //                console.log(data.$value);
-    //                return data.$value;
-    //            })
-    //        }
-    //    }
-    //})
-    .service('rootScopeInit', function (Auth, $rootScope, $firebaseObject) {
-        var ref;
-        Auth.$onAuth(function (authData) {
-            ref = fbutil.ref(['profiles', authData.uid]);
-        });
-        var promise = $firebaseObject(ref)
-            .$bindTo($rootScope, 'profiles').then(function (data) {
-                $rootScope.initialized == true;
-                console.log($rootScope.profiles.serverUserID);
-            }
-        );
-        return {}
-    })
+
     .factory('simpleLogin', ['$firebaseAuth', 'fbutil', 'createProfile', 'changeEmail',
         function ($firebaseAuth, fbutil, createProfile, changeEmail) {
 

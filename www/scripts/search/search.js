@@ -10,79 +10,84 @@
         });
     });
     //NOTE: We are including the constant `ApiEndpoint` to be used here.
-    app.factory('jsonFactory', function ($q, $http, ESService, Api) {
-        var jsonFactory = {
-            fromServer: function (table, where) {
-                var promise = Api.getApiData(table, where)
-                    .then(function (response) {
-                        return response;
-                    }).catch(function (err) {
-                        console.log(err);
-                    });
-                return promise;
-            },
-            hospitals: function (fileName) {
-                var url = 'resources/format/' + fileName + '.json';
-                var promise = $http.get(url).then(function (response) {
-                    return response.data;
-                });
-                return promise;
-            },
-            loadData: function (table, key, value) {
-                var arr = ['E0001_PO_HEADERS', 'E0001_PO_ITEMS'];
-                var d = $q.defer();
-                if (arr.indexOf(table) !== -1) {
-                    var i = 0;
-                    var query = '';
-                    console.log(key);
-                    angular.forEach(key, function (eachKey) {
-                        if (i === (key.length - 1)) {
-                            query = query + eachKey + '=/' + value[i] + '/';
-                        } else {
-                            query = query + eachKey + '=/' + value[i] + '/ and ';
-                        }
-                        i++;
-                    });
-                    console.log(table + ' ' + query);
-                    this.fromServer(table, query)
-                        .then(function (searchResult) {
-                            console.log(searchResult);
-                            switch (searchResult.length) {
-                                case 0:
-                                    d.reject('no data');
-                                    break;
-                                case 1:
-                                    d.resolve(searchResult[0]);
-                                    break;
-                                default :
-                                    d.resolve(searchResult);
-                                    break;
-                            }
-
+    app
+        .factory('jsonFactory', function ($q, $http, ESService, Api) {
+            var jsonFactory = {
+                fromServer: function (table, where) {
+                    var promise = Api.getApiData(table, where)
+                        .then(function (response) {
+                            return response;
                         }).catch(function (err) {
-                            d.reject(err);
-                        })
-                } else {
-                    ESService.lookup(table, key, value)
-                        .then(function (searchResult) {
-                            d.resolve(searchResult);
-                        }).catch(function (err) {
-                            d.reject(err);
+                            console.log(err);
                         });
-                }
-                return d.promise;
-            }
+                    return promise;
+                },
+                hospitals: function (fileName) {
+                    var url = 'resources/format/' + fileName + '.json';
+                    var promise = $http.get(url).then(function (response) {
+                        return response.data;
+                    });
+                    return promise;
+                },
+                loadData: function (table, key, value) {
+                    var arr = ['E0001_PO_HEADERS', 'E0001_PO_ITEMS',
+                        'E0004_REQUIREMENT_ITEMS',
+                    'task_message'];
+                    var d = $q.defer();
+                    if (arr.indexOf(table) !== -1) {
+                        var i = 0;
+                        var query = '';
+                        console.log(key);
+                        angular.forEach(key, function (eachKey) {
+                            if (i === (key.length - 1)) {
+                                query = query + eachKey + '=/' + value[i] + '/';
+                            } else {
+                                query = query + eachKey + '=/' + value[i] + '/ and ';
+                            }
+                            i++;
+                        });
+                        console.log(table + ' ' + query);
+                        this.fromServer(table, query)
+                            .then(function (searchResult) {
+                                console.log(searchResult);
+                                switch (searchResult.length) {
+                                    case 0:
+                                        d.reject('no data');
+                                        break;
+                                    case 1:
+                                        d.resolve(searchResult[0]);
+                                        break;
+                                    default :
+                                        d.resolve(searchResult);
+                                        break;
+                                }
 
-        };
-        return jsonFactory;
-    })
+                            }).catch(function (err) {
+                                d.reject(err);
+                            })
+                    } else {
+                        ESService.lookup(table, key, value)
+                            .then(function (searchResult) {
+                                d.resolve(searchResult);
+                            }).catch(function (err) {
+                                d.reject(err);
+                            });
+                    }
+                    return d.promise;
+                }
+
+            };
+            return jsonFactory;
+        })
         .factory('Api', function ($http, $q, taskUrl, COMPANY) {
             var getApiData = function (table, where) {
                 var q = $q.defer();
                 var str = taskUrl.url +
                     '/searchData?company_guid=' + COMPANY +
                     '&table_name=' + table +
-                    '&str_where=' + where;
+                    '&str_where=' + where +
+                    ' LIMIT 0,10' ;
+                console.log(str);
                 $http.get(str)
                     .success(function (jsonObj) {
                         if (typeof jsonObj == 'object' && jsonObj instanceof Array) {
@@ -105,7 +110,6 @@
         .factory('ESService', ['$q', 'esFactory', '$location', 'SearchUrl',
             function ($q, elasticsearch, $location, SearchUrl, COMPANY) {
                 var client = elasticsearch({
-                    //host: "https://a1b5amni:7smeg06ujbchru2l@apricot-2272737.us-east-1.bonsai.io/"
                     host: SearchUrl.url
                 });
                 var search;
@@ -133,19 +137,13 @@
                             obj[languageKey] = language;
                             multiQuery.push({match_phrase: obj});
                         }
-                        if (typeof foreignKey1 !== 'undefined' && foreignKey1 !== null) {
+                        if (typeof foreignKey !== 'undefined' && foreignKey !== null) {
                             var obj = {};
                             //console.log(foreignKey1+' '+foreignValue1);
-                            obj[foreignKey1] = foreignValue1;
+                            obj[foreignKey] = foreignValue;
                             multiQuery.push({match_phrase: obj});
                         }
-                        if (typeof foreignKey2 !== 'undefined' && foreignKey2 !== null) {
-                            var obj = {};
-                            //console.log(foreignKey2+' '+foreignValue2);
-                            obj[foreignKey2] = foreignValue2;
-                            multiQuery.push({match_phrase: obj});
 
-                        }
                         query = {
                             "bool": {
                                 "must": multiQuery
@@ -369,7 +367,7 @@
             return searchHistory;
         })
         .controller('searchCtrl', function (searchObj, $http, $q, Api, $resource,
-                                           $scope, ESService, localStorageService, jsonFactory) {
+                                            $scope, ESService, localStorageService, jsonFactory) {
             $scope.table = searchObj.value;
             jsonFactory.hospitals('search-lists').then(function (data) {
                 $scope.searchLink = data[searchObj.value].searchLink;

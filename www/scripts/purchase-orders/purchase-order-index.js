@@ -161,7 +161,6 @@
     })
         .config(['$stateProvider', function ($stateProvider) {
             $stateProvider
-
                 .state('e0001-header', {
                     url: '/e0001-header/:ref',
                     templateUrl: 'scripts/purchase-orders/e0001-header.html',

@@ -9,7 +9,7 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
     .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.defaults.timeout = 5000;
     }])
-    .config(['$translateProvider', function ($translateProvider,$rootScope) {
+    .config(['$translateProvider', function ($translateProvider) {
         $translateProvider.useStaticFilesLoader({
             files: [{
                 prefix: 'resources/language/locale-',
@@ -69,11 +69,7 @@ angular.module('myApp.routes', ['ionic', 'firebase.simpleLogin'])
                 controller: "addSAPUserCtrl",
                 templateUrl: 'scripts/setting/add-sap-user.html'
             })
-
-
-
         ;
-
 
         // if none of the above states are matched, use this as the fallback
         //isAuthenticated is set below in the .run() command
