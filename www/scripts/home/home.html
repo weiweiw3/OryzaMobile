@@ -1,4 +1,4 @@
-<ion-view class="bar-dark">
+<ion-view  class="bar-dark">
     <ion-nav-bar class="bar-positive nav-title-slide-ios7" align-title="left">
         <ion-nav-buttons side="left">&nbsp;&nbsp;&nbsp;
             <button class=" button-icon button-clear nav-left-button ion-navicon "
@@ -19,7 +19,6 @@
         <div class="subtitle" ng-hide="fbConnection">no connection</div>
 
         <div class="list">
-            {{serverUser}}
             <div class="item item-divider ">
                 {{ 'Inbox' | translate }}
             </div>
@@ -34,12 +33,13 @@
                     </div>
                 </div>
             </div>
+
             <div class="item item-divider ">
                 {{ 'outBox' | translate }}
             </div>
             <div>
                 <div class="buttons button-small">
-                    <a class="button" ui-sref="ionListESView({table:'task_message',key:['USER_ID','EVENT_TYPE'],value:[serverUser,'E0002']})">
+                    <a class="button" ui-sref="ionListESView({table:'task_message',key:['USER_ID','EVENT_TYPE','id'],value:[serverUser,'E0002','6105']})">
                         {{ 'outBox' | translate }}</a>
                     <!--<a class="button" ui-sref="ionListFBView({viewName:'tasks',index:'tasks/'+serverUser})"> {{ 'outBox'-->
                         <!--|-->
@@ -52,7 +52,7 @@
             <div>
                 <div class="buttons button-small">
                     <a class="button" ui-sref="e0023">Time-Sheet create</a>
-                    <a class="button">button</a>
+                    <a class="button" ui-sref="testForm({form:'test1'})">testForm</a>
                 </div>
             </div>
         </div>

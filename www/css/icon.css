@@ -394,8 +394,8 @@ ion-list
 @media (max-width: 320px) {
 
     .flex-container.wrap > div{
-        width: 50%;
-        max-width: 50%;
+        width: 60%;
+        max-width: 60%;
         text-overflow: ellipsis;
         white-space:nowrap;
         overflow: hidden;
@@ -406,12 +406,11 @@ ion-list
 
 @media (min-width: 321px) {
     .flex-container.wrap > div{
-        width: 33%;
-        max-width: 33%;
+        width: 50%;
+        max-width: 50%;
         text-overflow: ellipsis;
         white-space:nowrap;
         overflow: hidden;
-
     }
 }
 
@@ -457,9 +456,9 @@ ion-list
     text-overflow: ellipsis;
     white-space:nowrap;
     overflow: hidden;
-    max-width: 87%;
+    max-width: 95%;
     float: left;
-    padding: 2px 5px;
+    padding: 1px 5px;
 }
 
 .flex-container .col-header > .column {

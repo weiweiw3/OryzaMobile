@@ -3,125 +3,106 @@
 
     var app = angular.module('myApp.singlePageTemplate', []);
 
-    app
-        .controller('singlePageTemplateCtrl',
-        function (jsonFactory, $scope, $q, $timeout, ionicLoading,
-                  ESService, searchObj, localStorageService, $rootScope, searchHistory) {
-            console.log(searchObj);
-            $scope.viewKey = searchObj.value;
-            $scope.keyName = searchObj.key;
-            $scope.keyValue = searchObj.value;
-            $scope.title = searchObj.table + ' ' + searchObj.value;
+    app.controller('popoverCtrl',
+        function ($q,
+                  $ionicPopup, $timeout, $scope, $ionicPopover) {
+            $scope.popupLinks = $scope.$parent.popupLinks;
+            // .fromTemplate() method
+            var template = '<ion-popover-view><ion-header-bar> ' +
+                '<h1 class="title">My Popover Title</h1> </ion-header-bar> ' +
+                '<ion-content> Hello! </ion-content></ion-popover-view>';
 
-            ionicLoading.load();
+            $scope.popover = $ionicPopover.fromTemplate(template, {
+                scope: $scope
+            });
 
-            var getFieldValue = function (fieldFormatArray, searchResult) {
-                var arr = [];
-                var d = $q.defer();
-                var i = 0;
-                angular.forEach(fieldFormatArray, function (value) {
-                    //如果要lookup
-                    if (typeof value['LKP_KEYFIELD'] !== 'undefined' && value['LKP_KEYFIELD'] !== ''
-                        && value['LKP_KEYFIELD'] !== null) {
+            // .fromTemplateUrl() method
+            $ionicPopover.fromTemplateUrl('scripts/single-page-template/my-popover.html', {
+                scope: $scope
+            }).then(function (popover) {
+                $scope.popover = popover;
+            });
 
-                        //lookup: function (table, inputKey, inputValue, outputKey,languageKey,language,
-                        //                  foreignKey1, foreignValue1, foreignKey2, foreignValue2)
 
-                        ESService.lookup('E0015_' + value['LKP_TEXTTABLE'],
-                            value['LKP_KEYFIELD'], searchResult[value['FIELDNAME']],
-                            value['LKP_TEXTFIELD'],
-                            value['LKP_LANGFIELD'], 'E',
-                            value['LKP_FOREIGNKEY2'], searchResult[value['LKP_FOREIGNKEY1']])
-                            .then(function (result) {
-                                i++;
-                                arr[value['FIELDNAME']] = result + '(' + searchResult[value['FIELDNAME']] + ')';
-                                //console.log(key);
-                                if (i == fieldFormatArray.length) {
-                                    d.resolve(arr);
-                                    console.log(arr);
-                                }
-                            }).catch(function (err) {
-                                i++;
-                                if (i == fieldFormatArray.length) {
-                                    d.resolve(arr);
-                                    console.log(arr);
-                                }
-                                console.log(err);
-                            })
-                    } else {
-                        i++;
-                        arr[value['FIELDNAME']] = searchResult[value['FIELDNAME']];
-                        if (i == fieldFormatArray.length) {
-                            d.resolve(arr);
-                            console.log(arr);
-                        }
-                    }
-                });
-                return d.promise;
+            $scope.openPopover = function ($event) {
+                $scope.popover.show($event);
             };
+            $scope.closePopover = function () {
+                $scope.popover.hide();
+            };
+            //Cleanup the popover when we're done with it!
+            $scope.$on('$destroy', function () {
+                $scope.popover.remove();
+            });
+            // Execute action on hide popover
+            $scope.$on('popover.hidden', function () {
+                // Execute action
+            });
+            // Execute action on remove popover
+            $scope.$on('popover.removed', function () {
+                // Execute action
+            });
+        });
+    app.controller('singlePageTemplateCtrl',
+        function (jsonFactory, $scope, $q, $timeout, ionicLoading,
+                  searchObj, $rootScope, searchHistory, $stateParams, $ionicPopover) {
+            //
 
-            jsonFactory.hospitals('search-lists')
-                .then(function (data) {
-                    var currentObject = data[searchObj.table];
-                    $scope.formatLink = currentObject['formatLink'];
-                    $scope.searchLink = currentObject['searchLink'];
-                    $scope.buttonFab = currentObject['buttonFab'];
+            $scope.selection = 'settings';
+            console.log(searchObj);
+            $scope.viewKey = $stateParams.value;
+            $scope.keyName = $stateParams.key;
+            $scope.keyValue = $stateParams.value;
+            $scope.title = $stateParams.table + ' ' + $stateParams.value;
+            var currentObject = $scope.viewConfigure = searchObj[0];
+            $scope.formatArray = searchObj[2];
+            $scope.valueArray = searchObj[1];
+            $scope.formattedValueArray = searchObj[3];
+            //ionicLoading.load();
 
-                    if (typeof currentObject['popupLinks'] !== "undefined") {
-                        $scope.popupLinks = currentObject['popupLinks'];
-                    } else {
-                        $scope.popupLinks = [];
-                    }
+            if (typeof currentObject['popupLinks'] !== "undefined") {
+                $scope.popupLinks = currentObject['popupLinks'];
+            } else {
+                $scope.popupLinks = [];
+            }
 
-                    $scope.popup = {
-                        title: $scope.keyText,
-                        template: $scope.title
-                    };
+            $scope.buttonFab = currentObject['buttonFab'];
 
+            if (typeof currentObject['AddToSearchHistory'] !== "undefined") {
+                searchHistory.updateHistory(currentObject['searchLink'], $stateParams.value);
+            }
 
-                    searchHistory.updateHistory($scope.searchLink, searchObj.value);
-                    jsonFactory.fromServer('view_user_screen', 'TABNAME=/' + $scope.formatLink + '/')
-                        .then(function (fieldFormatArray) {
-                            $scope.fieldFormatArray = fieldFormatArray;
-                            console.log(fieldFormatArray);
-                            jsonFactory.loadData($scope.searchLink, searchObj.key, searchObj.value)
-                                .then(function (searchResult) {
+            $scope.popup = {
+                title: $scope.keyText,
+                template: $scope.title
+            };
+            if (currentObject['buttonFab'] === "createTask") {
+                var inputPara = '';
+                var jsonContent = {};
 
-                                    if (typeof currentObject['taskInputParas'] !== "undefined") {
-                                        var inputPara = '';
-                                        angular.forEach(currentObject['taskInputParas'], function (taskInputPara) {
-                                            inputPara = inputPara + '/' + searchResult[taskInputPara];
-                                        });
-                                        inputPara = inputPara.substr(1)
-                                        $scope.taskData = {
-                                            event: currentObject['eventID'],
-                                            serverUserID: searchResult['JCO_USER'],
-                                            inputParasRef: inputPara,
-                                            jsonContent: ''
-                                        };
+                angular.forEach(currentObject['taskInputParas'], function (taskInputPara) {
+                    inputPara = inputPara + '/' + $scope.valueArray[taskInputPara];
+                    jsonContent[taskInputPara] = $scope.valueArray[taskInputPara];
 
-                                    } else {
-                                        $scope.taskData = {};
-                                    }
-
-                                    getFieldValue(fieldFormatArray, searchResult)
-                                        .then(function (data) {
-                                            ionicLoading.unload();
-                                            $scope.fieldValueArray = data;
-                                            //console.log($scope.fieldValueArray);
-                                        });
-                                }).catch(function (err) {
-                                    console.log(err);
-                                    ionicLoading.unload();
-                                });
-                        });
                 });
+                inputPara = inputPara.substr(1);
+                $scope.taskData = {
+                    event: currentObject['eventID'],
+                    serverUserID: $scope.valueArray['JCO_USER'],
+                    inputParasRef: inputPara,
+                    jsonContent: jsonContent
+                };
+                console.log($scope.taskData);
+
+            } else {
+                $scope.taskData = {};
+            }
+
             $scope.refresh = function () {
                 //TODO refresh event
                 console.log('$scope.refresh');
                 $scope.$broadcast('scroll.refreshComplete');
             };
-
         })
 
         .directive('eatClickIf', ['$parse', '$rootScope',
@@ -157,20 +138,84 @@
             }
         ]);
 
-
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider
             .state('singlePageTemplate', {
                 url: '/singlePageTemplate/:table?key?value',
-                templateUrl: 'scripts/single-page-template/single-page-template.html',
+                templateUrl: function (stateParams) {
+                    switch (stateParams.table) {
+                        case 'task_message':
+                            return 'scripts/single-page-template/task-message.html';
+                            break;
+                        default :
+                            return 'scripts/single-page-template/single-page-template.html';
+                            break;
+                    }
+                },
+
                 controller: 'singlePageTemplateCtrl',
                 resolve: {
-                    searchObj: function ($stateParams) {
-                        return {
-                            table: $stateParams.table,
-                            key: $stateParams.key,
-                            value: $stateParams.value
-                        };
+                    searchObj: function ($state, $q, jsonFactory, $stateParams) {
+                        var d = $q.defer();
+                        var thenFn = function (value) {
+                                console.log('resolved ', value);
+                                return value;
+                            },
+                            q0 = $q.defer(), q1 = $q.defer(), q2 = $q.defer(), q3 = $q.defer(),
+                            p0 = q0.promise, p1 = q1.promise, p2 = q2.promise, p3 = q3.promise;
+
+                        $q.all([
+                            p0.then(thenFn), p1.then(thenFn), p2.then(thenFn)
+                        ])
+                            .then(function (values) {
+                                jsonFactory.formatFieldMapping(values[2], values[1])
+                                    .then(function (data) {
+                                        values.push(data);
+                                        console.log(values);
+                                        d.resolve(values);
+                                    });
+                            });
+
+                        $q.all([
+                            p0.then(thenFn), p1.then(thenFn), p3.then(thenFn)
+                        ])
+                            .then(function (values) {
+                                console.log(values);
+                                d.resolve(values);
+                                //$state.go(values[2], {
+                                //    table: $stateParams.table,
+                                //    key: $stateParams.key,
+                                //    value: $stateParams.value
+                                //});
+                                //return values;
+                            });
+
+                        jsonFactory.getSinglePageConfigure($stateParams.table)
+                            .then(function (data) {
+                                q0.resolve(data);
+
+                                if (typeof data['viewScreen'] !== "undefined") {
+                                    q3.resolve(data['viewScreen']);
+                                }
+
+                                if (typeof data['formatLink'] !== "undefined") {
+                                    //本地不存在模板，去服务器取页面模板
+                                    jsonFactory.fromServer('view_user_screen',
+                                        'TABNAME=/' + data['formatLink'] + '/')
+                                        .then(function (fieldFormatArray) {
+                                            q2.resolve(fieldFormatArray);
+                                        })
+                                        .catch(function (err) {
+                                        });
+                                }
+
+                                jsonFactory.loadData(data['searchLink'],
+                                    $stateParams.key, $stateParams.value)
+                                    .then(function (searchResult) {
+                                        q1.resolve(searchResult);
+                                    });
+                            });
+                        return d.promise;
                     }
                 }
             });

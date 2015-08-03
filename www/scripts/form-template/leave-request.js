@@ -43,6 +43,24 @@
 
                 });
         })
+
+
+        .controller('testFormCtrl',
+        function (form, ionicLoading, $ionicPopup, $timeout, $scope, $q, FIREBASE_URL) {
+            $scope.currentRef = form.ref.toString().replace(FIREBASE_URL, '');
+            form.ref.on('value',function(snap){
+                $scope.data=snap.val();
+            });
+
+        })
+        .controller('editFormCtrl',
+        function ($stateParams,ref, fbutil, $firebaseObject, ionicLoading, $ionicPopup, $timeout, $scope, $q) {
+            console.log(ref.toString());
+            $firebaseObject(ref)
+                .$bindTo($scope, 'data').then(function(){
+                    console.log($scope.data);
+                });
+        })
         .controller('leaveRequestListItemCtrl',
         function (myTask, ionicLoading, $ionicPopup, $timeout, $scope, $q) {
 
@@ -114,6 +132,72 @@
 
     app.config(['$stateProvider', function ($stateProvider) {
         $stateProvider
+            .state('testForm', {
+                url: '/testForm/:form',
+                templateUrl: 'scripts/form-template/test-form.html',
+                controller: 'testFormCtrl',
+                resolve: {
+                    form: function (fbutil, $firebaseObject, $q, $stateParams) {
+                        var ref = fbutil.ref(['testForm', $stateParams.form]);
+                        var d = $q.defer();
+
+                        ref.on('value', function (snapshot) {
+                            if (snapshot.hasChildren() === false) {
+                                ref.push({
+                                    data: 'x'
+                                }, function (ref) {
+                                    console.log('draft' + ref.key());
+                                    d.resolve({
+                                        form: $stateParams.form,
+                                        ref: newTaskRef
+                                    });
+                                });
+                            } else {
+                                snapshot.forEach(function (childSnapshot) {
+                                    d.resolve({
+                                        form: $stateParams.form,
+                                        ref: childSnapshot.ref()
+                                    });
+                                });
+                            }
+                        });
+
+                        return d.promise;
+
+                    }
+                }
+            }).state('editForm', {
+                url: '/editForm/:ref',
+                templateUrl: 'scripts/form-template/edit-form.html',
+                controller: 'editFormCtrl',
+                resolve: {
+                    ref: function ($stateParams, fbutil, $firebaseObject, $q) {
+
+                        var ref = fbutil.ref([$stateParams.ref]);
+                        var d = $q.defer();
+
+                        ref.on('value', function (snapshot) {
+                            console.log(snapshot.val());
+
+                            if ( snapshot.val() === null)
+                            {
+                                var onComplete = function(error) {
+                                    if (error) {
+                                        console.log('Synchronization failed');
+                                    } else {
+                                        console.log('Synchronization succeeded');
+                                    }
+                                };
+                                ref.set('', onComplete);
+                                //ref.set('');
+                            }
+                            d.resolve(ref);
+                        });
+
+                        return d.promise;
+                    }
+                }
+            })
             .state('e0024_change', {
                 url: '/e0024_change/:index?key',
                 templateUrl: 'scripts/purchase-orders/e0024_change.html',
@@ -155,6 +239,10 @@
                 url: '/e0023',
                 templateUrl: 'scripts/purchase-orders/e0023.html',
                 controller: 'e0023Ctrl'
-            });
-    }]);
-})(angular);
+            })
+        ;
+    }
+    ])
+    ;
+})
+(angular);

@@ -68,49 +68,45 @@ angular.module('myApp',
         });
     }])
     // rootScrop Initialization
-    .run(function ($translate,$rootScope, $location,fbutil, Auth, $q,
+    .run(function ($translate, $rootScope, $location, fbutil, Auth, $q,
                    loginRedirectPath, $firebaseAuth, $firebase, $timeout, $firebaseObject) {
 
         //$rootScope.fbConnection
         //$rootScope.serverUser
         var connectedRef = fbutil.ref(['.info/connected']);
-        connectedRef.on("value", function(snap) {
+        connectedRef.on("value", function (snap) {
             if (snap.val() === true) {
-                $rootScope.fbConnection=true;
+                $rootScope.fbConnection = true;
                 console.log("fb connected");
             } else {
-                $rootScope.fbConnection=false;
+                $rootScope.fbConnection = false;
                 console.log("not connected");
             }
         });
+        Auth.$onAuth(function (authData) {
+            var ref = fbutil.ref(['profiles', authData.uid]);
 
-        //Auth.$onAuth(function (authData) {
-        //    //$rootScope.loggedIn = !!authData;
-        //    if (authData) {
-        //
-        //        var ref = fbutil.ref(['profiles', authData.uid]);
-        //
-        //        $firebaseObject(ref)
-        //            .$bindTo($rootScope, 'profiles').then(function () {
-        //
-        //                if(typeof $rootScope.profiles['SAPUser'] ==="undefined"){$location.path('/addSAPUser');}
-        //
-        //                $rootScope.serverUser=$rootScope.profiles.serverUser;
-        //
-        //                $rootScope.$broadcast('rootScopeInit',true);
-        //
-        //            }
-        //        );
-        //        $rootScope.$watch('profiles.language', function (newValue, oldValue) {
-        //            $translate.use(newValue);
-        //        });
-        //    }
-        //});
+            $firebaseObject(ref)
+                .$bindTo($rootScope, 'profiles').then(function () {
+                    console.log(24);
+                    if (typeof $rootScope.profiles['SAPUser'] === "undefined") {
+                        $location.path('/addSAPUser');
+                    }
+
+                    $rootScope.serverUser = $rootScope.profiles.serverUser;
+                    console.log($rootScope.serverUser);
+                    $rootScope.$broadcast('rootScopeInit', true);
+                }
+            );
+        });
+        $rootScope.$watch('profiles.language', function (newValue, oldValue) {
+            $translate.use(newValue);
+        });
     })
-    .run(function($rootScope, $state,$stateParams) {
+    .run(function ($rootScope, $state, $stateParams) {
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
-        $rootScope.goBack = function() {
+        $rootScope.goBack = function () {
             // function to go back
             window.history.back();
         };
@@ -118,14 +114,14 @@ angular.module('myApp',
         $rootScope.$on('$stateChangeSuccess', function () {
             if ($state.$current == 'home' || $state.$current == 'setting') {
                 $rootScope.showCustomBack = false;
-            }else{
+            } else {
                 $rootScope.showCustomBack = true;
             }
         });
     })
 
 // do all the things ionic needs to get going
-    .run(function ($ionicPlatform, $rootScope, FIREBASE_URL,$ionicPopup,
+    .run(function ($ionicPlatform, $rootScope, FIREBASE_URL, $ionicPopup,
                    $firebaseAuth, $firebase, $window) {
 
         $ionicPlatform.ready(function (simpleLogin) {
@@ -147,12 +143,12 @@ angular.module('myApp',
     })
 
 /** ROOT SCOPE AND UTILS *************************/
-.run(function ($rootScope, $location, $log) {
-    $rootScope.$log = $log;
-    $rootScope.keypress = function (key, $event) {
-        $rootScope.$broadcast('keypress', key, $event);
-    };
-});
+    .run(function ($rootScope, $location, $log) {
+        $rootScope.$log = $log;
+        $rootScope.keypress = function (key, $event) {
+            $rootScope.$broadcast('keypress', key, $event);
+        };
+    });
 
 
 

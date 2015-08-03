@@ -1,0 +1,63 @@
+        <ion-view hide-nav-bar="true">
+            <ion-header-bar class="bar-positive bar-header2">
+                <div class="row">
+                    <div class="col col-10">
+                        <button ng-if="$root.showCustomBack" ng-click="$root.goBack()"
+                                class=" button-icon button-clear nav-left-button ion-android-arrow-back">
+                        </button>
+                    </div>
+                    <div class="col col-60">
+                        <div class="row responsive-sm">
+                            <div class="col bar-text ">{{viewConfigure['searchLink'].toString()|translate}}</div>
+                        </div>
+                        <div class="row responsive-sm">
+                            <div class="col bar-text">{{viewKey}}</div>
+                        </div>
+                    </div>
+                    <div class="col ">
+                        <button ng-show="popupLinks[0]" ng-click="openPopover($event)" ng-controller="popoverCtrl"
+                                class=" button-icon button-clear right-button ion-android-more-vertical">
+                        </button>
+                        <!--<div ng-repeat="link in popupLinks">{{link}}-->
+                            <!--<button ui-sref="ionListESView({table:link,key:keyName,value:keyValue})"-->
+                                    <!--class=" button-icon button-clear nav-left-button ion-android-arrow-forward">-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </ion-header-bar>
+            <ion-content class="has-header2" has-header="true" padding="true">
+                <ion-refresher on-refresh="refresh()"></ion-refresher>
+
+                <ion-list class="item low-pad-item item-icon-right"
+                         ng-repeat="(key,data) in valueArray " ng-show="data">
+                        <div class="flex-container wrap">
+                            <div class="column bodyFont1">{{key | translate}}</div>
+                            <div class="column1  bodyFont2">{{data}}</div>
+                        </div>
+                        <i class="icon ion-chevron-right icon-accessory" ng-show="{{field['DM_LKP_FLAG']=='X'}}"></i>
+                </ion-list>
+            </ion-content>
+            <div class="bar bar-footer bar-positive-400">
+                <!--<div class="title">Footer</div>-->
+                <div class="buttons buttons-right">
+                    <create-task ng-show="buttonFab==='createTask'"
+                                 class="button button-energized-900 button-fab button-icon icon ion-android-done light"
+                                 popup="popup"
+                                 task-data="taskData"></create-task>
+
+                    <button ng-show="buttonFab==='favorite'" class="button button-energized-900 button-fab"><i
+                            class="icon ion-star light"></i></button>
+                    <!--<create-task class="button button-energized-900 button-fab button-icon" button-text="approve" popup="popup"-->
+                    <!--task-data="taskData"><i class="icon ion-code light"></i></create-task>-->
+                </div>
+                <!---->
+
+
+            </div>
+        </ion-view>
+
+
+
+
+

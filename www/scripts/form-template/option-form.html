@@ -1,0 +1,24 @@
+<ion-view hide-back-button="true">
+    <ion-nav-title>
+        <div class="view-title">{{data.title | translate}}</div>
+    </ion-nav-title>
+
+    <ion-content>
+        <ion-item class="item item-icon-right"
+                  ng-repeat="(key,value) in data"
+                  ui-sref="search({text:key,value:value})"
+                >
+            <label class="item item-radio">
+                <input type="radio" name="group" >
+                <div class="item-content">dsfdf</div>
+                <i class="radio-icon ion-checkmark"></i>
+            </label>
+            <label class="item item-radio">
+                <input type="radio" name="group">
+                <div class="item-content">dsfdf</div>
+                <i class="radio-icon ion-checkmark"></i>
+            </label>
+        </ion-item>
+
+    </ion-content>
+</ion-view>

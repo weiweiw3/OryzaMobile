@@ -16,8 +16,8 @@
             <ng-include src="'scripts/list-template/' + lowercase_viewName + '.html'">
             </ng-include>
         </ion-list>
-        <ion-infinite-scroll
-                on-infinite="loadMore()"
+        <ion-infinite-scroll ng-if="!noMoreItemsAvailable"
+                             on-infinite="loadMore()"
                 icon="ion-loading-c"
                 distance="1%">
         </ion-infinite-scroll>

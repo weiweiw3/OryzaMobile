@@ -37,7 +37,7 @@
         })
 
         .controller('ionListFBViewCtrl',
-        function (ionicLoading, stateParamsObject, $firebaseArray, $state,
+        function (ionicLoading, stateParamsObject, $firebaseArray, $state,jsonFactory,
                   $location, $timeout, $scope) {
             $scope.stateParamsObject = stateParamsObject;
             $scope.lowercase_viewName = angular.lowercase(stateParamsObject.viewName);
@@ -60,11 +60,20 @@
                 ref: scrollRef.toString().replace(scrollRef.root().toString(), '')
             };
             // load the first three records
-            scrollRef.scroll.next(3);
+            scrollRef.scroll.next(2);
             $scope.ionList.array.$loaded()
                 .then(function () {
                     ionicLoading.unload();
                 });
+            $scope.ionList.array.$watch(function (data) {
+                if (data === "child_added") {
+                    ionicLoading.load();
+                    //TODO lookup字段
+                    //jsonFactory.lookup('',)
+                }
+                console.log(event);
+            });
+
 
             $scope.refresh = function () {
                 //TODO refresh event

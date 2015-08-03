@@ -5,17 +5,25 @@
         'firebase.utils', 'firebase']);
     app
 
-        .controller('sideBarCtrl', function (localStorageService,$rootScope,
+        .controller('sideBarCtrl', function (localStorageService, $rootScope,
                                              $scope, $state, $translate, $q, homeFactory, ionicLoading) {
             $scope.changeLanguage = function (langKey) {
-                $rootScope.profiles.language=langKey;
+                $rootScope.profiles.language = langKey;
                 console.log(langKey);
                 $translate.use(langKey);
             };
             //ionicLoading.load();
 
         })
-        .controller('homeCtrl', function ($timeout,fbutil, $q, localStorageService,
+
+        .controller('profileCtrl',function($scope,$firebaseArray, fbutil, $q,data, $rootScope){
+
+
+
+
+            $scope.profiles=data;
+        })
+          .controller('homeCtrl', function ($timeout, fbutil, $q, localStorageService,
                                           $scope, $state, $log, $rootScope, ionicLoading, $ionicSideMenuDelegate) {
 
             $scope.openMenu = function () {
@@ -23,17 +31,17 @@
             };
 
             ionicLoading.load();
-            $scope.objectSize = function(obj) {
+            $scope.objectSize = function (obj) {
                 var size = 0, key;
                 for (key in obj) {
                     if (obj.hasOwnProperty(key)) size++;
                 }
                 return size;
             };
-            $scope.$on("rootScopeInit",function(even,data){
+            $scope.$on("rootScopeInit", function (even, data) {
                 ionicLoading.unload();
-                if(data===true){
-                    $timeout(function() {
+                if (data === true) {
+                    $timeout(function () {
                         ionicLoading.unload();
                     }, 1000);
                     ionicLoading.load();
@@ -59,6 +67,7 @@
 
     app.factory('homeFactory',
         function ($rootScope, $firebaseObject, fbutil, $q, FIREBASE_URL) {
+            console.log($rootScope.serverUser);
             var homeFactory = {};
             homeFactory.ready = function (event) {
 
@@ -139,6 +148,24 @@
 
                 }
             })
-           ;
+            .state('profile', {
+                url: '/profile',
+                templateUrl: 'scripts/home/profile.html',
+                controller: 'profileCtrl'
+                ,
+                resolve: {
+                    data: function ($firebaseArray, fbutil, $q, $rootScope) {
+                        var d = $q.defer(),
+                            ref = fbutil.ref(['profiles', $rootScope.authData.uid,'data']);
+                        console.log('x');
+                        $firebaseArray(ref).$loaded().then(function(snap){
+                            console.log(snap);
+                            d.resolve(snap);
+                        });
+                        return d.promise;
+                    }
+                }
+            })
+        ;
     }]);
 })(angular);

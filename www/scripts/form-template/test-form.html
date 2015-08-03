@@ -1,0 +1,53 @@
+<ion-view view-title="leave request" hide-back-button="true">
+    <ion-content>
+        <label style="background: white" class="item item-input"
+               ui-sref="editForm({ref:currentRef+'/email'})">
+            <i class="icon ion-person placeholder-icon"></i>
+            <input type="email" name="email" placeholder="Email"
+                   ng-model="data.email"
+                   ng-required="true">
+        </label>
+        <label style="background: white" class="item item-input"
+               ui-sref="optionForm({ref:currentRef+'/language',default:'E'})">
+            <i class="icon ion-person placeholder-icon"></i>
+            <input type="email" name="email" placeholder="Email"
+                   ng-model="data.email"
+                   ng-required="true">
+        </label>
+<div>   ToDate
+        <ionic-datepicker idate="toDate" disablepreviousdates="true" callback="toDatePickerCallback">
+            <button class="button button-positive"> {{ toDate | date:'dd - MMMM - yyyy' }}</button>
+        </ionic-datepicker>
+</div>
+     <div>ToDate
+
+        <ionic-timepicker etime="toTimeslots.epochTime" format="toTimeslots.format" step="toTimeslots.step"
+                          callback="toTimePickerCallback">
+            <button class="button button-positive overflowShow">
+                <standard-time-meridian etime='toTimeslots.epochTime'></standard-time-meridian>
+            </button>
+        </ionic-timepicker>
+     </div>
+
+        <div>
+            <button class="button button-positive" ng-click="showConfirm()">
+                apply
+            </button>
+        </div>
+    </ion-content>
+    <div class="bar bar-footer bar-positive-400">
+        <!--<div class="title">Footer</div>-->
+        <div class="buttons buttons-right">
+            <button class="button button-energized-900 button-fab"><i
+                    class="icon ion-star light"></i></button>
+            <!--<create-task class="button button-energized-900 button-fab button-icon" button-text="approve" popup="popup"-->
+            <!--task-data="taskData"><i class="icon ion-code light"></i></create-task>-->
+        </div>
+        <!---->
+
+
+    </div>
+</ion-view>
+
+
+

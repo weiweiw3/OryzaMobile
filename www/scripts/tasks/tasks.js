@@ -31,15 +31,27 @@
                     var taskData = defaultData;
 
                     taskData.userId = ServerUser;
-
+                     if (typeof jsonContent === 'object') {
+                        switch (event) {
+                            case 'E0002' || 'E0003' :
+                                taskData.jsonContent = jsonContent;
+                                break;
+                        }
+                    }
                     if (typeof defaultData.jsonContent === 'object') {
                         taskData.jsonContent = defaultData.jsonContent;
-                        if (event === 'E0025') {
-                            taskData.jsonContent.CATSRECORDS[0] = jsonContent;
+                        switch (event) {
+                            case 'A0001':
+                                break;
+                            case 'E0025':
+                                taskData.jsonContent.CATSRECORDS[0] = jsonContent;
+                                break;
+                            case 'E0024_CHANGE':
+                                taskData.jsonContent.CATSRECORDS_IN[0] = jsonContent;
+                                break;
+
                         }
-                        if (event === 'E0024_CHANGE') {
-                            taskData.jsonContent.CATSRECORDS_IN[0] = jsonContent;
-                        }
+
                     }
 
                     if (typeof defaultData.inputParas === 'string' && typeof inputParasRef === 'string') {
@@ -47,41 +59,40 @@
                         var array = inputParasRef.split("/");
                         var inputParas = defaultData.inputParas;
 
-                        if (event === 'A0001') {
-                            myTask.getSAPSys().then(function (data) {
-                                angular.forEach(data, function (value, key) {
-                                    switch (key.toUpperCase()) {
-                                        case 'SAP_SYSTEM_GUID':
-                                            inputParas = inputParas.replace('$P01$', value);
-                                            break;
-                                        case 'SYSTEM_ID':
-                                            inputParas = inputParas.replace('$P02$', value);
-                                            break;
-                                        case 'SERVER_NAME':
-                                            inputParas = inputParas.replace('$P03$', value);
-                                            break;
-                                        case 'INSTANCE_NUMBER':
-                                            inputParas = inputParas.replace('$P04$', value);
-                                            break;
-                                        case 'CLIENT':
-                                            inputParas = inputParas.replace('$P05$', value);
-                                            break;
-                                    }
+                        switch (event) {
+                            case 'A0001':
+                                myTask.getSAPSys().then(function (data) {
+                                    angular.forEach(data, function (value, key) {
+                                        switch (key.toUpperCase()) {
+                                            case 'SAP_SYSTEM_GUID':
+                                                inputParas = inputParas.replace('$P01$', value);
+                                                break;
+                                            case 'SYSTEM_ID':
+                                                inputParas = inputParas.replace('$P02$', value);
+                                                break;
+                                            case 'SERVER_NAME':
+                                                inputParas = inputParas.replace('$P03$', value);
+                                                break;
+                                            case 'INSTANCE_NUMBER':
+                                                inputParas = inputParas.replace('$P04$', value);
+                                                break;
+                                            case 'CLIENT':
+                                                inputParas = inputParas.replace('$P05$', value);
+                                                break;
+                                        }
+                                    });
+
+                                    inputParas = inputParas.replace('$P06$', array[0]);//SAP_USER
+                                    inputParas = inputParas.replace('$P07$', array[1]);//SAP_PASSWORD
+                                    inputParas = inputParas.replace('$P08$', array[2]);//SAP_LANGUAGE
+
+                                    taskData.inputParas = inputParas;
+                                    //inputParas = inputParas + ';FB_FROM_PATH=' + inputParasRef.replace(FIREBASE_URL, '');
+
+                                    d.resolve(taskData);
                                 });
-
-                                inputParas = inputParas.replace('$P06$', array[0]);//SAP_USER
-                                inputParas = inputParas.replace('$P07$', array[1]);//SAP_PASSWORD
-                                inputParas = inputParas.replace('$P08$', array[2]);//SAP_LANGUAGE
-
-                                taskData.inputParas = inputParas;
-                                //inputParas = inputParas + ';FB_FROM_PATH=' + inputParasRef.replace(FIREBASE_URL, '');
-
-                                d.resolve(taskData);
-                            });
-
-                        } else {
-                            if (event === 'E0005') {
-                                //E0004->E0005
+                                break;
+                            case 'E0005':
                                 inputParas = inputParas.replace('$P01$', array[6].substr(3));//PO_REL_CODE
                                 // TODO replace P02 twice , in the furture use replace-all function
                                 inputParas = inputParas.replace('$P02$', array[8]);//PURCHASEREQUEST
@@ -89,21 +100,21 @@
                                 inputParas = inputParas.replace('$P03$', array[9]);//ITEM
                                 inputParas = inputParas.replace('$P03$', array[9]);//ITEM
                                 inputParas = inputParas.replace('$P04$', array[5]);//ServerUserID
-                            }
-                            if (event === 'E0002') {
-                                //E0001->E0002
-                                //inputParas = inputParas.replace('$P01$', array[2].substr(3));//PO_REL_CODE
+                                taskData.inputParas = inputParas;
+                                d.resolve(taskData);
+                                break;
+                            case 'E0002'|| 'E0003':
                                 inputParas = inputParas.replace('$P01$', array[2]);//PO_REL_CODE
                                 inputParas = inputParas.replace('$P01$', array[2]);//PO_REL_CODE
                                 //TODO replace P02 twice , in the furture use replace-all function
                                 inputParas = inputParas.replace('$P02$', array[1]);//PURCHASEORDER
                                 inputParas = inputParas.replace('$P02$', array[1]);//PURCHASEORDER
                                 inputParas = inputParas.replace('$P03$', array[0]);//ServerUserID
-                            }
-                            taskData.inputParas = inputParas;
-                            //inputParas = inputParas + ';FB_FROM_PATH=' + inputParasRef.replace(FIREBASE_URL, '');
-                            d.resolve(taskData);
+                                taskData.inputParas = inputParas;
+                                d.resolve(taskData);
+                                break;
                         }
+
                     }
                     return d.promise;
 

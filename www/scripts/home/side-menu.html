@@ -2,10 +2,10 @@
     <ion-header-bar class="bar side-menu-bar-header bar-dark">
         <div class="row responsive-sm">
             <div class="col">
-                <div ui-sref="A0001" menu-close ><i class="icon ion-android-mail"></i>&nbsp;{{authData.password.email}}
+                <div ui-sref="profile" menu-close ><i class="icon ion-android-mail"></i>&nbsp;{{authData.password.email}}
                 </div>
             </div>
-            <div class="col">{{profiles.A0001.SAP_USER}}</div>
+            <div class="col" ui-sref="profile" >{{profiles.A0001.SAP_USER}}</div>
         </div>
 
     </ion-header-bar>

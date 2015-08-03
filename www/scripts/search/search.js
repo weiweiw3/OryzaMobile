@@ -11,7 +11,7 @@
     });
     //NOTE: We are including the constant `ApiEndpoint` to be used here.
     app
-        .factory('jsonFactory', function ($q, $http, ESService, Api) {
+        .factory('jsonFactory', function ($rootScope, $q, $http, ESService, Api) {
             var jsonFactory = {
                 fromServer: function (table, where) {
                     var promise = Api.getApiData(table, where)
@@ -29,10 +29,65 @@
                     });
                     return promise;
                 },
+                getSinglePageConfigure: function (table) {
+                    var d = $q.defer();
+                    jsonFactory.hospitals('search-lists')
+                        .then(function (data) {
+                            d.resolve(data[table]);
+                        })
+                        .catch(function(err){
+                            d.reject(err);
+                        });
+                    return d.promise;
+                },
+                formatFieldMapping: function (fieldFormatArray, fieldValueArray) {
+                    var arr = [];
+                    var d = $q.defer();
+                    var i = 0;
+                    angular.forEach(fieldFormatArray, function (value) {
+                        //如果要lookup
+                        if (typeof value['LKP_KEYFIELD'] !== 'undefined' && value['LKP_KEYFIELD'] !== ''
+                            && value['LKP_KEYFIELD'] !== null) {
+
+                            //lookup: function (table, inputKey, inputValue, outputKey,languageKey,language,
+                            //                  foreignKey, foreignValue)
+
+                            ESService.lookup('E0015_' + value['LKP_TEXTTABLE'],
+                                value['LKP_KEYFIELD'], fieldValueArray[value['FIELDNAME']],
+                                value['LKP_TEXTFIELD'],
+                                value['LKP_LANGFIELD'], $rootScope.profiles.language,
+                                value['LKP_FOREIGNKEY2'], fieldValueArray[value['LKP_FOREIGNKEY1']])
+                                .then(function (result) {
+                                    i++;
+                                    arr[value['FIELDNAME']] = result + '(' + fieldValueArray[value['FIELDNAME']] + ')';
+                                    //console.log(key);
+                                    if (i == fieldFormatArray.length) {
+                                        d.resolve(arr);
+                                        console.log(arr);
+                                    }
+                                }).catch(function (err) {
+                                    i++;
+                                    if (i == fieldFormatArray.length) {
+                                        d.resolve(arr);
+                                        console.log(arr);
+                                    }
+                                    console.log(err);
+                                })
+                        } else {
+                            i++;
+                            arr[value['FIELDNAME']] = fieldValueArray[value['FIELDNAME']];
+                            if (i == fieldFormatArray.length) {
+                                d.resolve(arr);
+                                console.log(arr);
+                            }
+                        }
+                    });
+                    return d.promise;
+                },
                 loadData: function (table, key, value) {
                     var arr = ['E0001_PO_HEADERS', 'E0001_PO_ITEMS',
                         'E0004_REQUIREMENT_ITEMS',
-                    'task_message'];
+                        'task_message'];
                     var d = $q.defer();
                     if (arr.indexOf(table) !== -1) {
                         var i = 0;
@@ -82,11 +137,12 @@
         .factory('Api', function ($http, $q, taskUrl, COMPANY) {
             var getApiData = function (table, where) {
                 var q = $q.defer();
+
                 var str = taskUrl.url +
                     '/searchData?company_guid=' + COMPANY +
                     '&table_name=' + table +
                     '&str_where=' + where +
-                    ' LIMIT 0,10' ;
+                    ' LIMIT 0,10';
                 console.log(str);
                 $http.get(str)
                     .success(function (jsonObj) {

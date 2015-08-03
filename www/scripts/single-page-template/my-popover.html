@@ -1,0 +1,12 @@
+<ion-popover-view class="fit">
+    <ion-content>
+        <div class="list" ng-click="popover.hide()">
+            <div ng-repeat="link in popupLinks">
+                <a class="item" ui-sref="ionListESView({table:link,key:keyName,value:keyValue})" >
+                    <!--target="_blank"-->
+                    {{link | translate}}
+                </a>
+            </div>
+        </div>
+    </ion-content>
+</ion-popover-view>

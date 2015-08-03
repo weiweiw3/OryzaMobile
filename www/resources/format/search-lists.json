@@ -1,20 +1,20 @@
 {
   "task_message": {
     "searchLink": "task_message",
-    "formatLink": [
-      "BAPIEBAN"
-    ],
+
     "primaryKey": [
       "user_id",
       "event_type",
       "id"
     ],
+    "viewScreen":"task-message",
     "eventID": "E0002",
     "taskInputParas": [
       "id",
       "user_id",
       "PREQ_NO"
-    ]
+    ],
+    "AddToSearchHistory":"X"
   },
 
   "E0004_REQUIREMENT_ITEMS": {
@@ -51,6 +51,9 @@
       "JCO_USER",
       "PO_NUMBER",
       "REL_STRAT"
+    ],
+    "jsonContent":[
+
     ]
   },
   "E0001_PO_ITEMS": {
