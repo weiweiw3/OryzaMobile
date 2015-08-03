@@ -16,9 +16,13 @@
 
         })
 
-        .controller('profileCtrl',function($scope,$firebaseArray, fbutil, $q,data, $rootScope){
+        .controller('profileCtrl',function($scope,$firebaseArray, fbutil, $q,data, $rootScope,ionicMaterialInk, ionicMaterialMotion,$timeout){
 
 
+            $timeout(function(){
+                ionicMaterialInk.displayEffect();
+                ionicMaterialMotion.ripple();
+            },0);
 
 
             $scope.profiles=data;
